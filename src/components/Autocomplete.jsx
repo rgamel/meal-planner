@@ -1,10 +1,9 @@
 import { useState } from "react";
 
-const AutoComplete = ({ suggestions }) => {
+const AutoComplete = ({ suggestions, addItem, selected, setSelected }) => {
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
     const [showSuggestions, setShowSuggestions] = useState(false);
-    const [input, setInput] = useState("");
 
     const onChange = (e) => {
         const userInput = e.target.value;
@@ -14,46 +13,49 @@ const AutoComplete = ({ suggestions }) => {
                 suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
         );
 
-        setInput(e.target.value);
+        setSelected(e.target.value);
         setFilteredSuggestions(unLinked);
         setActiveSuggestionIndex(0);
         setShowSuggestions(true);
     };
 
     const onKeyDown = (e) => {
-        console.log(e.key)
         switch (e.key) {
+            case 'Tab':
             case 'Enter':
-                setInput(filteredSuggestions[activeSuggestionIndex]);
+                if (selected.trim().length === 0) return;
+                setSelected(filteredSuggestions[activeSuggestionIndex]);
                 setShowSuggestions(false);
                 break;
             case 'ArrowUp':
-            if (activeSuggestionIndex > 0) {
+                if (activeSuggestionIndex > 0) {
                     setActiveSuggestionIndex(activeSuggestionIndex - 1);
-                    console.log(activeSuggestionIndex);
                 }
                 break;
             case 'ArrowDown':
-                console.log('gotHere', activeSuggestionIndex)
                 if (activeSuggestionIndex < filteredSuggestions.length - 1) {
-                    console.log('andHere', activeSuggestionIndex)
                     setActiveSuggestionIndex(activeSuggestionIndex + 1);
-                    console.log(activeSuggestionIndex);
                 }
                 break;
             default:
                 break;
         }
+    };
+
+    const handleAddItem = (input) => {
+        addItem(input);
+        setSelected(input);
+        setShowSuggestions(false);
     }
 
     const SuggestionsListComponent = () => {
         const onClick = (e) => {
             setFilteredSuggestions([]);
-            setInput(e.target.innerText);
+            setSelected(e.target.innerText);
             setActiveSuggestionIndex(0);
             setShowSuggestions(false);
         };
-    
+
         return filteredSuggestions.length ? (
             <ul className="suggestions">
                 {filteredSuggestions.map((suggestion, index) => {
@@ -69,8 +71,9 @@ const AutoComplete = ({ suggestions }) => {
                 })}
             </ul>
         ) : (
-            <div class="no-suggestions">
-                <em>No suggestions, you're on your own!</em>
+            <div className="no-suggestions">
+                <em>{`"${selected}" not found. Add it?`}</em>
+                <button onClick={() => handleAddItem(selected.trim())}>+</button>
             </div>
         );
     };
@@ -81,9 +84,9 @@ const AutoComplete = ({ suggestions }) => {
                 type="text"
                 onChange={onChange}
                 onKeyDown={onKeyDown}
-                value={input}
+                value={selected}
             />
-            {showSuggestions && input && <SuggestionsListComponent />}
+            {showSuggestions && selected && <SuggestionsListComponent />}
         </>
     );
 };
