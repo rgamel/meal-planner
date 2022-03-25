@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { nanoid } from 'nanoid';
 import IngredientInput from './IngredientInput';
 import GroceryList from './GroceryList';
 import { useRecipes } from '../hooks/hooks';
 
 export type GroceryItem = { quantity: number; uom: string; item: string; isAldi: boolean };
 
-export type Recipe = { name: string; groceries: GroceryItem[] };
+export type Recipe = { name: string; groceries: GroceryItem[]; recipeId: string };
 
 function RecipeForm() {
     const { addRecipe } = useRecipes();
@@ -30,7 +31,7 @@ function RecipeForm() {
     };
 
     const handleSave = () => {
-        const recipe = { name: recipeName, groceries };
+        const recipe = { name: recipeName, groceries, recipeId: nanoid() };
         if (!recipeName.trim().length) return;
         addRecipe(recipe);
         setRecipeName('');
@@ -40,6 +41,7 @@ function RecipeForm() {
     return (
         <div>
             <h1>{recipeName || 'New Recipe'}</h1>
+            <span>Recipe Name</span>
             <input type="text" value={recipeName} onChange={handleSetRecipeName} />
             <IngredientInput commitGroceryItem={commitGroceryItem} />
             <h3>Grocery List:</h3>

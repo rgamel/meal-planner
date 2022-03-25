@@ -1,29 +1,32 @@
-import { State } from '@hookstate/core';
-
 import { useSelectedRecipes } from 'hooks/hooks';
 import React from 'react';
 import { Recipe } from './RecipeForm';
 
 type RecipeListItemProps = {
-    recipe: State<Recipe>;
+    recipe: Recipe;
+    editRecipe: (recipe: Recipe) => void;
 };
 
-function RecipeListItem({ recipe }: RecipeListItemProps) {
+function RecipeListItem({ recipe, editRecipe }: RecipeListItemProps) {
     const { selectedRecipes, handleSelectRecipe } = useSelectedRecipes();
-    const currentlySelectedRecipes = selectedRecipes.get();
-    const currentRecipe = recipe.get();
 
     const handleChange = () => {
-        handleSelectRecipe(currentRecipe.name);
+        console.log(recipe.recipeId);
+        handleSelectRecipe(recipe.recipeId);
     };
     return (
-        <li key={currentRecipe.name}>
+        <li key={recipe.name}>
             <input
                 type="checkbox"
-                checked={currentlySelectedRecipes.map((r: Recipe) => r.name).includes(currentRecipe.name)}
+                checked={Object.values(selectedRecipes.get())
+                    .map((r: Recipe) => r.name)
+                    .includes(recipe.name)}
                 onChange={handleChange}
             />
-            {currentRecipe.name}
+            {recipe.name}
+            <button type="button" onClick={() => editRecipe(recipe)}>
+                edit
+            </button>
         </li>
     );
 }

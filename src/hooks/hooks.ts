@@ -1,4 +1,4 @@
-import { createState, useState } from '@hookstate/core';
+import { createState, none, useState } from '@hookstate/core';
 import { Recipe } from '../components/RecipeForm';
 
 const baseUoms: string[] = ['oz', 'can', 'bag', 'lb', 'gram', 'tsp', 'ml'];
@@ -15,9 +15,8 @@ const baseIngredients: string[] = [
     'tortillas',
     'beef',
 ];
-
-const baseRecipes: Recipe[] = [
-    {
+const baseRecipes: Record<string, Recipe> = {
+    '1234': {
         name: 'chicken',
         groceries: [
             {
@@ -27,14 +26,63 @@ const baseRecipes: Recipe[] = [
                 isAldi: true,
             },
         ],
+        recipeId: '1234',
     },
-];
+    PYOWpahEyfVLDdSUhE48F: {
+        name: 'taco sauce',
+        groceries: [
+            {
+                quantity: 1,
+                uom: 'lb',
+                item: 'tomatoes',
+                isAldi: true,
+            },
+            {
+                quantity: 3,
+                uom: 'tsp',
+                item: 'cumin',
+                isAldi: true,
+            },
+            {
+                quantity: 1,
+                uom: 'gram',
+                item: 'black beans',
+                isAldi: true,
+            },
+        ],
+        recipeId: 'PYOWpahEyfVLDdSUhE48F',
+    },
+    WmXxnjwzNaaIwgmx81nCp: {
+        name: 'cat trap',
+        groceries: [
+            {
+                quantity: 1,
+                uom: 'large',
+                item: 'blanket',
+                isAldi: false,
+            },
+        ],
+        recipeId: 'WmXxnjwzNaaIwgmx81nCp',
+    },
+    'f7_-XGtxmKqgRVb2p6q4l': {
+        name: 'milk',
+        groceries: [
+            {
+                quantity: 1,
+                uom: 'gallon',
+                item: 'whole milk',
+                isAldi: true,
+            },
+        ],
+        recipeId: 'f7_-XGtxmKqgRVb2p6q4l',
+    },
+};
 
 const globalState = createState({
     ingredients: baseIngredients,
     recipes: baseRecipes,
     uoms: baseUoms,
-    selectedRecipes: [] as Recipe[],
+    selectedRecipes: {} as Record<string, Recipe>,
 });
 
 export const useIngredients = () => {
@@ -65,9 +113,9 @@ export const useUoms = () => {
 
 export const useRecipes = () => {
     const { recipes } = useState(globalState);
-
+    console.log('recipes:', recipes.get());
     const addRecipe = (recipe: Recipe) => {
-        recipes.set((prev) => [...prev, recipe]);
+        recipes.merge({ [recipe.recipeId]: recipe });
     };
 
     return {
@@ -80,15 +128,15 @@ export const useSelectedRecipes = () => {
     const { recipes } = useState(globalState);
     const { selectedRecipes } = useState(globalState);
 
-    const handleSelectRecipe = (name: string) => {
-        if (selectedRecipes.find((sr) => sr.get().name === name)) {
-            selectedRecipes.set((prev) => [...prev.filter((sr) => sr.name !== name)]);
+    const handleSelectRecipe = (recipeId: string) => {
+        if (!recipes[recipeId]) return;
+
+        if (selectedRecipes.nested(recipeId).value) {
+            selectedRecipes[recipeId].set(none);
             return;
         }
-        const recipeToSelect = recipes.find((r) => r.get().name === name)?.get();
-        if (!recipeToSelect) return;
 
-        selectedRecipes.set((prev) => [...prev, recipeToSelect]);
+        selectedRecipes.merge({ [recipeId]: recipes[recipeId].get() });
     };
 
     return {
