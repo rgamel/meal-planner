@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { createState, useState } from '@hookstate/core';
 import { Recipe } from '../components/RecipeForm';
 
-const baseIngredients = [
+const baseUoms: string[] = ['oz', 'can', 'bag', 'lb', 'gram', 'tsp', 'ml'];
+const baseIngredients: string[] = [
     'apples',
     'tomatoes',
     'salt',
@@ -14,9 +15,8 @@ const baseIngredients = [
     'tortillas',
     'beef',
 ];
-const baseUoms = ['oz', 'can', 'bag', 'lb', 'gram', 'tsp', 'ml'];
 
-const baseRecipes = [
+const baseRecipes: Recipe[] = [
     {
         name: 'chicken',
         groceries: [
@@ -30,67 +30,69 @@ const baseRecipes = [
     },
 ];
 
+const globalState = createState({
+    ingredients: baseIngredients,
+    recipes: baseRecipes,
+    uoms: baseUoms,
+    selectedRecipes: [] as Recipe[],
+});
+
 export const useIngredients = () => {
-    const [ingredients, setIngredients] = useState(baseIngredients);
+    const { ingredients } = useState(globalState);
 
     const addIngredient = (item: string) => {
-        setIngredients([...ingredients, item]);
+        ingredients.set((prev) => [...prev, item]);
     };
 
     return {
         ingredients,
-        setIngredients,
         addIngredient,
     };
 };
 
 export const useUoms = () => {
-    const [uoms, setUoms] = useState(baseUoms);
+    const { uoms } = useState(globalState);
 
     const addUom = (uom: string) => {
-        setUoms([...uoms, uom]);
+        uoms.set((prev) => [...prev, uom]);
     };
 
     return {
         uoms,
-        setUoms,
         addUom,
     };
 };
 
 export const useRecipes = () => {
-    const [recipes, setRecipes] = useState(baseRecipes);
+    const { recipes } = useState(globalState);
 
     const addRecipe = (recipe: Recipe) => {
-        setRecipes([...recipes, recipe]);
+        recipes.set((prev) => [...prev, recipe]);
     };
 
     return {
         recipes,
-        setRecipes,
         addRecipe,
     };
 };
 
 export const useSelectedRecipes = () => {
-    const { recipes } = useRecipes();
-    const [selectedRecipes, setSelectedRecipes] = useState<Recipe[]>([]);
+    const { recipes } = useState(globalState);
+    const { selectedRecipes } = useState(globalState);
 
     const handleSelectRecipe = (name: string) => {
-        if (selectedRecipes.find((sr) => sr.name === name)) {
-            // selectedRecipes.splice(selectedRecipes.indexOf(name), 1);
-            setSelectedRecipes((prevSelectedRecipes) => prevSelectedRecipes.filter((sr) => sr.name !== name));
+        if (selectedRecipes.find((sr) => sr.get().name === name)) {
+            selectedRecipes.set((prev) => [...prev.filter((sr) => sr.name !== name)]);
             return;
         }
-        const recipeToSelect = recipes.find((r) => r.name === name);
+        const recipeToSelect = recipes.find((r) => r.get().name === name)?.get();
         if (!recipeToSelect) return;
 
-        setSelectedRecipes([...selectedRecipes, recipeToSelect]);
+        selectedRecipes.set((prev) => [...prev, recipeToSelect]);
     };
 
     return {
         selectedRecipes,
-        setSelectedRecipes,
         handleSelectRecipe,
     };
 };

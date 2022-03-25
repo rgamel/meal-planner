@@ -16,7 +16,7 @@ function Groceries() {
         return list;
     };
 
-    const allGroceries = compactGroceries(selectedRecipes.map((r) => r.groceries).flat());
+    const allGroceries = compactGroceries(selectedRecipes.map((r) => r.get().groceries).flat());
     return (
         <>
             <h1>Groceries:</h1>

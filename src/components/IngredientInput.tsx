@@ -43,7 +43,7 @@ function IngredientInput({
                 <span>
                     UOM
                     <Autocomplete
-                        suggestions={uoms}
+                        suggestions={uoms.get()}
                         addItem={addUom}
                         selected={selectedUom}
                         setSelected={setSelectedUom}
@@ -54,7 +54,7 @@ function IngredientInput({
                 <span>
                     Ingredient
                     <Autocomplete
-                        suggestions={ingredients}
+                        suggestions={ingredients.get()}
                         addItem={addIngredient}
                         selected={selectedIngredient}
                         setSelected={setSelectedIngredient}
