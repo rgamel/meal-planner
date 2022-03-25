@@ -1,13 +1,20 @@
-import React, { ChangeEvent, Dispatch, KeyboardEventHandler, MouseEventHandler, SetStateAction, useState } from "react";
+import React, {
+    ChangeEvent,
+    Dispatch,
+    KeyboardEventHandler,
+    MouseEventHandler,
+    SetStateAction,
+    useMemo,
+    useState,
+} from 'react';
 
 type AutoCompleteProps = {
     suggestions: string[];
     addItem: (input: string) => void;
-    selected: string,
-    setSelected: Dispatch<SetStateAction<string>>
-
-}
-const AutoComplete = ({ suggestions, addItem, selected, setSelected }: AutoCompleteProps) => {
+    selected: string;
+    setSelected: Dispatch<SetStateAction<string>>;
+};
+function AutoComplete({ suggestions, addItem, selected, setSelected }: AutoCompleteProps) {
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
     const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -16,8 +23,7 @@ const AutoComplete = ({ suggestions, addItem, selected, setSelected }: AutoCompl
         const userInput = e.target.value;
 
         const unLinked = suggestions.filter(
-            (suggestion) =>
-                suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+            (suggestion) => suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1,
         );
 
         setSelected(e.target.value);
@@ -26,7 +32,7 @@ const AutoComplete = ({ suggestions, addItem, selected, setSelected }: AutoCompl
         setShowSuggestions(true);
     };
 
-    const onKeyDown: KeyboardEventHandler<HTMLInputElement>  = (e) => {
+    const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
         switch (e.key) {
             case 'Tab':
             case 'Enter':
@@ -53,9 +59,9 @@ const AutoComplete = ({ suggestions, addItem, selected, setSelected }: AutoCompl
         addItem(input);
         setSelected(input);
         setShowSuggestions(false);
-    }
+    };
 
-    const SuggestionsListComponent = () => {
+    function SuggestionsListComponent() {
         const onClick: MouseEventHandler<HTMLElement> = (e) => {
             setFilteredSuggestions([]);
             setSelected((e.target as HTMLElement).innerText);
@@ -63,39 +69,40 @@ const AutoComplete = ({ suggestions, addItem, selected, setSelected }: AutoCompl
             setShowSuggestions(false);
         };
 
-        return filteredSuggestions.length ? (
-            <ul className="suggestions">
-                {filteredSuggestions.map((suggestion, index) => {
-                    let className;
-                    if (index === activeSuggestionIndex) {
-                        className = "suggestion-active";
-                    }
-                    return (
-                        <li className={className} key={suggestion} onClick={onClick}>
-                            {suggestion}
-                        </li>
-                    );
-                })}
-            </ul>
-        ) : (
-            <div className="no-suggestions">
-                <em>{`"${selected}" not found. Add it?`}</em>
-                <button onClick={() => handleAddItem(selected.trim())}>+</button>
-            </div>
+        return useMemo(
+            () =>
+                filteredSuggestions.length ? (
+                    <ul className="suggestions">
+                        {filteredSuggestions.map((suggestion, index) => {
+                            let className;
+                            if (index === activeSuggestionIndex) {
+                                className = 'suggestion-active';
+                            }
+                            return (
+                                // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+                                <li className={className} key={suggestion} onClick={onClick}>
+                                    {suggestion}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                ) : (
+                    <div className="no-suggestions">
+                        <em>{`"${selected}" not found. Add it?`}</em>
+                        <button type="button" onClick={() => handleAddItem(selected.trim())}>
+                            +
+                        </button>
+                    </div>
+                ),
+            [],
         );
-    };
+    }
 
     return (
         <>
-            <input
-                type="text"
-                onChange={onChange}
-                onKeyDown={onKeyDown}
-                value={selected}
-            />
+            <input type="text" onChange={onChange} onKeyDown={onKeyDown} value={selected} />
             {showSuggestions && selected && <SuggestionsListComponent />}
         </>
     );
-};
+}
 export default AutoComplete;
-

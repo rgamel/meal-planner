@@ -3,7 +3,7 @@ import GroceryList from '../components/GroceryList';
 import { GroceryItem } from '../components/RecipeForm';
 import { useSelectedRecipes } from '../hooks/hooks';
 
-const Groceries = () => {
+function Groceries() {
     const { selectedRecipes } = useSelectedRecipes();
     const compactGroceries = (groceries: GroceryItem[]) => {
         const list = groceries.reduce((acc, val) => {
@@ -14,7 +14,6 @@ const Groceries = () => {
             }
             return [...acc, val];
         }, [] as GroceryItem[]);
-        console.log(list);
         return list;
     };
 
@@ -25,6 +24,6 @@ const Groceries = () => {
             <GroceryList groceries={allGroceries} />
         </>
     );
-};
+}
 
 export default Groceries;

@@ -1,3 +1,4 @@
 {
-    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

@@ -1,19 +1,22 @@
+import React from 'react';
 import partition from 'lodash/fp/partition';
 import sortBy from 'lodash/fp/sortBy';
 import { GroceryItem } from './RecipeForm';
 
-const StoreList = ({ items }: { items: GroceryItem[] }) => (
-    <ul>
-        {sortBy('item', items).map((i) => (
-            <li key={`${i.uom}|${i.item}|${i.isAldi}`}>
-                <em>{`${i.item}`}</em>
-                {`, ${i.quantity} ${i.uom}`}
-            </li>
-        ))}
-    </ul>
-);
+function StoreList({ items }: { items: GroceryItem[] }) {
+    return (
+        <ul>
+            {sortBy('item', items).map((i) => (
+                <li key={`${i.uom}|${i.item}|${String(i.isAldi)}`}>
+                    <em>{`${i.item}`}</em>
+                    {`, ${i.quantity} ${i.uom}`}
+                </li>
+            ))}
+        </ul>
+    );
+}
 
-const GroceryList = ({ groceries }: { groceries: GroceryItem[]}) => {
+function GroceryList({ groceries }: { groceries: GroceryItem[] }) {
     const [aldi, schnucks] = partition('isAldi', groceries);
     return (
         <div>
@@ -23,6 +26,6 @@ const GroceryList = ({ groceries }: { groceries: GroceryItem[]}) => {
             <StoreList items={schnucks} />
         </div>
     );
-};
+}
 
 export default GroceryList;

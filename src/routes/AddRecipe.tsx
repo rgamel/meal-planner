@@ -1,13 +1,13 @@
 import React from 'react';
-import Recipe from '../components/RecipeForm';
+import RecipeForm from '../components/RecipeForm';
 
-const AddRecipe = () => {
+function AddRecipe() {
     return (
         <>
             <h1>Add Recipe:</h1>
-            <Recipe />
+            <RecipeForm />
         </>
     );
-};
+}
 
 export default AddRecipe;

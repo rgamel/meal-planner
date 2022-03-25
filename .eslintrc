@@ -1,0 +1,96 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "airbnb",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:prettier/recommended",
+        "plugin:eslint-plugin/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2021,
+        "sourceType": "module",
+        "project": "./tsconfig.json",
+        "tsconfigRootDir": "./"
+    },
+    "plugins": ["import", "react", "@typescript-eslint", "react-hooks"],
+    "rules": {
+        "@typescript-eslint/no-floating-promises": "warn",
+        "@typescript-eslint/no-shadow": "error",
+        "@typescript-eslint/no-use-before-define": "warn",
+        "@typescript-eslint/no-unused-vars": ["warn"],
+        "@typescript-eslint/restrict-template-expressions": [
+            "warn",
+            {
+                "allowNumber": true,
+                "allowAny": true
+            }
+        ],
+        "arrow-body-style": ["warn", "as-needed"],
+        "global-require": "off",
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "ts": "never",
+                "tsx": "never"
+            }
+        ],
+        "import/no-cycle": "off",
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": false,
+                "optionalDependencies": false,
+                "peerDependencies": false
+            }
+        ],
+        "import/prefer-default-export": "off",
+        "no-nested-ternary": "off",
+        "no-underscore-dangle": "off",
+        "no-use-before-define": "off",
+        "no-void": "off",
+        "react-hooks/exhaustive-deps": "warn",
+        "react-hooks/rules-of-hooks": "error",
+        "react/jsx-filename-extension": [
+            "warn",
+            {
+                "extensions": [".tsx", ".js"]
+            }
+        ],
+        "react/jsx-props-no-spreading": "warn",
+        "react/prop-types": "off",
+        "react/require-default-props": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "import/no-dynamic-require": "off",
+        "jsx-a11y/click-events-have-key-events": "off",
+        "jsx-a11y/no-static-element-interactions": "off"
+    },
+    "settings": {
+        "import/parsers": {
+            "@typescript-eslint/parser": [".ts", ".tsx"]
+        },
+        "import/resolver": {
+            "typescript": {
+                "alwaysTryTypes": "true",
+                "project": "tsconfig.json"
+            }
+        }
+    }
+}

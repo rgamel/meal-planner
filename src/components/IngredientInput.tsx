@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useIngredients, useUoms } from '../hooks/hooks';
-import Autocomplete from "./Autocomplete";
+import Autocomplete from './Autocomplete';
 
-const IngredientInput = ({ commitGroceryItem }: { commitGroceryItem: (quantity: number, selectedUom: string, selectedIngredient: string, isAldi: boolean) => void }) => {
+function IngredientInput({
+    commitGroceryItem,
+}: {
+    commitGroceryItem: (quantity: number, selectedUom: string, selectedIngredient: string, isAldi: boolean) => void;
+}) {
     const { ingredients, addIngredient } = useIngredients();
     const { uoms, addUom } = useUoms();
     const [quantity, setQuantity] = useState(0);
@@ -30,29 +34,46 @@ const IngredientInput = ({ commitGroceryItem }: { commitGroceryItem: (quantity: 
     return (
         <div>
             <div>
-                <label htmlFor="">Quantity</label>
-                <input type="number" name="quantity" value={quantity} onChange={handleChangeQuantity} />
+                <label htmlFor="quantity">
+                    Quantity
+                    <input type="number" name="quantity" value={quantity} onChange={handleChangeQuantity} />
+                </label>
             </div>
             <div>
-                <label htmlFor="">UOM</label>
-                <Autocomplete suggestions={uoms} addItem={addUom} selected={selectedUom} setSelected={setSelectedUom} />
+                <span>
+                    UOM
+                    <Autocomplete
+                        suggestions={uoms}
+                        addItem={addUom}
+                        selected={selectedUom}
+                        setSelected={setSelectedUom}
+                    />
+                </span>
             </div>
-            <label htmlFor="">Ingredient</label>
             <div>
-                <Autocomplete
-                    suggestions={ingredients}
-                    addItem={addIngredient}
-                    selected={selectedIngredient}
-                    setSelected={setSelectedIngredient} />
+                <span>
+                    Ingredient
+                    <Autocomplete
+                        suggestions={ingredients}
+                        addItem={addIngredient}
+                        selected={selectedIngredient}
+                        setSelected={setSelectedIngredient}
+                    />
+                </span>
             </div>
             <div>
-                <label htmlFor="">Aldi</label>
-                <input type="checkbox" name="Aldi" id="aldi" checked={isAldi} onChange={handleSetIsAldi} /></div>
+                <label htmlFor="aldi">
+                    Aldi
+                    <input type="checkbox" name="Aldi" id="aldi" checked={isAldi} onChange={handleSetIsAldi} />
+                </label>
+            </div>
             <div>
-                <button type="button" onClick={handleCommitGroceryItem}>Commit</button>
+                <button type="button" onClick={handleCommitGroceryItem}>
+                    Commit
+                </button>
             </div>
         </div>
     );
-};
+}
 
 export default IngredientInput;
