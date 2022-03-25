@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const RecipeListItem = ({ name, handleSelectRecipe }) => {
+const RecipeListItem = ({ name, handleSelectRecipe }: { name: string, handleSelectRecipe: (name: string) => void }) => {
     const [checked, setChecked] = useState(false);
 
     const handleChange = () => {

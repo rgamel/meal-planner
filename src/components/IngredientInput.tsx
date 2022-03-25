@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
+import { useIngredients, useUoms } from '../hooks/hooks';
 import Autocomplete from "./Autocomplete";
 
-const IngredientInput = ({ ingredients, addIngredient, uoms, addUom, commitGroceryItem }) => {
+const IngredientInput = ({ commitGroceryItem }: { commitGroceryItem: (quantity: number, selectedUom: string, selectedIngredient: string, isAldi: boolean) => void }) => {
+    const { ingredients, addIngredient } = useIngredients();
+    const { uoms, addUom } = useUoms();
     const [quantity, setQuantity] = useState(0);
     const [selectedIngredient, setSelectedIngredient] = useState('');
     const [selectedUom, setSelectedUom] = useState('');
     const [isAldi, setIsAldi] = useState(false);
 
-    const handleChangeQuantity = (e) => {
+    const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuantity(Number(e.target.value));
     };
 
@@ -20,7 +23,7 @@ const IngredientInput = ({ ingredients, addIngredient, uoms, addUom, commitGroce
         setIsAldi(false);
     };
 
-    const handleSetIsAldi = (e) => {
+    const handleSetIsAldi = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsAldi(e.target.checked);
     };
 
@@ -44,7 +47,7 @@ const IngredientInput = ({ ingredients, addIngredient, uoms, addUom, commitGroce
             </div>
             <div>
                 <label htmlFor="">Aldi</label>
-                <input type="checkbox" label="Aldi" name="Aldi" id="aldi" checked={isAldi} onChange={handleSetIsAldi} /></div>
+                <input type="checkbox" name="Aldi" id="aldi" checked={isAldi} onChange={handleSetIsAldi} /></div>
             <div>
                 <button type="button" onClick={handleCommitGroceryItem}>Commit</button>
             </div>

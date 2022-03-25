@@ -1,11 +1,18 @@
-import { useState } from "react";
+import React, { ChangeEvent, Dispatch, KeyboardEventHandler, MouseEventHandler, SetStateAction, useState } from "react";
 
-const AutoComplete = ({ suggestions, addItem, selected, setSelected }) => {
-    const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+type AutoCompleteProps = {
+    suggestions: string[];
+    addItem: (input: string) => void;
+    selected: string,
+    setSelected: Dispatch<SetStateAction<string>>
+
+}
+const AutoComplete = ({ suggestions, addItem, selected, setSelected }: AutoCompleteProps) => {
+    const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
     const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
-    const onChange = (e) => {
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         const userInput = e.target.value;
 
         const unLinked = suggestions.filter(
@@ -19,7 +26,7 @@ const AutoComplete = ({ suggestions, addItem, selected, setSelected }) => {
         setShowSuggestions(true);
     };
 
-    const onKeyDown = (e) => {
+    const onKeyDown: KeyboardEventHandler<HTMLInputElement>  = (e) => {
         switch (e.key) {
             case 'Tab':
             case 'Enter':
@@ -42,16 +49,16 @@ const AutoComplete = ({ suggestions, addItem, selected, setSelected }) => {
         }
     };
 
-    const handleAddItem = (input) => {
+    const handleAddItem = (input: string) => {
         addItem(input);
         setSelected(input);
         setShowSuggestions(false);
     }
 
     const SuggestionsListComponent = () => {
-        const onClick = (e) => {
+        const onClick: MouseEventHandler<HTMLElement> = (e) => {
             setFilteredSuggestions([]);
-            setSelected(e.target.innerText);
+            setSelected((e.target as HTMLElement).innerText);
             setActiveSuggestionIndex(0);
             setShowSuggestions(false);
         };

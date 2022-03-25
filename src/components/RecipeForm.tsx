@@ -1,32 +1,39 @@
 import React, { useState } from 'react';
 import IngredientInput from './IngredientInput';
 import GroceryList from './GroceryList';
+import { useRecipes } from '../hooks/hooks';
 
-const Recipe = ({ ingredients, addIngredient, uoms, addUom, addRecipe }) => {
-    const [groceries, setGroceries] = useState([]);
+export type GroceryItem = { quantity: number, uom: string, item: string, isAldi: boolean; };
+
+export type Recipe = { name: string, groceries: GroceryItem[]; };
+
+const RecipeForm = () => {
+    const { addRecipe } = useRecipes();
+    const [groceries, setGroceries] = useState<GroceryItem[]>([]);
     const [recipeName, setRecipeName] = useState('');
 
 
-    const commitGroceryItem = (quantity, uom, item, isAldi) => {
+    const commitGroceryItem = (quantity: number, uom: string, item: string, isAldi: boolean) => {
         const match = groceries.find(g => g.item === item);
         if (!match) {
             setGroceries([...groceries, { quantity, uom, item, isAldi }]);
             return;
         }
-        if ((match.uom.trim() === uom.trim()) && (match.isAldi === uom.isAldi)) {
+        if ((match.uom.trim() === uom.trim()) && (match.isAldi === isAldi)) {
             groceries.splice(groceries.indexOf(match), 1);
             setGroceries([...groceries, { ...match, quantity: Number(match.quantity) + Number(quantity) }]);
             return;
         }
     };
 
-    const handleSetRecipeName = (e) => {
+    const handleSetRecipeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         const input = e.target.value;
         setRecipeName(input);
     };
 
     const handleSave = () => {
         const recipe = { name: recipeName, groceries };
+        if (!recipeName.trim().length) return;
         addRecipe(recipe);
         setRecipeName('');
         setGroceries([]);
@@ -37,10 +44,6 @@ const Recipe = ({ ingredients, addIngredient, uoms, addUom, addRecipe }) => {
             <h1>{recipeName || "New Recipe"}</h1>
             <input type="text" value={recipeName} onChange={handleSetRecipeName} />
             <IngredientInput
-                ingredients={ingredients}
-                addIngredient={addIngredient}
-                uoms={uoms}
-                addUom={addUom}
                 commitGroceryItem={commitGroceryItem}
             />
             <h3>Grocery List:</h3>
@@ -50,4 +53,4 @@ const Recipe = ({ ingredients, addIngredient, uoms, addUom, addRecipe }) => {
     );
 };
 
-export default Recipe;
+export default RecipeForm;
