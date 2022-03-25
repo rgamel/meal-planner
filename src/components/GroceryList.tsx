@@ -1,4 +1,3 @@
-import React from 'react';
 import partition from 'lodash/fp/partition';
 import sortBy from 'lodash/fp/sortBy';
 import { GroceryItem } from './RecipeForm';
