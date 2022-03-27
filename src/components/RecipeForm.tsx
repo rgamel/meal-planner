@@ -1,18 +1,37 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Button, DialogContentText, Divider, Grid, TextField, Typography } from '@mui/material';
-import { Category, EntityOptionType, GroceryItem, Ingredient, Uom } from 'types';
+import { Category, EntityOptionType, GroceryItem, Ingredient, Recipe, Uom } from 'types';
+import { isNil } from 'lodash';
 import IngredientInput from './IngredientInput';
 import { GroceryItems } from './GroceryList';
 import { useRecipes, useCategories, useIsRecipeDialogOpen } from '../hooks/hooks';
 import Autocomplete from './Autocomplete';
 
-export default function RecipeForm() {
-    const { addRecipe } = useRecipes();
+const trace = (label: string, x: any) => {
+    console.log(label, x);
+    return x;
+};
+
+export default function RecipeForm({
+    recipeToEdit,
+    setRecipeToEdit,
+}: {
+    recipeToEdit?: Recipe;
+    setRecipeToEdit?: Dispatch<SetStateAction<null | Recipe>>;
+}) {
+    const { addRecipe, updateRecipe } = useRecipes();
     const { categories, addCategory, deleteCategory } = useCategories();
     const { toggleRecipeDialog } = useIsRecipeDialogOpen();
     const [groceries, setGroceries] = useState<GroceryItem[]>([]);
     const [category, setCategory] = useState<EntityOptionType | null>(null);
     const [recipeName, setRecipeName] = useState('');
+
+    useEffect(() => {
+        if (!recipeToEdit) return;
+        setRecipeName(recipeToEdit.name);
+        setCategory(recipeToEdit.category as Category);
+        setGroceries(recipeToEdit.groceries);
+    }, [recipeToEdit]);
 
     const commitGroceryItem = (quantity: number, uom: Uom, item: Ingredient, isAldi: boolean) => {
         const match = groceries.find((g) => g.item.name === item.name);
@@ -35,16 +54,20 @@ export default function RecipeForm() {
         setRecipeName(input);
     };
 
+    const enableSave = () => Boolean(recipeName.trim().length && category?.id && groceries.length);
+
     const handleSave = () => {
         if (recipeName.trim().length && category?.id && groceries.length) {
-            const recipe = { name: recipeName, groceries, category: category as Category };
-            addRecipe(recipe);
-            setRecipeName('');
-            setGroceries([]);
+            const recipe = { name: recipeName.trim(), groceries, category: category as Category };
+            if (!isNil(recipeToEdit)) {
+                updateRecipe({ id: recipeToEdit.id, ...recipe });
+            } else {
+                addRecipe(recipe);
+            }
             toggleRecipeDialog();
+            setRecipeToEdit?.(null);
         }
     };
-    const suggestions = Object.values(categories.get());
 
     return (
         <Grid container direction="column" spacing={1}>
@@ -60,9 +83,9 @@ export default function RecipeForm() {
             </Grid>
             <Grid item>
                 <Autocomplete
-                    suggestions={suggestions}
+                    suggestions={Object.values(categories.get())}
                     label="Category"
-                    selected={category}
+                    selected={trace('selected:\t', category)}
                     setSelected={setCategory}
                     addItem={addCategory}
                     deleteItem={deleteCategory}
@@ -80,8 +103,8 @@ export default function RecipeForm() {
                 <Typography>Ingredients:</Typography>
             </Grid>
             <GroceryItems items={groceries} deleteGroceryItem={deleteGroceryItem} />
-            <Button onClick={handleSave} variant="contained">
-                SAVE
+            <Button onClick={handleSave} disabled={!enableSave()} variant="contained">
+                {`Save${recipeToEdit ? ' changes' : ''}`}
             </Button>
         </Grid>
     );

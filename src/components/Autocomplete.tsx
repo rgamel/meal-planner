@@ -73,7 +73,6 @@ export default function ComboBox({ suggestions, label, selected, setSelected, ad
             inputValue={value}
             onInputChange={(_, newValue) => {
                 setValue(newValue);
-                setSelected(null);
             }}
             selectOnFocus
             clearOnBlur

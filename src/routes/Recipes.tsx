@@ -8,10 +8,10 @@ import { useIsRecipeDialogOpen, useRecipes } from '../hooks/hooks';
 function Recipes() {
     const { recipes } = useRecipes();
     const { isRecipeDialogOpen, toggleRecipeDialog } = useIsRecipeDialogOpen();
-    // const [recipeToEdit, setRecipeToEdit] = useState<null | Recipe>(null);
-    const editRecipe = (recipe: Recipe) => {
-        console.log('editing:\t', recipe); // TODO
-        // setRecipeToEdit(recipe);
+    const [recipeToEdit, setRecipeToEdit] = useState<null | Recipe>(null);
+    const editRecipe = () => (recipe: Recipe) => {
+        setRecipeToEdit(recipe);
+        toggleRecipeDialog();
     };
 
     return (
@@ -21,14 +21,25 @@ function Recipes() {
                     <RecipeListItem key={r.id} recipe={r} editRecipe={editRecipe} />
                 ))}
             </List>
-            <Dialog fullWidth open={isRecipeDialogOpen.get()} onClose={toggleRecipeDialog}>
+            <Dialog
+                fullWidth
+                open={isRecipeDialogOpen.get()}
+                onClose={() => {
+                    toggleRecipeDialog();
+                    setRecipeToEdit(null);
+                }}
+            >
                 <Grid container direction="column">
                     <Grid item xs={1}>
                         <DialogTitle sx={{ pb: 0 }}>New Recipe</DialogTitle>
                     </Grid>
                     <Grid item xs={11}>
                         <DialogContent>
-                            <RecipeForm />
+                            {recipeToEdit ? (
+                                <RecipeForm recipeToEdit={recipeToEdit} setRecipeToEdit={setRecipeToEdit} />
+                            ) : (
+                                <RecipeForm />
+                            )}
                         </DialogContent>
                     </Grid>
                 </Grid>

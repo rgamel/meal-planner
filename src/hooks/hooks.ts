@@ -39,6 +39,7 @@ const baseRecipes: RecipeList = {
                 isAldi: true,
             },
         ],
+        category: { id: '1', name: 'American' },
         id: '1234',
     },
     PYOWpahEyfVLDdSUhE48F: {
@@ -63,6 +64,7 @@ const baseRecipes: RecipeList = {
                 isAldi: true,
             },
         ],
+        category: { id: '1', name: 'American' },
         id: 'PYOWpahEyfVLDdSUhE48F',
     },
     WmXxnjwzNaaIwgmx81nCp: {
@@ -75,6 +77,7 @@ const baseRecipes: RecipeList = {
                 isAldi: false,
             },
         ],
+        category: { id: '1', name: 'American' },
         id: 'WmXxnjwzNaaIwgmx81nCp',
     },
     'f7_-XGtxmKqgRVb2p6q4l': {
@@ -83,10 +86,11 @@ const baseRecipes: RecipeList = {
             {
                 quantity: 1,
                 uom: { name: 'gallon', id: '8' },
-                item: { name: 'whole milk', id: '' },
+                item: { name: 'whole milk', id: '12' },
                 isAldi: true,
             },
         ],
+        category: { id: '1', name: 'American' },
         id: 'f7_-XGtxmKqgRVb2p6q4l',
     },
 };
@@ -174,10 +178,15 @@ export const useRecipes = () => {
         recipes[id].set(none);
     };
 
+    const updateRecipe = (item: Recipe) => {
+        recipes[item.id].set(item);
+    };
+
     return {
         recipes,
         addRecipe,
         deleteRecipe,
+        updateRecipe,
     };
 };
 

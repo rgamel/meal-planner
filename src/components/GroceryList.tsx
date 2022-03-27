@@ -47,7 +47,7 @@ export function GroceryItems({
 }) {
     return (
         <List>
-            {sortBy('item.name', items).map((groceryItem) => (
+            {sortBy('item.name', items).map((groceryItem: GroceryItem) => (
                 <GroceryLineItem
                     key={`${groceryItem.uom.id}|${groceryItem.item.id}`}
                     groceryItem={groceryItem}
