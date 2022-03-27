@@ -4,11 +4,12 @@ import { Button, DialogContentText, Divider, Grid, TextField, Typography } from 
 import { GroceryItem } from 'types';
 import IngredientInput from './IngredientInput';
 import { StoreList } from './GroceryList';
-import { useRecipes } from '../hooks/hooks';
+import { useRecipes, useCategories } from '../hooks/hooks';
 import Autocomplete from './Autocomplete';
 
 export default function RecipeForm() {
     const { addRecipe } = useRecipes();
+    const { categories, addCategory, deleteCategory } = useCategories();
     const [groceries, setGroceries] = useState<GroceryItem[]>([]);
     const [category, setCategory] = useState('');
     const [recipeName, setRecipeName] = useState('');
@@ -56,32 +57,12 @@ export default function RecipeForm() {
             </Grid>
             <Grid item>
                 <Autocomplete
-                    suggestions={[
-                        'American',
-                        'Asian',
-                        'Chinese',
-                        'Japanese',
-                        'Korean',
-                        'Thai',
-                        'Comfort Food',
-                        'Mexican',
-                        'Italian',
-                        'French',
-                        'Vegan',
-                        'Vegetarian',
-                        'Slow Cooker',
-                        'One Skillet',
-                        'Jamaican',
-                        'Lebanese',
-                        'Dessert',
-                        'Southern',
-                        'Soup',
-                        'Stew',
-                        'Southwestern',
-                    ].sort()}
+                    suggestions={[...categories.get()].sort()}
                     label="Category"
                     selected={category}
                     setSelected={setCategory}
+                    addItem={addCategory}
+                    deleteItem={deleteCategory}
                 />
             </Grid>
             <Divider sx={{ mt: 2 }} />

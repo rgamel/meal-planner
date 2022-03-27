@@ -1,5 +1,5 @@
 import { createState, none, useState } from '@hookstate/core';
-import { Uom, UomList, Ingredient, IngredientList, RecipeList, Recipe } from 'types';
+import { Uom, UomList, Ingredient, IngredientList, RecipeList, Recipe, Category, CategoryList } from 'types';
 
 const baseUoms: UomList = ['oz', 'can', 'bag', 'lb', 'gram', 'tsp', 'ml'];
 const baseIngredients: IngredientList = [
@@ -84,10 +84,35 @@ const baseRecipes: RecipeList = {
     },
 };
 
+const baseCategories: CategoryList = [
+    'American',
+    'Asian',
+    'Chinese',
+    'Japanese',
+    'Korean',
+    'Thai',
+    'Comfort Food',
+    'Mexican',
+    'Italian',
+    'French',
+    'Vegan',
+    'Vegetarian',
+    'Slow Cooker',
+    'One Skillet',
+    'Jamaican',
+    'Lebanese',
+    'Dessert',
+    'Southern',
+    'Soup',
+    'Stew',
+    'Southwestern',
+];
+
 const globalState = createState({
     ingredients: baseIngredients,
     recipes: baseRecipes,
     uoms: baseUoms,
+    categories: baseCategories,
     selectedRecipes: {} as RecipeList,
 });
 
@@ -98,9 +123,14 @@ export const useIngredients = () => {
         ingredients.set((prev) => [...prev, item]);
     };
 
+    const deleteIngredient = (item: Ingredient) => {
+        ingredients.set((prev) => prev.filter((i) => i !== item));
+    };
+
     return {
         ingredients,
         addIngredient,
+        deleteIngredient,
     };
 };
 
@@ -111,9 +141,14 @@ export const useUoms = () => {
         uoms.set((prev) => [...prev, uom]);
     };
 
+    const deleteUom = (item: Uom) => {
+        uoms.set((prev) => prev.filter((u) => u !== item));
+    };
+
     return {
         uoms,
         addUom,
+        deleteUom,
     };
 };
 
@@ -147,5 +182,23 @@ export const useSelectedRecipes = () => {
     return {
         selectedRecipes,
         handleSelectRecipe,
+    };
+};
+
+export const useCategories = () => {
+    const { categories } = useState(globalState);
+
+    const addCategory = (category: Category) => {
+        categories.set((prev) => [...prev, category]);
+    };
+
+    const deleteCategory = (item: Category) => {
+        categories.set((prev) => prev.filter((i) => i !== item));
+    };
+
+    return {
+        categories,
+        addCategory,
+        deleteCategory,
     };
 };

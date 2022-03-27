@@ -8,8 +8,8 @@ function IngredientInput({
 }: {
     commitGroceryItem: (quantity: number, selectedUom: string, selectedIngredient: string, isAldi: boolean) => void;
 }) {
-    const { ingredients, addIngredient } = useIngredients(); // TODO
-    const { uoms, addUom } = useUoms(); // TODO
+    const { ingredients, addIngredient, deleteIngredient } = useIngredients(); // TODO
+    const { uoms, addUom, deleteUom } = useUoms(); // TODO
     const [quantity, setQuantity] = useState('');
     const [selectedIngredient, setSelectedIngredient] = useState('');
     const [selectedUom, setSelectedUom] = useState('');
@@ -47,7 +47,8 @@ function IngredientInput({
             <Grid item xs={1}>
                 <Autocomplete
                     suggestions={uoms.get()}
-                    // addItem={addUom}
+                    addItem={addUom}
+                    deleteItem={deleteUom}
                     selected={selectedUom}
                     setSelected={setSelectedUom}
                     label="UOM"
@@ -56,7 +57,8 @@ function IngredientInput({
             <Grid item xs={1}>
                 <Autocomplete
                     suggestions={ingredients.get()}
-                    // addItem={addIngredient}
+                    addItem={addIngredient}
+                    deleteItem={deleteIngredient}
                     selected={selectedIngredient}
                     setSelected={setSelectedIngredient}
                     label="Ingredient"
