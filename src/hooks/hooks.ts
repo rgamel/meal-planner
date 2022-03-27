@@ -1,8 +1,8 @@
 import { createState, none, useState } from '@hookstate/core';
-import { Recipe } from '../components/RecipeForm';
+import { Uom, UomList, Ingredient, IngredientList, RecipeList, Recipe } from 'types';
 
-const baseUoms: string[] = ['oz', 'can', 'bag', 'lb', 'gram', 'tsp', 'ml'];
-const baseIngredients: string[] = [
+const baseUoms: UomList = ['oz', 'can', 'bag', 'lb', 'gram', 'tsp', 'ml'];
+const baseIngredients: IngredientList = [
     'apples',
     'tomatoes',
     'salt',
@@ -15,7 +15,7 @@ const baseIngredients: string[] = [
     'tortillas',
     'beef',
 ];
-const baseRecipes: Record<string, Recipe> = {
+const baseRecipes: RecipeList = {
     '1234': {
         name: 'chicken',
         groceries: [
@@ -24,6 +24,7 @@ const baseRecipes: Record<string, Recipe> = {
                 uom: 'can',
                 item: 'chicken',
                 isAldi: true,
+                id: 'fakeId1',
             },
         ],
         recipeId: '1234',
@@ -36,18 +37,21 @@ const baseRecipes: Record<string, Recipe> = {
                 uom: 'lb',
                 item: 'tomatoes',
                 isAldi: true,
+                id: 'fakeId2',
             },
             {
                 quantity: 3,
                 uom: 'tsp',
                 item: 'cumin',
                 isAldi: true,
+                id: 'fakeId3',
             },
             {
                 quantity: 1,
                 uom: 'gram',
                 item: 'black beans',
                 isAldi: true,
+                id: 'fakeId4',
             },
         ],
         recipeId: 'PYOWpahEyfVLDdSUhE48F',
@@ -60,6 +64,7 @@ const baseRecipes: Record<string, Recipe> = {
                 uom: 'large',
                 item: 'blanket',
                 isAldi: false,
+                id: 'fakeId5',
             },
         ],
         recipeId: 'WmXxnjwzNaaIwgmx81nCp',
@@ -72,6 +77,7 @@ const baseRecipes: Record<string, Recipe> = {
                 uom: 'gallon',
                 item: 'whole milk',
                 isAldi: true,
+                id: 'fakeId6',
             },
         ],
         recipeId: 'f7_-XGtxmKqgRVb2p6q4l',
@@ -82,13 +88,13 @@ const globalState = createState({
     ingredients: baseIngredients,
     recipes: baseRecipes,
     uoms: baseUoms,
-    selectedRecipes: {} as Record<string, Recipe>,
+    selectedRecipes: {} as RecipeList,
 });
 
 export const useIngredients = () => {
     const { ingredients } = useState(globalState);
 
-    const addIngredient = (item: string) => {
+    const addIngredient = (item: Ingredient) => {
         ingredients.set((prev) => [...prev, item]);
     };
 
@@ -101,7 +107,7 @@ export const useIngredients = () => {
 export const useUoms = () => {
     const { uoms } = useState(globalState);
 
-    const addUom = (uom: string) => {
+    const addUom = (uom: Uom) => {
         uoms.set((prev) => [...prev, uom]);
     };
 
@@ -113,7 +119,6 @@ export const useUoms = () => {
 
 export const useRecipes = () => {
     const { recipes } = useState(globalState);
-    console.log('recipes:', recipes.get());
     const addRecipe = (recipe: Recipe) => {
         recipes.merge({ [recipe.recipeId]: recipe });
     };

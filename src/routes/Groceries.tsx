@@ -1,5 +1,5 @@
+import { GroceryItem } from 'types';
 import GroceryList from '../components/GroceryList';
-import { GroceryItem } from '../components/RecipeForm';
 import { useSelectedRecipes } from '../hooks/hooks';
 
 function Groceries() {
@@ -21,12 +21,7 @@ function Groceries() {
             .map((r) => r.groceries)
             .flat(),
     );
-    return (
-        <>
-            <h1>Groceries:</h1>
-            <GroceryList groceries={allGroceries} />
-        </>
-    );
+    return <GroceryList groceries={allGroceries} />;
 }
 
 export default Groceries;

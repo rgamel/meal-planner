@@ -1,27 +1,13 @@
 import './styles.css';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import ButtonAppBar from 'components/ButtonAppBar';
+import { Box } from '@mui/material';
 
-function NavBar() {
+export default function App() {
     return (
-        <nav
-            style={{
-                borderBottom: 'solid 1px',
-                paddingBottom: '1rem',
-            }}
-        >
-            <Link to="/recipes">Recipes</Link> | <Link to="/addRecipe">Add Recipe</Link> |{' '}
-            <Link to="/groceries">Groceries</Link>
-        </nav>
-    );
-}
-
-function App() {
-    return (
-        <div>
-            <NavBar />
+        <Box sx={{ maxWidth: 'md', mx: 'auto' }}>
+            <ButtonAppBar />
             <Outlet />
-        </div>
+        </Box>
     );
 }
-
-export default App;
