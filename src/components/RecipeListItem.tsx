@@ -12,7 +12,7 @@ export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemPro
     const { selectedRecipes, handleSelectRecipe } = useSelectedRecipes();
 
     const handleChange = () => {
-        handleSelectRecipe(recipe.recipeId);
+        handleSelectRecipe(recipe.id);
     };
 
     return (
@@ -23,7 +23,10 @@ export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemPro
                     .includes(recipe.name)}
                 onChange={handleChange}
             />
-            <ListItemText primary={startCase(recipe.name)} secondary={recipe.category ? `${recipe.category} ` : ''} />
+            <ListItemText
+                primary={startCase(recipe.name)}
+                secondary={recipe.category ? `${recipe.category.name} ` : ''}
+            />
             <IconButton onClick={() => editRecipe(recipe)}>
                 <Icon>edit</Icon>
             </IconButton>

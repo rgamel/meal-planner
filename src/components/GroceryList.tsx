@@ -16,20 +16,20 @@ import { GroceryItem } from 'types';
 
 type GroceryLineItemProps = {
     groceryItem: GroceryItem;
-    deleteGroceryItem?: (id: string) => void;
+    deleteGroceryItem?: (item: GroceryItem) => void;
 };
 
 function GroceryLineItem({ groceryItem, deleteGroceryItem }: GroceryLineItemProps) {
     return (
-        <ListItem key={`${groceryItem.uom}|${groceryItem.item}|${String(groceryItem.isAldi)}`}>
+        <ListItem key={`${groceryItem.uom.name}|${groceryItem.item.name}|${String(groceryItem.isAldi)}`}>
             {!deleteGroceryItem ? <Checkbox /> : null}
             <ListItemText
-                primary={startCase(groceryItem.item)}
-                secondary={`${groceryItem.quantity} ${groceryItem.uom}`}
+                primary={startCase(groceryItem.item.name)}
+                secondary={`${groceryItem.quantity} ${groceryItem.uom.name}`}
             />
             <ListItemSecondaryAction>
                 {deleteGroceryItem && (
-                    <IconButton edge="end" onClick={() => deleteGroceryItem(groceryItem.id)}>
+                    <IconButton edge="end" onClick={() => deleteGroceryItem(groceryItem)}>
                         <Icon>delete</Icon>
                     </IconButton>
                 )}
@@ -38,39 +38,49 @@ function GroceryLineItem({ groceryItem, deleteGroceryItem }: GroceryLineItemProp
     );
 }
 
-export function StoreList({
+export function GroceryItems({
     items,
-    label,
     deleteGroceryItem,
 }: {
     items: GroceryItem[];
-    label?: string;
-    deleteGroceryItem?: (id: string) => void;
+    deleteGroceryItem?: (item: GroceryItem) => void;
 }) {
+    return (
+        <List>
+            {sortBy('item.name', items).map((groceryItem) => (
+                <GroceryLineItem
+                    key={`${groceryItem.uom.id}|${groceryItem.item.id}`}
+                    groceryItem={groceryItem}
+                    deleteGroceryItem={deleteGroceryItem}
+                />
+            ))}
+        </List>
+    );
+}
+
+export function StoreListAccordion({ label, children }: { label?: string; children: JSX.Element | JSX.Element[] }) {
     return (
         <Grid item xs={2} sm={4}>
             <Accordion>
                 <AccordionSummary expandIcon={<Icon>expand_more</Icon>}>
                     <Typography>{label}</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
-                    <List>
-                        {sortBy('item', items).map((groceryItem) => (
-                            <GroceryLineItem groceryItem={groceryItem} deleteGroceryItem={deleteGroceryItem} />
-                        ))}
-                    </List>
-                </AccordionDetails>
+                <AccordionDetails>{children}</AccordionDetails>
             </Accordion>
         </Grid>
     );
 }
 
-export default function GroceryList({ groceries }: { groceries: GroceryItem[] }) {
+export default function GroceryMasterList({ groceries }: { groceries: GroceryItem[] }) {
     const [aldi, schnucks] = partition('isAldi', groceries);
     return (
         <Grid container columns={{ xs: 2, sm: 8 }}>
-            <StoreList items={aldi} label="Aldi list" />
-            <StoreList items={schnucks} label="Schnucks list" />
+            <StoreListAccordion label="Aldi list">
+                <GroceryItems items={aldi} />
+            </StoreListAccordion>
+            <StoreListAccordion label="Schnucks list">
+                <GroceryItems items={schnucks} />
+            </StoreListAccordion>
         </Grid>
     );
 }

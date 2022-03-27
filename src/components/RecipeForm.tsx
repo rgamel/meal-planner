@@ -1,33 +1,33 @@
 import { ChangeEvent, useState } from 'react';
-import { nanoid } from 'nanoid';
 import { Button, DialogContentText, Divider, Grid, TextField, Typography } from '@mui/material';
-import { GroceryItem } from 'types';
+import { Category, EntityOptionType, GroceryItem, Ingredient, Uom } from 'types';
 import IngredientInput from './IngredientInput';
-import { StoreList } from './GroceryList';
-import { useRecipes, useCategories } from '../hooks/hooks';
+import { GroceryItems } from './GroceryList';
+import { useRecipes, useCategories, useIsRecipeDialogOpen } from '../hooks/hooks';
 import Autocomplete from './Autocomplete';
 
 export default function RecipeForm() {
     const { addRecipe } = useRecipes();
     const { categories, addCategory, deleteCategory } = useCategories();
+    const { toggleRecipeDialog } = useIsRecipeDialogOpen();
     const [groceries, setGroceries] = useState<GroceryItem[]>([]);
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState<EntityOptionType | null>(null);
     const [recipeName, setRecipeName] = useState('');
 
-    const commitGroceryItem = (quantity: number, uom: string, item: string, isAldi: boolean) => {
-        const match = groceries.find((g) => g.item === item);
+    const commitGroceryItem = (quantity: number, uom: Uom, item: Ingredient, isAldi: boolean) => {
+        const match = groceries.find((g) => g.item.name === item.name);
         if (!match) {
-            setGroceries([...groceries, { quantity, uom, item, isAldi, id: nanoid() }]);
+            setGroceries([...groceries, { quantity, uom, item, isAldi }]);
             return;
         }
-        if (match.uom.trim() === uom.trim() && match.isAldi === isAldi) {
+        if (match.uom.name.trim() === uom.name.trim() && match.isAldi === isAldi) {
             groceries.splice(groceries.indexOf(match), 1);
             setGroceries([...groceries, { ...match, quantity: Number(match.quantity) + Number(quantity) }]);
         }
     };
 
-    const deleteGroceryItem = (id: string) => {
-        setGroceries((prev) => prev.filter((g: GroceryItem) => g.id !== id));
+    const deleteGroceryItem = (item: GroceryItem) => {
+        setGroceries((prev) => prev.filter((g: GroceryItem) => g !== item));
     };
 
     const handleSetRecipeName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,12 +36,15 @@ export default function RecipeForm() {
     };
 
     const handleSave = () => {
-        const recipe = { name: recipeName, groceries, category, recipeId: nanoid() };
-        if (!recipeName.trim().length) return;
-        addRecipe(recipe);
-        setRecipeName('');
-        setGroceries([]);
+        if (recipeName.trim().length && category?.id && groceries.length) {
+            const recipe = { name: recipeName, groceries, category: category as Category };
+            addRecipe(recipe);
+            setRecipeName('');
+            setGroceries([]);
+            toggleRecipeDialog();
+        }
     };
+    const suggestions = Object.values(categories.get());
 
     return (
         <Grid container direction="column" spacing={1}>
@@ -57,7 +60,7 @@ export default function RecipeForm() {
             </Grid>
             <Grid item>
                 <Autocomplete
-                    suggestions={[...categories.get()].sort()}
+                    suggestions={suggestions}
                     label="Category"
                     selected={category}
                     setSelected={setCategory}
@@ -76,7 +79,7 @@ export default function RecipeForm() {
             <Grid item xs={1}>
                 <Typography>Ingredients:</Typography>
             </Grid>
-            <StoreList items={groceries} deleteGroceryItem={deleteGroceryItem} />
+            <GroceryItems items={groceries} deleteGroceryItem={deleteGroceryItem} />
             <Button onClick={handleSave} variant="contained">
                 SAVE
             </Button>

@@ -1,18 +1,19 @@
 import { Button, Checkbox, FormControlLabel, Grid, TextField } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
+import { EntityOptionType, Ingredient, Uom } from 'types';
 import { useIngredients, useUoms } from '../hooks/hooks';
 import Autocomplete from './Autocomplete';
 
 function IngredientInput({
     commitGroceryItem,
 }: {
-    commitGroceryItem: (quantity: number, selectedUom: string, selectedIngredient: string, isAldi: boolean) => void;
+    commitGroceryItem: (quantity: number, selectedUom: Uom, selectedIngredient: Ingredient, isAldi: boolean) => void;
 }) {
-    const { ingredients, addIngredient, deleteIngredient } = useIngredients(); // TODO
-    const { uoms, addUom, deleteUom } = useUoms(); // TODO
+    const { ingredients, addIngredient, deleteIngredient } = useIngredients();
+    const { uoms, addUom, deleteUom } = useUoms();
     const [quantity, setQuantity] = useState('');
-    const [selectedIngredient, setSelectedIngredient] = useState('');
-    const [selectedUom, setSelectedUom] = useState('');
+    const [selectedIngredient, setSelectedIngredient] = useState<EntityOptionType | null>(null);
+    const [selectedUom, setSelectedUom] = useState<EntityOptionType | null>(null);
     const [isAldi, setIsAldi] = useState(false);
 
     const handleChangeQuantity = (e: ChangeEvent<HTMLInputElement>) => {
@@ -20,12 +21,13 @@ function IngredientInput({
     };
 
     const handleCommitGroceryItem = () => {
-        if (!quantity || !selectedUom || !selectedIngredient) return;
-        commitGroceryItem(Number(quantity), selectedUom, selectedIngredient, isAldi);
-        setQuantity('');
-        setSelectedUom('');
-        setSelectedIngredient('');
-        setIsAldi(false);
+        if (quantity && selectedUom?.id && selectedIngredient?.id) {
+            commitGroceryItem(Number(quantity), selectedUom as Uom, selectedIngredient as Ingredient, isAldi);
+            setQuantity('');
+            setSelectedUom(null);
+            setSelectedIngredient(null);
+            setIsAldi(false);
+        }
     };
 
     const handleSetIsAldi = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +48,7 @@ function IngredientInput({
             </Grid>
             <Grid item xs={1}>
                 <Autocomplete
-                    suggestions={uoms.get()}
+                    suggestions={Object.values(uoms.get())}
                     addItem={addUom}
                     deleteItem={deleteUom}
                     selected={selectedUom}
@@ -56,7 +58,7 @@ function IngredientInput({
             </Grid>
             <Grid item xs={1}>
                 <Autocomplete
-                    suggestions={ingredients.get()}
+                    suggestions={Object.values(ingredients.get())}
                     addItem={addIngredient}
                     deleteItem={deleteIngredient}
                     selected={selectedIngredient}
