@@ -1,4 +1,4 @@
-import { createState, none, useState } from '@hookstate/core';
+import { createState, none, State, useState } from '@hookstate/core';
 import { nanoid } from 'nanoid';
 import { Uom, UomList, Ingredient, IngredientList, RecipeList, Recipe, Category, CategoryList } from 'types';
 
@@ -128,65 +128,86 @@ const globalState = createState({
     isRecipeDialogOpen: false,
 });
 
-export const useIngredients = () => {
-    const { ingredients } = useState(globalState);
-
-    const addIngredient = (item: Omit<Ingredient, 'id'>) => {
+const useGenericFns = <T extends { id: string }>(collection: State<Record<string, T>>) => {
+    const addFn = (item: Omit<T, 'id'>) => {
         const id = nanoid();
-        ingredients.merge({ [id]: { ...item, id } as Ingredient });
+        collection.merge({ [id]: { ...item, id } as T });
     };
 
-    const deleteIngredient = (id: string) => {
-        ingredients[id].set(none);
+    const deleteFn = (id: string) => {
+        collection[id].set(none);
+    };
+
+    const updateFn = (item: T) => {
+        collection[item.id].set(item);
     };
 
     return {
+        addFn,
+        deleteFn,
+        updateFn,
+    };
+};
+
+// // TODO
+// const hooksTuples = Object.keys(pick(['isRecipeDialogOpen', 'seletedRecipes'], globalState)).map(
+//     (key: 'ingredients' | 'recipes' | 'uoms' | 'categories') => {
+//         const collection = useState(globalState)[key];
+//         const { addFn, deleteFn, updateFn } = useGenericFns(collection);
+//         const startCased = startCase(key);
+//         return [
+//             `use${startCased}`,
+//             {
+//                 [`add${startCased}`]: addFn,
+//                 [`delete${startCased}`]: deleteFn,
+//                 [`update${startCased}`]: updateFn,
+//             },
+//         ];
+//     },
+// );
+
+export const useIngredients = () => {
+    const { ingredients } = useState(globalState);
+    const { addFn, deleteFn } = useGenericFns(ingredients);
+
+    return {
         ingredients,
-        addIngredient,
-        deleteIngredient,
+        addIngredient: addFn,
+        deleteIngredient: deleteFn,
     };
 };
 
 export const useUoms = () => {
     const { uoms } = useState(globalState);
-
-    const addUom = (item: Omit<Uom, 'id'>) => {
-        const id = nanoid();
-        uoms.merge({ [id]: { ...item, id } as Uom });
-    };
-
-    const deleteUom = (id: string) => {
-        uoms[id].set(none);
-    };
+    const { addFn, deleteFn } = useGenericFns(uoms);
 
     return {
         uoms,
-        addUom,
-        deleteUom,
+        addUom: addFn,
+        deleteUom: deleteFn,
     };
 };
 
 export const useRecipes = () => {
     const { recipes } = useState(globalState);
-
-    const addRecipe = (item: Omit<Recipe, 'id'>) => {
-        const id = nanoid();
-        recipes.merge({ [id]: { ...item, id } as Recipe });
-    };
-
-    const deleteRecipe = (id: string) => {
-        recipes[id].set(none);
-    };
-
-    const updateRecipe = (item: Recipe) => {
-        recipes[item.id].set(item);
-    };
+    const { addFn, deleteFn, updateFn } = useGenericFns(recipes);
 
     return {
         recipes,
-        addRecipe,
-        deleteRecipe,
-        updateRecipe,
+        addRecipe: addFn,
+        deleteRecipe: deleteFn,
+        updateRecipe: updateFn,
+    };
+};
+
+export const useCategories = () => {
+    const { categories } = useState(globalState);
+    const { addFn, deleteFn } = useGenericFns(categories);
+
+    return {
+        categories,
+        addCategory: addFn,
+        deleteCategory: deleteFn,
     };
 };
 
@@ -212,27 +233,10 @@ export const useSelectedRecipes = () => {
     };
 };
 
-export const useCategories = () => {
-    const { categories } = useState(globalState);
-
-    const addCategory = (item: Omit<Category, 'id'>) => {
-        const id = nanoid();
-        categories.merge({ [id]: { ...item, id } as Category });
-    };
-
-    const deleteCategory = (id: string) => {
-        categories[id].set(none);
-    };
-
-    return {
-        categories,
-        addCategory,
-        deleteCategory,
-    };
-};
-
 export const useIsRecipeDialogOpen = () => {
     const { isRecipeDialogOpen } = useState(globalState);
+
     const setRecipeDialogOpen = (value: boolean) => isRecipeDialogOpen.set(value);
+
     return { isRecipeDialogOpen, setRecipeDialogOpen };
 };
