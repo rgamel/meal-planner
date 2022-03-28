@@ -28,7 +28,9 @@ export default function ComboBox({ suggestions, label, selected, setSelected, ad
     };
     return (
         <Autocomplete
-            disablePortal
+            isOptionEqualToValue={(option, val) => {
+                return option.id === val.id;
+            }}
             id="combo-box-demo"
             options={suggestions as EntityOptionType[]}
             getOptionLabel={(option) => {
