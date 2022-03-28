@@ -13,6 +13,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import { GroceryItem } from 'types';
+import { useMemo } from 'react';
 
 type GroceryLineItemProps = {
     groceryItem: GroceryItem;
@@ -20,21 +21,24 @@ type GroceryLineItemProps = {
 };
 
 function GroceryLineItem({ groceryItem, deleteGroceryItem }: GroceryLineItemProps) {
-    return (
-        <ListItem key={`${groceryItem.uom.name}|${groceryItem.item.name}|${String(groceryItem.isAldi)}`}>
-            {!deleteGroceryItem ? <Checkbox /> : null}
-            <ListItemText
-                primary={startCase(groceryItem.item.name)}
-                secondary={`${groceryItem.quantity} ${groceryItem.uom.name}`}
-            />
-            <ListItemSecondaryAction>
-                {deleteGroceryItem && (
-                    <IconButton edge="end" onClick={() => deleteGroceryItem(groceryItem)}>
-                        <Icon>delete</Icon>
-                    </IconButton>
-                )}
-            </ListItemSecondaryAction>
-        </ListItem>
+    return useMemo(
+        () => (
+            <ListItem key={`${groceryItem.uom.name}|${groceryItem.item.name}|${String(groceryItem.isAldi)}`}>
+                {!deleteGroceryItem ? <Checkbox /> : null}
+                <ListItemText
+                    primary={startCase(groceryItem.item.name)}
+                    secondary={`${groceryItem.quantity} ${groceryItem.uom.name}`}
+                />
+                <ListItemSecondaryAction>
+                    {deleteGroceryItem && (
+                        <IconButton edge="end" onClick={() => deleteGroceryItem(groceryItem)}>
+                            <Icon>delete</Icon>
+                        </IconButton>
+                    )}
+                </ListItemSecondaryAction>
+            </ListItem>
+        ),
+        [groceryItem, deleteGroceryItem],
     );
 }
 
@@ -45,9 +49,10 @@ export function GroceryItems({
     items: GroceryItem[];
     deleteGroceryItem?: (item: GroceryItem) => void;
 }) {
+    const sortedItems = useMemo(() => sortBy('item.name', items), [items]);
     return (
         <List>
-            {sortBy('item.name', items).map((groceryItem: GroceryItem) => (
+            {sortedItems.map((groceryItem: GroceryItem) => (
                 <GroceryLineItem
                     key={`${groceryItem.uom.id}|${groceryItem.item.id}`}
                     groceryItem={groceryItem}

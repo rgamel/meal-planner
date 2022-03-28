@@ -122,9 +122,9 @@ const baseCategories: CategoryList = {
 const globalState = createState({
     ingredients: baseIngredients,
     recipes: baseRecipes,
+    selectedRecipes: [] as string[],
     uoms: baseUoms,
     categories: baseCategories,
-    selectedRecipes: {} as RecipeList,
     isRecipeDialogOpen: false,
 });
 
@@ -191,18 +191,19 @@ export const useRecipes = () => {
 };
 
 export const useSelectedRecipes = () => {
-    const { recipes } = useState(globalState);
-    const { selectedRecipes } = useState(globalState);
+    const { recipes, selectedRecipes } = useState(globalState);
 
     const handleSelectRecipe = (id: string) => {
         if (!recipes.nested(id).value) return;
 
-        if (selectedRecipes.nested(id).value) {
-            selectedRecipes[id].set(none);
+        const match = selectedRecipes.find((sr) => sr.get() === id);
+        if (match) {
+            const i = selectedRecipes.indexOf(match);
+            selectedRecipes[i].set(none);
             return;
         }
 
-        selectedRecipes.merge({ [id]: recipes[id].get() });
+        selectedRecipes.merge([id]);
     };
 
     return {
@@ -232,6 +233,6 @@ export const useCategories = () => {
 
 export const useIsRecipeDialogOpen = () => {
     const { isRecipeDialogOpen } = useState(globalState);
-    const toggleRecipeDialog = () => isRecipeDialogOpen.set((prev) => !prev);
-    return { isRecipeDialogOpen, toggleRecipeDialog };
+    const setRecipeDialogOpen = (value: boolean) => isRecipeDialogOpen.set(value);
+    return { isRecipeDialogOpen, setRecipeDialogOpen };
 };

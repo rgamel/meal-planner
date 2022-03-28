@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { Button, DialogContentText, Divider, Grid, TextField, Typography } from '@mui/material';
 import { Category, EntityOptionType, GroceryItem, Ingredient, Recipe, Uom } from 'types';
 import { isNil } from 'lodash';
@@ -21,7 +21,7 @@ export default function RecipeForm({
 }) {
     const { addRecipe, updateRecipe } = useRecipes();
     const { categories, addCategory, deleteCategory } = useCategories();
-    const { toggleRecipeDialog } = useIsRecipeDialogOpen();
+    const { setRecipeDialogOpen } = useIsRecipeDialogOpen();
     const [groceries, setGroceries] = useState<GroceryItem[]>([]);
     const [category, setCategory] = useState<EntityOptionType | null>(null);
     const [recipeName, setRecipeName] = useState('');
@@ -57,14 +57,14 @@ export default function RecipeForm({
     const enableSave = () => Boolean(recipeName.trim().length && category?.id && groceries.length);
 
     const handleSave = () => {
-        if (recipeName.trim().length && category?.id && groceries.length) {
+        if (enableSave()) {
             const recipe = { name: recipeName.trim(), groceries, category: category as Category };
             if (!isNil(recipeToEdit)) {
                 updateRecipe({ id: recipeToEdit.id, ...recipe });
             } else {
                 addRecipe(recipe);
             }
-            toggleRecipeDialog();
+            setRecipeDialogOpen(false);
             setRecipeToEdit?.(null);
         }
     };
@@ -85,7 +85,7 @@ export default function RecipeForm({
                 <Autocomplete
                     suggestions={Object.values(categories.get())}
                     label="Category"
-                    selected={trace('selected:\t', category)}
+                    selected={category}
                     setSelected={setCategory}
                     addItem={addCategory}
                     deleteItem={deleteCategory}

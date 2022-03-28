@@ -1,18 +1,21 @@
 import { Fab, Icon, List, Paper, Dialog, DialogContent, DialogTitle, Grid } from '@mui/material';
 import RecipeForm from 'components/RecipeForm';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Recipe } from 'types';
 import RecipeListItem from '../components/RecipeListItem';
 import { useIsRecipeDialogOpen, useRecipes } from '../hooks/hooks';
 
 function Recipes() {
     const { recipes } = useRecipes();
-    const { isRecipeDialogOpen, toggleRecipeDialog } = useIsRecipeDialogOpen();
+    const { isRecipeDialogOpen, setRecipeDialogOpen } = useIsRecipeDialogOpen();
     const [recipeToEdit, setRecipeToEdit] = useState<null | Recipe>(null);
-    const editRecipe = () => (recipe: Recipe) => {
-        setRecipeToEdit(recipe);
-        toggleRecipeDialog();
-    };
+    const editRecipe = useCallback(
+        (recipe: Recipe) => {
+            setRecipeToEdit(recipe);
+            setRecipeDialogOpen(true);
+        },
+        [recipes, setRecipeDialogOpen, setRecipeToEdit],
+    );
 
     return (
         <Paper sx={{ p: 2, mb: 24 }}>
@@ -25,7 +28,7 @@ function Recipes() {
                 fullWidth
                 open={isRecipeDialogOpen.get()}
                 onClose={() => {
-                    toggleRecipeDialog();
+                    setRecipeDialogOpen(false);
                     setRecipeToEdit(null);
                 }}
             >
@@ -47,7 +50,7 @@ function Recipes() {
             <Fab
                 color="primary"
                 aria-label="add"
-                onClick={toggleRecipeDialog}
+                onClick={() => setRecipeDialogOpen(true)}
                 sx={{ position: 'fixed', bottom: 24, right: 24 }}
             >
                 <Icon>add</Icon>

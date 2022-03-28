@@ -27,7 +27,6 @@ export default function ComboBox({ suggestions, label, selected, setSelected, ad
         deleteItem(option.id);
     };
     return (
-        // TODO: get back ability to add options
         <Autocomplete
             disablePortal
             id="combo-box-demo"
@@ -48,7 +47,6 @@ export default function ComboBox({ suggestions, label, selected, setSelected, ad
                         name: newValue,
                     });
                 } else if (newValue && newValue.inputValue) {
-                    // Create a new value from the user input
                     const itemToAdd = { name: newValue.inputValue };
                     setSelected({
                         name: newValue.inputValue,
