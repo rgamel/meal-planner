@@ -21,24 +21,21 @@ type GroceryLineItemProps = {
 };
 
 function GroceryLineItem({ groceryItem, deleteGroceryItem }: GroceryLineItemProps) {
-    return useMemo(
-        () => (
-            <ListItem key={`${groceryItem.uom.name}|${groceryItem.item.name}|${String(groceryItem.isAldi)}`}>
-                {!deleteGroceryItem ? <Checkbox /> : null}
-                <ListItemText
-                    primary={startCase(groceryItem.item.name)}
-                    secondary={`${groceryItem.quantity} ${groceryItem.uom.name}`}
-                />
-                <ListItemSecondaryAction>
-                    {deleteGroceryItem && (
-                        <IconButton edge="end" onClick={() => deleteGroceryItem(groceryItem)}>
-                            <Icon>delete</Icon>
-                        </IconButton>
-                    )}
-                </ListItemSecondaryAction>
-            </ListItem>
-        ),
-        [groceryItem, deleteGroceryItem],
+    return (
+        <ListItem key={`${groceryItem.uom.name}|${groceryItem.item.name}|${String(groceryItem.isAldi)}`}>
+            {!deleteGroceryItem ? <Checkbox /> : null}
+            <ListItemText
+                primary={startCase(groceryItem.item.name)}
+                secondary={`${groceryItem.quantity} ${groceryItem.uom.name}`}
+            />
+            <ListItemSecondaryAction>
+                {deleteGroceryItem && (
+                    <IconButton edge="end" onClick={() => deleteGroceryItem(groceryItem)}>
+                        <Icon>delete</Icon>
+                    </IconButton>
+                )}
+            </ListItemSecondaryAction>
+        </ListItem>
     );
 }
 
