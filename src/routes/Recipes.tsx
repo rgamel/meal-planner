@@ -1,6 +1,7 @@
+import { Downgraded } from '@hookstate/core';
 import { Fab, Icon, List, Paper, Dialog, DialogContent, DialogTitle, Grid } from '@mui/material';
 import RecipeForm from 'components/RecipeForm';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Recipe } from 'types';
 import RecipeListItem from '../components/RecipeListItem';
 import { useIsRecipeDialogOpen, useRecipes } from '../hooks/hooks';
@@ -17,10 +18,12 @@ function Recipes() {
         [recipes, setRecipeDialogOpen, setRecipeToEdit],
     );
 
+    const recipesMemo = useMemo(() => Object.values(recipes.attach(Downgraded).get()), [recipes]);
+
     return (
         <Paper sx={{ p: 2, mb: 24 }}>
             <List>
-                {Object.values(recipes.get()).map((r) => (
+                {recipesMemo.map((r) => (
                     <RecipeListItem key={r.id} recipe={r} editRecipe={editRecipe} />
                 ))}
             </List>
