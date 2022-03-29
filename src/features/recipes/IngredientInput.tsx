@@ -1,5 +1,5 @@
 import { Button, Checkbox, FormControlLabel, Grid, TextField } from '@mui/material';
-import { ChangeEvent, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { EntityOptionType, Ingredient, Uom } from 'types';
 import { useIngredients, useUoms } from '../../app/hooks';
 import Autocomplete from '../../components/Autocomplete';
@@ -16,11 +16,11 @@ function IngredientInput({
     const [selectedUom, setSelectedUom] = useState<EntityOptionType | null>(null);
     const [isAldi, setIsAldi] = useState(false);
 
-    const handleChangeQuantity = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChangeQuantity = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setQuantity(e.target.value);
-    };
+    }, []);
 
-    const handleCommitGroceryItem = () => {
+    const handleCommitGroceryItem = useCallback(() => {
         if (quantity && selectedUom?.id && selectedIngredient?.id) {
             commitGroceryItem(Number(quantity), selectedUom as Uom, selectedIngredient as Ingredient, isAldi);
             setQuantity('');
@@ -28,11 +28,11 @@ function IngredientInput({
             setSelectedIngredient(null);
             setIsAldi(false);
         }
-    };
+    }, [commitGroceryItem, isAldi, quantity, selectedIngredient, selectedUom]);
 
-    const handleSetIsAldi = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleSetIsAldi = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setIsAldi(e.target.checked);
-    };
+    }, []);
 
     const uomsMemo = useMemo(() => Object.values(uoms), [uoms]);
     const ingredientsMemo = useMemo(() => Object.values(ingredients), [ingredients]);
