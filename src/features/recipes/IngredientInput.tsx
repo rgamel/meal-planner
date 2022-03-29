@@ -1,8 +1,8 @@
 import { Button, Checkbox, FormControlLabel, Grid, TextField } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useMemo, useState } from 'react';
 import { EntityOptionType, Ingredient, Uom } from 'types';
-import { useIngredients, useUoms } from '../hooks/hooks';
-import Autocomplete from './Autocomplete';
+import { useIngredients, useUoms } from '../../app/hooks';
+import Autocomplete from '../../components/Autocomplete';
 
 function IngredientInput({
     commitGroceryItem,
@@ -34,6 +34,9 @@ function IngredientInput({
         setIsAldi(e.target.checked);
     };
 
+    const uomsMemo = useMemo(() => Object.values(uoms), [uoms]);
+    const ingredientsMemo = useMemo(() => Object.values(ingredients), [ingredients]);
+
     return (
         <Grid container spacing={1} direction="column">
             <Grid item xs={1}>
@@ -48,7 +51,7 @@ function IngredientInput({
             </Grid>
             <Grid item xs={1}>
                 <Autocomplete
-                    suggestions={Object.values(uoms.get())}
+                    suggestions={uomsMemo}
                     addItem={addUom}
                     deleteItem={deleteUom}
                     selected={selectedUom}
@@ -58,7 +61,7 @@ function IngredientInput({
             </Grid>
             <Grid item xs={1}>
                 <Autocomplete
-                    suggestions={Object.values(ingredients.get())}
+                    suggestions={ingredientsMemo}
                     addItem={addIngredient}
                     deleteItem={deleteIngredient}
                     selected={selectedIngredient}

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { GroceryItem } from 'types';
-import GroceryList from '../components/GroceryList';
-import { useRecipes, useSelectedRecipes } from '../hooks/hooks';
+import GroceryList from './GroceryList';
+import { useRecipes, useSelectedRecipes } from '../../app/hooks';
 
 function Groceries() {
     const { selectedRecipes } = useSelectedRecipes();
@@ -22,11 +22,11 @@ function Groceries() {
     const allGroceries = useMemo(
         () =>
             compactGroceries(
-                Object.values(selectedRecipes.get())
-                    .map((id) => recipes.nested(id).groceries.get())
+                Object.values(selectedRecipes || [])
+                    .map((id) => recipes[id].groceries)
                     .flat(),
             ),
-        [selectedRecipes],
+        [selectedRecipes, compactGroceries, recipes],
     );
     return <GroceryList groceries={allGroceries} />;
 }

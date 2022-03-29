@@ -1,27 +1,22 @@
-import { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Button, DialogContentText, Divider, Grid, TextField, Typography } from '@mui/material';
 import { Category, EntityOptionType, GroceryItem, Ingredient, Recipe, Uom } from 'types';
 import { isNil } from 'lodash';
 import IngredientInput from './IngredientInput';
-import { GroceryItems } from './GroceryList';
-import { useRecipes, useCategories, useIsRecipeDialogOpen } from '../hooks/hooks';
-import Autocomplete from './Autocomplete';
+import { GroceryItems } from '../groceries/GroceryList';
+import { useRecipes, useCategories } from '../../app/hooks';
+import Autocomplete from '../../components/Autocomplete';
 
-const trace = (label: string, x: any) => {
-    console.log(label, x);
-    return x;
+type RecipeFormProps = {
+    setRecipeDialogOpen: Dispatch<SetStateAction<boolean>>;
+    setRecipeToEdit: Dispatch<SetStateAction<null | Recipe>>;
+    recipeToEdit: Recipe | null;
 };
 
-export default function RecipeForm({
-    recipeToEdit,
-    setRecipeToEdit,
-}: {
-    recipeToEdit?: Recipe;
-    setRecipeToEdit?: Dispatch<SetStateAction<null | Recipe>>;
-}) {
+// TODO: use React-Final-Form for form management and validation plz k thnkx
+export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDialogOpen }: RecipeFormProps) {
     const { addRecipe, updateRecipe } = useRecipes();
     const { categories, addCategory, deleteCategory } = useCategories();
-    const { setRecipeDialogOpen } = useIsRecipeDialogOpen();
     const [groceries, setGroceries] = useState<GroceryItem[]>([]);
     const [category, setCategory] = useState<EntityOptionType | null>(null);
     const [recipeName, setRecipeName] = useState('');
@@ -65,7 +60,7 @@ export default function RecipeForm({
                 addRecipe(recipe);
             }
             setRecipeDialogOpen(false);
-            setRecipeToEdit?.(null);
+            setRecipeToEdit(null);
         }
     };
 
@@ -83,7 +78,7 @@ export default function RecipeForm({
             </Grid>
             <Grid item>
                 <Autocomplete
-                    suggestions={Object.values(categories.get())}
+                    suggestions={Object.values(categories)}
                     label="Category"
                     selected={category}
                     setSelected={setCategory}

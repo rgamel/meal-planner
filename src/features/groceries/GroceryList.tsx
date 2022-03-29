@@ -39,13 +39,12 @@ function GroceryLineItem({ groceryItem, deleteGroceryItem }: GroceryLineItemProp
     );
 }
 
-export function GroceryItems({
-    items,
-    deleteGroceryItem,
-}: {
+type GroceryItemsProps = {
     items: GroceryItem[];
     deleteGroceryItem?: (item: GroceryItem) => void;
-}) {
+};
+
+export function GroceryItems({ items, deleteGroceryItem }: GroceryItemsProps) {
     const sortedItems = useMemo(() => sortBy('item.name', items), [items]);
     return (
         <List>

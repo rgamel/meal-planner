@@ -28,9 +28,7 @@ export default function ComboBox({ suggestions, label, selected, setSelected, ad
     };
     return (
         <Autocomplete
-            isOptionEqualToValue={(option, val) => {
-                return option.id === val.id;
-            }}
+            isOptionEqualToValue={(option, val) => option.id === val.id}
             id="combo-box-demo"
             options={suggestions as EntityOptionType[]}
             getOptionLabel={(option) => {

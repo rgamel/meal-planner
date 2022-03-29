@@ -1,4 +1,4 @@
-import { useRecipes, useSelectedRecipes } from 'hooks/hooks';
+import { useSelectedRecipes } from 'app/hooks';
 import { Checkbox, Icon, IconButton, ListItem, ListItemText } from '@mui/material';
 import { startCase } from 'lodash';
 import { Recipe } from 'types';
@@ -11,18 +11,11 @@ type RecipeListItemProps = {
 
 export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemProps) {
     const { selectedRecipes, handleSelectRecipe } = useSelectedRecipes();
-    const { recipes } = useRecipes();
     const handleChange = useCallback(() => {
         handleSelectRecipe(recipe.id);
     }, [recipe.id, handleSelectRecipe]);
 
-    const checked = useMemo(
-        () =>
-            Object.values(selectedRecipes.get())
-                .map((r: string) => recipes.nested(r).get().name)
-                .includes(recipe.name),
-        [selectedRecipes, recipe],
-    );
+    const checked = useMemo(() => selectedRecipes.includes(recipe.id), [selectedRecipes, recipe]);
 
     const onClickEdit = useCallback(() => {
         editRecipe(recipe);

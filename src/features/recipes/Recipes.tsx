@@ -1,25 +1,23 @@
-import { Downgraded } from '@hookstate/core';
 import { Fab, Icon, List, Paper, Dialog, DialogContent, DialogTitle, Grid } from '@mui/material';
-import RecipeForm from 'components/RecipeForm';
-import { useCallback, useMemo, useState } from 'react';
+import RecipeForm from 'features/recipes/RecipeForm';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { Recipe } from 'types';
-import RecipeListItem from '../components/RecipeListItem';
-import { useIsRecipeDialogOpen, useRecipes } from '../hooks/hooks';
+import { RecipesContext } from 'app/context';
+import RecipeListItem from './RecipeListItem';
 
 function Recipes() {
-    const { recipes } = useRecipes();
-    const { isRecipeDialogOpen, setRecipeDialogOpen } = useIsRecipeDialogOpen();
+    const { recipes } = useContext(RecipesContext);
+    const [isRecipeDialogOpen, setRecipeDialogOpen] = useState(false);
     const [recipeToEdit, setRecipeToEdit] = useState<null | Recipe>(null);
     const editRecipe = useCallback(
         (recipe: Recipe) => {
             setRecipeToEdit(recipe);
             setRecipeDialogOpen(true);
         },
-        [recipes, setRecipeDialogOpen, setRecipeToEdit],
+        [setRecipeDialogOpen, setRecipeToEdit],
     );
 
-    const recipesMemo = useMemo(() => Object.values(recipes.attach(Downgraded).get()), [recipes]);
-
+    const recipesMemo = useMemo(() => Object.values(recipes), [recipes]);
     return (
         <Paper sx={{ p: 2, mb: 24 }}>
             <List>
@@ -29,7 +27,7 @@ function Recipes() {
             </List>
             <Dialog
                 fullWidth
-                open={isRecipeDialogOpen.get()}
+                open={isRecipeDialogOpen}
                 onClose={() => {
                     setRecipeDialogOpen(false);
                     setRecipeToEdit(null);
@@ -41,11 +39,11 @@ function Recipes() {
                     </Grid>
                     <Grid item xs={11}>
                         <DialogContent>
-                            {recipeToEdit ? (
-                                <RecipeForm recipeToEdit={recipeToEdit} setRecipeToEdit={setRecipeToEdit} />
-                            ) : (
-                                <RecipeForm />
-                            )}
+                            <RecipeForm
+                                setRecipeDialogOpen={setRecipeDialogOpen}
+                                recipeToEdit={recipeToEdit}
+                                setRecipeToEdit={setRecipeToEdit}
+                            />
                         </DialogContent>
                     </Grid>
                 </Grid>
