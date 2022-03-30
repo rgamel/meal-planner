@@ -5,20 +5,39 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Icon from '@mui/material/Icon';
-import { useState, MouseEvent } from 'react';
+import { useState, MouseEvent, useContext } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
+import { UserContext } from 'app/userContext';
+import { Avatar } from '@mui/material';
 
 export default function ButtonAppBar() {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const { user, signInWithGoogle, signOutUser } = useContext(UserContext);
+    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-    const handleMenu = (event: MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
+    const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
+        setAnchorElNav(event.currentTarget);
+    };
+    const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
+        setAnchorElUser(event.currentTarget);
     };
 
-    const handleClose = () => {
-        setAnchorEl(null);
+    const handleCloseNavMenu = () => {
+        setAnchorElNav(null);
+    };
+
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
+
+    const handleClick = () => {
+        if (!user) {
+            signInWithGoogle();
+            return;
+        }
+        signOutUser();
     };
 
     return (
@@ -26,7 +45,7 @@ export default function ButtonAppBar() {
             <AppBar position="fixed">
                 <Toolbar>
                     <IconButton
-                        onClick={handleMenu}
+                        onClick={handleOpenNavMenu}
                         size="large"
                         edge="start"
                         color="inherit"
@@ -38,13 +57,46 @@ export default function ButtonAppBar() {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Grocery Planner
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    <IconButton onClick={handleOpenUserMenu}>
+                        {!user ? (
+                            <Icon>account_circle</Icon>
+                        ) : (
+                            <Avatar alt={user.displayName || ''} src={user.photoURL || ''} />
+                        )}
+                    </IconButton>
                 </Toolbar>
             </AppBar>
             <Toolbar />
             <Menu
                 id="menu-appbar"
-                anchorEl={anchorEl}
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{ mt: '45px' }}
+            >
+                <MenuItem onClick={handleCloseNavMenu}>
+                    <Link to="/recipes" style={{ textDecoration: 'none', color: 'black' }}>
+                        Recipes
+                    </Link>
+                </MenuItem>
+                <MenuItem onClick={handleCloseNavMenu}>
+                    <Link to="/groceries" style={{ textDecoration: 'none', color: 'black' }}>
+                        Groceries
+                    </Link>
+                </MenuItem>
+            </Menu>
+            <Menu
+                id="menu-userauth"
+                anchorEl={anchorElUser}
                 anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
@@ -54,18 +106,12 @@ export default function ButtonAppBar() {
                     vertical: 'top',
                     horizontal: 'right',
                 }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+                sx={{ mt: '45px' }}
             >
-                <MenuItem onClick={handleClose}>
-                    <Link to="/recipes" style={{ textDecoration: 'none', color: 'black' }}>
-                        Recipes
-                    </Link>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                    <Link to="/groceries" style={{ textDecoration: 'none', color: 'black' }}>
-                        Groceries
-                    </Link>
+                <MenuItem onClick={handleCloseUserMenu}>
+                    <Button onClick={handleClick}>{`Sign ${!user ? 'in with Google' : 'out'}`}</Button>
                 </MenuItem>
             </Menu>
         </Box>

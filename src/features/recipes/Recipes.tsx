@@ -2,7 +2,7 @@ import { Fab, Icon, List, Paper, Dialog, DialogContent, DialogTitle, Grid } from
 import RecipeForm from 'features/recipes/RecipeForm';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Recipe } from 'types';
-import { RecipesContext } from 'app/context';
+import { RecipesContext } from 'app/recipeContext';
 import RecipeListItem from './RecipeListItem';
 
 function Recipes() {

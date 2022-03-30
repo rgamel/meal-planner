@@ -243,3 +243,6 @@ $RECYCLE.BIN/
 
 # and uncomment the following lines
 # .pnp.*
+
+### SECRETS SECRETS ###
+config.ts

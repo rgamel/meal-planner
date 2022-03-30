@@ -1,7 +1,7 @@
 import { set, unset } from 'lodash/fp';
 import { nanoid } from 'nanoid';
 import { Dispatch, SetStateAction, useContext } from 'react';
-import { RecipesContext } from './context';
+import { RecipesContext } from './recipeContext';
 
 const useGenericFns = <T extends { id: string }>(
     collection: Record<string, T>,
