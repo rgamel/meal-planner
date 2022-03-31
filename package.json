@@ -31,7 +31,7 @@
     },
     "scripts": {
         "clean": "rm -rf ./build ./src/firebase-config.json",
-        "createfirebaseconf": "firebase apps:sdkconfig web --json > ./src/firebase-config.json",
+        "createfirebaseconf": "npx firebase-tools apps:sdkconfig web --json > ./src/firebase-config.json",
         "start": "react-scripts start",
         "build": "npm run clean && npm run createfirebaseconf && react-scripts build",
         "test": "react-scripts test",
