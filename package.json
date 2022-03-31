@@ -30,12 +30,15 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
+        "clean": "rm -rf ./build ./src/firebase-config.json",
+        "createfirebaseconf": "firebase apps:sdkconfig web --json > ./src/firebase-config.json",
         "start": "react-scripts start",
-        "build": "react-scripts build",
+        "build": "npm run clean && npm run createfirebaseconf && react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "format": "prettier --config .prettierrc 'src/**/*.t(s|sx)' --write",
-        "lint": "npx eslint src/** --fix"
+        "lint": "npx eslint src/** --fix",
+        "serve": "firebase serve"
     },
     "eslintConfig": {
         "extends": [
