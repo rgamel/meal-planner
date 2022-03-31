@@ -246,3 +246,8 @@ $RECYCLE.BIN/
 
 ### SECRETS SECRETS ###
 config.ts
+
+
+# production
+/build
+.firebase

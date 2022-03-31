@@ -61,7 +61,9 @@ export default function ButtonAppBar() {
                         {!user ? (
                             <Icon>account_circle</Icon>
                         ) : (
-                            <Avatar alt={user.displayName || ''} src={user.photoURL || ''} />
+                            <Avatar alt={user.displayName || ''} src={user.photoURL || ''}>
+                                {' '}
+                            </Avatar>
                         )}
                     </IconButton>
                 </Toolbar>
