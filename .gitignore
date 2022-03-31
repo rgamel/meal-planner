@@ -244,11 +244,6 @@ $RECYCLE.BIN/
 # and uncomment the following lines
 # .pnp.*
 
-### SECRETS SECRETS ###
-config.ts
-
-
 # production
 /build
 .firebase
-src/firebase-config.json
