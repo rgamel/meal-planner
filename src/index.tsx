@@ -1,4 +1,3 @@
-import { getConfig } from '@testing-library/react';
 import UserContextProvider from 'app/userContext';
 import React from 'react';
 import ReactDOM from 'react-dom';
