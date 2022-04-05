@@ -90,7 +90,8 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
             setSelectedRecipes([] as string[]);
         }
         void loadData();
-    }, [getCollection]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return <RecipesContext.Provider value={storeMemo}>{children}</RecipesContext.Provider>;
 }
