@@ -2,7 +2,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import partition from 'lodash/fp/partition';
-import sortBy from 'lodash/fp/sortBy';
 import { startCase } from 'lodash';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
@@ -13,7 +12,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import { GroceryItem } from 'types';
-import { useMemo } from 'react';
+import { useIngredients, useUoms } from 'app/hooks';
 
 type GroceryLineItemProps = {
     groceryItem: GroceryItem;
@@ -21,12 +20,14 @@ type GroceryLineItemProps = {
 };
 
 function GroceryLineItem({ groceryItem, deleteGroceryItem }: GroceryLineItemProps) {
+    const { uoms } = useUoms();
+    const { ingredients } = useIngredients();
     return (
-        <ListItem key={`${groceryItem.uom.name}|${groceryItem.item.name}|${String(groceryItem.isAldi)}`}>
+        <ListItem key={`${groceryItem.uomId}|${groceryItem.itemId}|${String(groceryItem.isAldi)}`}>
             {!deleteGroceryItem ? <Checkbox /> : null}
             <ListItemText
-                primary={startCase(groceryItem.item.name)}
-                secondary={`${groceryItem.quantity} ${groceryItem.uom.name}`}
+                primary={startCase(ingredients[groceryItem.itemId]?.name)}
+                secondary={`${groceryItem.quantity} ${uoms[groceryItem.uomId]?.name}`}
             />
             <ListItemSecondaryAction>
                 {deleteGroceryItem && (
@@ -45,12 +46,12 @@ type GroceryItemsProps = {
 };
 
 export function GroceryItems({ items, deleteGroceryItem }: GroceryItemsProps) {
-    const sortedItems = useMemo(() => sortBy('item.name', items), [items]);
+    // const sortedItems = useMemo(() => sortBy('item.name', items), [items]); // TODO - do we even need this?
     return (
         <List>
-            {sortedItems.map((groceryItem: GroceryItem) => (
+            {items.map((groceryItem: GroceryItem) => (
                 <GroceryLineItem
-                    key={`${groceryItem.uom.id}|${groceryItem.item.id}`}
+                    key={`${groceryItem.uomId}|${groceryItem.itemId}`}
                     groceryItem={groceryItem}
                     deleteGroceryItem={deleteGroceryItem}
                 />

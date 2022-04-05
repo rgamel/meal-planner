@@ -9,7 +9,7 @@ function Groceries() {
 
     const compactGroceries = useCallback((groceries: GroceryItem[]) => {
         const list = groceries.reduce((acc, val) => {
-            const match = acc.find((g) => g.item === val.item && g.uom === val.uom && val.isAldi === g.isAldi);
+            const match = acc.find((g) => g.itemId === val.itemId && g.uomId === val.uomId && val.isAldi === g.isAldi);
             if (match) {
                 acc.splice(acc.indexOf(match), 1);
                 return [...acc, { ...match, quantity: Number(val.quantity) + Number(match.quantity) }];

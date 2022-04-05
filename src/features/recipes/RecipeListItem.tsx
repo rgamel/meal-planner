@@ -1,4 +1,4 @@
-import { useSelectedRecipes } from 'app/hooks';
+import { useCategories, useSelectedRecipes } from 'app/hooks';
 import { Checkbox, Icon, IconButton, ListItem, ListItemText } from '@mui/material';
 import { startCase } from 'lodash';
 import { Recipe } from 'types';
@@ -11,6 +11,7 @@ type RecipeListItemProps = {
 
 export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemProps) {
     const { selectedRecipes, handleSelectRecipe } = useSelectedRecipes();
+    const { categories } = useCategories();
     const handleChange = useCallback(() => {
         handleSelectRecipe(recipe.id);
     }, [recipe.id, handleSelectRecipe]);
@@ -21,13 +22,15 @@ export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemPro
         editRecipe(recipe);
     }, [editRecipe, recipe]);
 
+    const label = startCase(recipe.name);
+    const categoryLabel = categories[recipe?.categoryId || '']
+        ? `${startCase(categories[recipe?.categoryId || '']?.name)} `
+        : '';
+
     return (
         <ListItem key={recipe.name}>
             <Checkbox checked={checked} onChange={handleChange} />
-            <ListItemText
-                primary={startCase(recipe.name)}
-                secondary={recipe.category ? `${recipe.category.name} ` : ''}
-            />
+            <ListItemText primary={label} secondary={categoryLabel} />
             <IconButton onClick={onClickEdit}>
                 <Icon>edit</Icon>
             </IconButton>

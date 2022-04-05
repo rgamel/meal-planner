@@ -1,6 +1,6 @@
 import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Button, DialogContentText, Divider, Grid, TextField, Typography } from '@mui/material';
-import { Category, EntityOptionType, GroceryItem, Ingredient, Recipe, Uom } from 'types';
+import { EntityOptionType, GroceryItem, Recipe } from 'types';
 import { isNil } from 'lodash';
 import IngredientInput from './IngredientInput';
 import { GroceryItems } from '../groceries/GroceryList';
@@ -24,17 +24,17 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     useEffect(() => {
         if (!recipeToEdit) return;
         setRecipeName(recipeToEdit.name);
-        setCategory(recipeToEdit.category as Category);
+        setCategory(categories[recipeToEdit.categoryId || '']);
         setGroceries(recipeToEdit.groceries);
     }, [recipeToEdit]);
 
-    const commitGroceryItem = (quantity: number, uom: Uom, item: Ingredient, isAldi: boolean) => {
-        const match = groceries.find((g) => g.item.name === item.name);
+    const commitGroceryItem = (quantity: number, uomId: string, itemId: string, isAldi: boolean) => {
+        const match = groceries.find((g) => g.itemId === itemId);
         if (!match) {
-            setGroceries([...groceries, { quantity, uom, item, isAldi }]);
+            setGroceries([...groceries, { quantity, uomId, itemId, isAldi }]);
             return;
         }
-        if (match.uom.name.trim() === uom.name.trim() && match.isAldi === isAldi) {
+        if (match.uomId === uomId && match.isAldi === isAldi) {
             groceries.splice(groceries.indexOf(match), 1);
             setGroceries([...groceries, { ...match, quantity: Number(match.quantity) + Number(quantity) }]);
         }
@@ -49,11 +49,11 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
         setRecipeName(input);
     };
 
-    const enableSave = () => Boolean(recipeName.trim().length && category?.id && groceries.length);
+    const enableSave = () => Boolean(recipeName.trim().length && groceries.length);
 
     const handleSave = () => {
         if (enableSave()) {
-            const recipe = { name: recipeName.trim(), groceries, category: category as Category };
+            const recipe = { name: recipeName.trim(), groceries, categoryId: category?.id || '' };
             if (!isNil(recipeToEdit)) {
                 updateRecipe({ id: recipeToEdit.id, ...recipe });
             } else {

@@ -7,7 +7,7 @@ import Autocomplete from '../../components/Autocomplete';
 function IngredientInput({
     commitGroceryItem,
 }: {
-    commitGroceryItem: (quantity: number, selectedUom: Uom, selectedIngredient: Ingredient, isAldi: boolean) => void;
+    commitGroceryItem: (quantity: number, selectedUomId: string, selectedIngredientId: string, isAldi: boolean) => void;
 }) {
     const { ingredients, addIngredient, deleteIngredient } = useIngredients();
     const { uoms, addUom, deleteUom } = useUoms();
@@ -22,7 +22,7 @@ function IngredientInput({
 
     const handleCommitGroceryItem = useCallback(() => {
         if (quantity && selectedUom?.id && selectedIngredient?.id) {
-            commitGroceryItem(Number(quantity), selectedUom as Uom, selectedIngredient as Ingredient, isAldi);
+            commitGroceryItem(Number(quantity), selectedUom.id, selectedIngredient.id, isAldi);
             setQuantity('');
             setSelectedUom(null);
             setSelectedIngredient(null);

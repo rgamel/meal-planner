@@ -1,7 +1,7 @@
 import { noop } from 'lodash/fp';
 import { createContext, Dispatch, SetStateAction, useEffect, useState, useMemo } from 'react';
-import { baseCategories, baseIngredients, baseRecipes, baseUoms } from 'testData/testData';
 import { CategoryList, IngredientList, RecipeList, UomList } from 'types';
+import { useFirebase } from './hooks';
 
 type RecipesContextProps = {
     recipes: RecipeList;
@@ -38,20 +38,12 @@ export type AppState = {
     isRecipeDialogOpen: boolean;
 };
 
-const initialState: AppState = {
-    ingredients: baseIngredients,
-    recipes: baseRecipes,
-    selectedRecipes: [] as string[],
-    uoms: baseUoms,
-    categories: baseCategories,
-    isRecipeDialogOpen: false,
-};
-
 interface RecipesContextProviderProps {
     children?: JSX.Element[] | JSX.Element;
 }
 
 export default function RecipesContextProvider({ children }: RecipesContextProviderProps) {
+    const { getCollection } = useFirebase();
     const [recipes, setRecipes] = useState<RecipeList>({});
     const [ingredients, setIngredients] = useState<IngredientList>({});
     const [uoms, setUoms] = useState<UomList>({});
@@ -87,13 +79,15 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
 
     useEffect(() => {
         async function loadData() {
-            const data = await Promise.resolve(initialState);
+            const [ingredientsCollection, uomsCollection, categoriesCollection, recipesCollection] = await Promise.all(
+                ['ingredients', 'uoms', 'categories', 'recipes'].map(getCollection),
+            );
 
-            setRecipes(data.recipes);
-            setIngredients(data.ingredients);
-            setUoms(data.uoms);
-            setCategories(data.categories);
-            setSelectedRecipes(data.selectedRecipes);
+            setRecipes(recipesCollection);
+            setIngredients(ingredientsCollection);
+            setUoms(uomsCollection);
+            setCategories(categoriesCollection);
+            setSelectedRecipes([] as string[]);
         }
         void loadData();
     }, []);

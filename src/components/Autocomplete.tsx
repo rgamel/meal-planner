@@ -13,7 +13,7 @@ type ComboBoxProps = {
     label: string;
     selected: EntityOptionType | null;
     setSelected: Dispatch<SetStateAction<EntityOptionType | null>>;
-    addItem: (item: EntityOptionType) => void;
+    addItem: (item: EntityOptionType) => Entity;
     deleteItem: (id: string) => void;
 };
 
@@ -47,11 +47,7 @@ export default function ComboBox({ suggestions, label, selected, setSelected, ad
                     name: newValue,
                 });
             } else if (newValue && newValue.inputValue) {
-                const itemToAdd = { name: newValue.inputValue };
-                setSelected({
-                    name: newValue.inputValue,
-                });
-                addItem(itemToAdd);
+                setSelected(addItem({ name: newValue.inputValue }));
             } else {
                 setSelected(newValue);
             }
@@ -92,7 +88,7 @@ export default function ComboBox({ suggestions, label, selected, setSelected, ad
 
     return (
         <Autocomplete
-            isOptionEqualToValue={(option, val) => option.id === val.id}
+            isOptionEqualToValue={(a, b) => (a?.name || '') === (b?.name || '')}
             id="combo-box-demo"
             options={suggestions as EntityOptionType[]}
             getOptionLabel={getOptionLabel}
