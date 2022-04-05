@@ -26,7 +26,7 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
         setRecipeName(recipeToEdit.name);
         setCategory(categories[recipeToEdit.categoryId || '']);
         setGroceries(recipeToEdit.groceries);
-    }, [recipeToEdit]);
+    }, [recipeToEdit, categories]);
 
     const commitGroceryItem = (quantity: number, uomId: string, itemId: string, isAldi: boolean) => {
         const match = groceries.find((g) => g.itemId === itemId);

@@ -90,7 +90,7 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
             setSelectedRecipes([] as string[]);
         }
         void loadData();
-    }, []);
+    }, [getCollection]);
 
     return <RecipesContext.Provider value={storeMemo}>{children}</RecipesContext.Provider>;
 }

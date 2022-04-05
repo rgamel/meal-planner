@@ -1,6 +1,6 @@
 import { Button, Checkbox, FormControlLabel, Grid, TextField } from '@mui/material';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
-import { EntityOptionType, Ingredient, Uom } from 'types';
+import { EntityOptionType } from 'types';
 import { useIngredients, useUoms } from '../../app/hooks';
 import Autocomplete from '../../components/Autocomplete';
 
