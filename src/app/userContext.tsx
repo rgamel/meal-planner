@@ -1,6 +1,6 @@
 import { GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
 import noop from 'lodash/fp/noop';
-import { createContext, Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
+import { createContext, Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import { auth } from './firebase';
 
 const provider = new GoogleAuthProvider();
@@ -18,6 +18,14 @@ interface UserContextProviderProps {
 
 export default function UserContextProvider({ children }: UserContextProviderProps) {
     const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        setUser(JSON.parse(window.localStorage.getItem('user') || ''));
+    }, []);
+
+    useEffect(() => {
+        window.localStorage.setItem('user', JSON.stringify(user));
+    }, [user]);
 
     const signInWithGoogle = useCallback(async () => {
         const result = await signInWithPopup(auth, provider);
