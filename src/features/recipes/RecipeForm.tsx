@@ -31,14 +31,12 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
 
     const commitGroceryItem = (quantity: Fraction, uomId: string, itemId: string, isAldi: boolean) => {
         const match = groceries.find((g) => g.itemId === itemId);
-        if (!match) {
-            setGroceries([...groceries, { quantity: quantity.toFraction(true), uomId, itemId, isAldi }]);
-            return;
-        }
-        if (match.uomId === uomId && match.isAldi === isAldi) {
+        if (match?.uomId === uomId && match.isAldi === isAldi) {
             groceries.splice(groceries.indexOf(match), 1);
             setGroceries([...groceries, { ...match, quantity: quantity.add(match.quantity).toFraction(true) }]);
+            return;
         }
+        setGroceries([...groceries, { quantity: quantity.toFraction(true), uomId, itemId, isAldi }]);
     };
 
     const deleteGroceryItem = (item: GroceryItem) => {
