@@ -1,11 +1,20 @@
-import { Fab, Icon, List, Paper, Dialog, DialogContent, DialogTitle, Grid } from '@mui/material';
+import { Fab, Icon, List, Paper, Dialog, DialogContent, DialogTitle, Grid, Typography } from '@mui/material';
 import RecipeForm from 'features/recipes/RecipeForm';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Recipe } from 'types';
 import { RecipesContext } from 'app/recipeContext';
 import RecipeListItem from './RecipeListItem';
 
-function Recipes() {
+function NoRecipes() {
+    return (
+        <div>
+            <Typography variant="h4">Nothing here yet.</Typography>
+            <Typography variant="body1">Click the + button below to get started</Typography>
+        </div>
+    );
+}
+
+export default function Recipes() {
     const { recipes } = useContext(RecipesContext);
     const [isRecipeDialogOpen, setRecipeDialogOpen] = useState(false);
     const [recipeToEdit, setRecipeToEdit] = useState<null | Recipe>(null);
@@ -21,9 +30,11 @@ function Recipes() {
     return (
         <Paper sx={{ p: 2, mb: 24 }}>
             <List>
-                {recipesMemo.map((r) => (
-                    <RecipeListItem key={r.id} recipe={r} editRecipe={editRecipe} />
-                ))}
+                {!recipesMemo.length ? (
+                    <NoRecipes />
+                ) : (
+                    recipesMemo.map((r) => <RecipeListItem key={r.id} recipe={r} editRecipe={editRecipe} />)
+                )}
             </List>
             <Dialog
                 fullWidth
@@ -59,5 +70,3 @@ function Recipes() {
         </Paper>
     );
 }
-
-export default Recipes;
