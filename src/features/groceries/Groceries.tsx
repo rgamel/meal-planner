@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { GroceryItem } from 'types';
+import Fraction from 'fraction.js';
 import GroceryList from './GroceryList';
 import { useRecipes, useSelectedRecipes } from '../../app/hooks';
 
@@ -12,7 +13,10 @@ function Groceries() {
             const match = acc.find((g) => g.itemId === val.itemId && g.uomId === val.uomId && val.isAldi === g.isAldi);
             if (match) {
                 acc.splice(acc.indexOf(match), 1);
-                return [...acc, { ...match, quantity: Number(val.quantity) + Number(match.quantity) }];
+                return [
+                    ...acc,
+                    { ...match, quantity: new Fraction(val.quantity).add(match.quantity).toFraction(true) },
+                ];
             }
             return [...acc, val];
         }, [] as GroceryItem[]);

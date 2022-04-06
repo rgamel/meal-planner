@@ -2,6 +2,7 @@ import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'reac
 import { Button, DialogContentText, Divider, Grid, TextField, Typography } from '@mui/material';
 import { EntityOptionType, GroceryItem, Recipe } from 'types';
 import { isNil } from 'lodash';
+import Fraction from 'fraction.js';
 import IngredientInput from './IngredientInput';
 import { GroceryItems } from '../groceries/GroceryList';
 import { useRecipes, useCategories } from '../../app/hooks';
@@ -28,15 +29,15 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
         setGroceries(recipeToEdit.groceries);
     }, [recipeToEdit, categories]);
 
-    const commitGroceryItem = (quantity: number, uomId: string, itemId: string, isAldi: boolean) => {
+    const commitGroceryItem = (quantity: Fraction, uomId: string, itemId: string, isAldi: boolean) => {
         const match = groceries.find((g) => g.itemId === itemId);
         if (!match) {
-            setGroceries([...groceries, { quantity, uomId, itemId, isAldi }]);
+            setGroceries([...groceries, { quantity: quantity.toFraction(true), uomId, itemId, isAldi }]);
             return;
         }
         if (match.uomId === uomId && match.isAldi === isAldi) {
             groceries.splice(groceries.indexOf(match), 1);
-            setGroceries([...groceries, { ...match, quantity: Number(match.quantity) + Number(quantity) }]);
+            setGroceries([...groceries, { ...match, quantity: quantity.add(match.quantity).toFraction(true) }]);
         }
     };
 

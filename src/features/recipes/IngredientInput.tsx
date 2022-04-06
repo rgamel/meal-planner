@@ -1,4 +1,5 @@
 import { Button, Checkbox, FormControlLabel, Grid, TextField } from '@mui/material';
+import Fraction from 'fraction.js';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { EntityOptionType } from 'types';
 import { useIngredients, useUoms } from '../../app/hooks';
@@ -7,7 +8,12 @@ import Autocomplete from '../../components/Autocomplete';
 function IngredientInput({
     commitGroceryItem,
 }: {
-    commitGroceryItem: (quantity: number, selectedUomId: string, selectedIngredientId: string, isAldi: boolean) => void;
+    commitGroceryItem: (
+        quantity: Fraction,
+        selectedUomId: string,
+        selectedIngredientId: string,
+        isAldi: boolean,
+    ) => void;
 }) {
     const { ingredients, addIngredient, deleteIngredient } = useIngredients();
     const { uoms, addUom, deleteUom } = useUoms();
@@ -20,15 +26,18 @@ function IngredientInput({
         setQuantity(e.target.value);
     }, []);
 
+    const validQuantity = quantity.trim().match(/^(?:\d+ )?\d+\/\d+$|^\d+$/);
+
     const handleCommitGroceryItem = useCallback(() => {
-        if (quantity && selectedUom?.id && selectedIngredient?.id) {
-            commitGroceryItem(Number(quantity), selectedUom.id, selectedIngredient.id, isAldi);
+        if (validQuantity && selectedUom?.id && selectedIngredient?.id) {
+            const fractionalQuantity = new Fraction(quantity);
+            commitGroceryItem(fractionalQuantity, selectedUom.id, selectedIngredient.id, isAldi);
             setQuantity('');
             setSelectedUom(null);
             setSelectedIngredient(null);
             setIsAldi(false);
         }
-    }, [commitGroceryItem, isAldi, quantity, selectedIngredient, selectedUom]);
+    }, [commitGroceryItem, isAldi, quantity, validQuantity, selectedIngredient, selectedUom]);
 
     const handleSetIsAldi = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setIsAldi(e.target.checked);
@@ -41,6 +50,7 @@ function IngredientInput({
         <Grid container spacing={1} direction="column">
             <Grid item xs={1}>
                 <TextField
+                    error={quantity.length > 0 && !validQuantity}
                     value={quantity}
                     onChange={handleChangeQuantity}
                     fullWidth

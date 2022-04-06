@@ -4,7 +4,7 @@ export type UomList = Record<string, Uom>;
 export type Ingredient = { name: string; id: string };
 export type IngredientList = Record<string, Ingredient>;
 
-export type GroceryItem = { quantity: number; uomId: keyof UomList; itemId: keyof IngredientList; isAldi: boolean };
+export type GroceryItem = { quantity: string; uomId: keyof UomList; itemId: keyof IngredientList; isAldi: boolean };
 
 export type Category = { name: string; id: string };
 export type CategoryList = Record<string, Category>;
