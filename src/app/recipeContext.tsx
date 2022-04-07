@@ -92,7 +92,7 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
                 setCategories(categoriesCollection);
                 setSelectedRecipes([] as string[]);
             } catch {
-                console.error('error loading data');
+                throw new Error('error loading data');
             }
         }
         void loadData();
