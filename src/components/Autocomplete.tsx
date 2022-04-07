@@ -74,7 +74,7 @@ export default function ComboBox({ suggestions, label, selected, setSelected, ad
     const renderOption = useCallback(
         (props, option) => (
             // eslint-disable-next-line react/jsx-props-no-spreading
-            <ListItem {...props}>
+            <ListItem {...props} key={`${option.name}__${option.id}`}>
                 <ListItemText>{option.name}</ListItemText>
                 <ListItemSecondaryAction>
                     <IconButton onClick={() => handleDelete(option)}>
