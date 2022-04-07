@@ -36,17 +36,10 @@ export default function Recipes() {
                     recipesMemo.map((r) => <RecipeListItem key={r.id} recipe={r} editRecipe={editRecipe} />)
                 )}
             </List>
-            <Dialog
-                fullWidth
-                open={isRecipeDialogOpen}
-                onClose={() => {
-                    setRecipeDialogOpen(false);
-                    setRecipeToEdit(null);
-                }}
-            >
+            <Dialog fullWidth open={isRecipeDialogOpen}>
                 <Grid container direction="column">
                     <Grid item xs={1}>
-                        <DialogTitle sx={{ pb: 0 }}>New Recipe</DialogTitle>
+                        <DialogTitle sx={{ pb: 0 }}>{`${recipeToEdit ? 'Edit' : 'Create'} Recipe`}</DialogTitle>
                     </Grid>
                     <Grid item xs={11}>
                         <DialogContent>

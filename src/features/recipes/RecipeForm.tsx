@@ -63,6 +63,11 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
         }
     };
 
+    const handleClose = () => {
+        setRecipeToEdit(null);
+        setRecipeDialogOpen(false);
+    };
+
     return (
         <Grid container direction="column" spacing={1}>
             <Grid item xs={1}>
@@ -97,9 +102,18 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
                 <Typography>Ingredients:</Typography>
             </Grid>
             <GroceryItems items={groceries} deleteGroceryItem={deleteGroceryItem} />
-            <Button onClick={handleSave} disabled={!enableSave()} variant="contained">
-                {`Save${recipeToEdit ? ' changes' : ''}`}
-            </Button>
+            <Grid container direction="row" spacing={1}>
+                <Grid item xs={6}>
+                    <Button onClick={handleClose} variant="outlined" color="error">
+                        Cancel
+                    </Button>
+                </Grid>
+                <Grid item xs={6}>
+                    <Button onClick={handleSave} disabled={!enableSave()} variant="contained">
+                        {`Save${recipeToEdit ? ' changes' : ''}`}
+                    </Button>
+                </Grid>
+            </Grid>
         </Grid>
     );
 }
