@@ -1,7 +1,8 @@
 import { noop } from 'lodash/fp';
-import { createContext, Dispatch, SetStateAction, useEffect, useState, useMemo } from 'react';
+import { createContext, Dispatch, SetStateAction, useEffect, useState, useMemo, useContext } from 'react';
 import { CategoryList, IngredientList, RecipeList, UomList } from 'types';
 import { useFirebase } from './hooks';
+import { UserContext } from './userContext';
 
 type RecipesContextProps = {
     recipes: RecipeList;
@@ -44,6 +45,7 @@ interface RecipesContextProviderProps {
 
 export default function RecipesContextProvider({ children }: RecipesContextProviderProps) {
     const { getCollection } = useFirebase();
+    const { user } = useContext(UserContext);
     const [recipes, setRecipes] = useState<RecipeList>({});
     const [ingredients, setIngredients] = useState<IngredientList>({});
     const [uoms, setUoms] = useState<UomList>({});
@@ -79,19 +81,23 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
 
     useEffect(() => {
         async function loadData() {
-            const [ingredientsCollection, uomsCollection, categoriesCollection, recipesCollection] = await Promise.all(
-                ['ingredients', 'uoms', 'categories', 'recipes'].map(getCollection),
-            );
+            if (!user) return;
+            try {
+                const [ingredientsCollection, uomsCollection, categoriesCollection, recipesCollection] =
+                    await Promise.all(['ingredients', 'uoms', 'categories', 'recipes'].map(getCollection));
 
-            setRecipes(recipesCollection);
-            setIngredients(ingredientsCollection);
-            setUoms(uomsCollection);
-            setCategories(categoriesCollection);
-            setSelectedRecipes([] as string[]);
+                setRecipes(recipesCollection);
+                setIngredients(ingredientsCollection);
+                setUoms(uomsCollection);
+                setCategories(categoriesCollection);
+                setSelectedRecipes([] as string[]);
+            } catch {
+                console.error('error loading data');
+            }
         }
         void loadData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [user]);
 
     return <RecipesContext.Provider value={storeMemo}>{children}</RecipesContext.Provider>;
 }
