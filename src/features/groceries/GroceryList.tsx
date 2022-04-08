@@ -11,23 +11,63 @@ import { ListItemSecondaryAction, ListItemText } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import {
+    DragDropContext,
+    Draggable,
+    DraggingStyle,
+    Droppable,
+    DropResult,
+    NotDraggingStyle,
+} from 'react-beautiful-dnd';
 import { GroceryItem } from 'types';
 import { useIngredients, useUoms } from 'app/hooks';
+import { Dispatch, SetStateAction } from 'react';
 
 type GroceryLineItemProps = {
     groceryItem: GroceryItem;
     deleteGroceryItem?: (item: GroceryItem) => void;
 };
 
+function move(array: any[], fromIndex: number, toIndex: number) {
+    const item = array[fromIndex];
+    const { length } = array;
+    const diff = fromIndex - toIndex;
+
+    if (diff > 0) {
+        return [
+            ...array.slice(0, toIndex),
+            item,
+            ...array.slice(toIndex, fromIndex),
+            ...array.slice(fromIndex + 1, length),
+        ];
+    }
+
+    if (diff < 0) {
+        const targetIndex = toIndex + 1;
+        return [
+            ...array.slice(0, fromIndex),
+            ...array.slice(fromIndex + 1, targetIndex),
+            item,
+            ...array.slice(targetIndex, length),
+        ];
+    }
+
+    return array;
+}
+
 function GroceryLineItem({ groceryItem, deleteGroceryItem }: GroceryLineItemProps) {
     const { uoms } = useUoms();
     const { ingredients } = useIngredients();
     return (
-        <ListItem key={`${groceryItem.uomId}|${groceryItem.itemId}|${String(groceryItem.isAldi)}`}>
-            {!deleteGroceryItem ? <Checkbox /> : null}
+        <ListItem disableGutters key={`${groceryItem.uomId}|${groceryItem.itemId}|${String(groceryItem.isAldi)}`}>
+            {!deleteGroceryItem ? <Checkbox /> : <Icon sx={{ ml: -1, opacity: 0.5 }}>drag_indicator</Icon>}
             <ListItemText
-                primary={startCase(ingredients[groceryItem.itemId]?.name)}
-                secondary={`${groceryItem.quantity} ${uoms[groceryItem.uomId]?.name}`}
+                primary={
+                    <span>
+                        <strong>{startCase(ingredients[groceryItem.itemId]?.name)}</strong>
+                        <em>{`, ${groceryItem.quantity} ${uoms[groceryItem.uomId]?.name}`}</em>
+                    </span>
+                }
             />
             <ListItemSecondaryAction>
                 {deleteGroceryItem && (
@@ -42,20 +82,67 @@ function GroceryLineItem({ groceryItem, deleteGroceryItem }: GroceryLineItemProp
 
 type GroceryItemsProps = {
     items: GroceryItem[];
+    setItems?: Dispatch<SetStateAction<GroceryItem[]>>;
     deleteGroceryItem?: (item: GroceryItem) => void;
 };
 
-export function GroceryItems({ items, deleteGroceryItem }: GroceryItemsProps) {
-    // const sortedItems = useMemo(() => sortBy('item.name', items), [items]); // TODO - do we even need this?
+export function GroceryItems({ items, setItems, deleteGroceryItem }: GroceryItemsProps) {
+    const onDragEnd = (result: DropResult) => {
+        if (!result.destination) return;
+        setItems?.(move(items, result.source.index, result.destination.index));
+    };
+
+    const getListStyle = (isDraggingOver: boolean) => ({
+        backgroundColor: isDraggingOver ? 'rgb(21, 101, 192, 0.1)' : '#FFF',
+    });
+
+    const getItemStyle = (isDragging: boolean, draggableStyle: DraggingStyle | NotDraggingStyle | undefined) => ({
+        padding: 16,
+        margin: `0 0 16 0`,
+        background: '#FFF',
+        ...draggableStyle,
+    });
+
     return (
         <List>
-            {items.map((groceryItem: GroceryItem) => (
-                <GroceryLineItem
-                    key={`${groceryItem.uomId}|${groceryItem.itemId}`}
-                    groceryItem={groceryItem}
-                    deleteGroceryItem={deleteGroceryItem}
-                />
-            ))}
+            <div style={{ overflow: 'auto' }}>
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="groceries">
+                        {(provided, snapshot) => (
+                            <div
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                style={getListStyle(snapshot.isDraggingOver)}
+                            >
+                                {items.map((groceryItem: GroceryItem, i: number) => {
+                                    const itemId = `${groceryItem.uomId}|${groceryItem.itemId}`;
+                                    return (
+                                        <Draggable key={itemId} draggableId={itemId} index={i}>
+                                            {(providedDraggable, snapshotDraggable) => (
+                                                <div
+                                                    ref={providedDraggable.innerRef}
+                                                    {...providedDraggable.draggableProps}
+                                                    {...providedDraggable.dragHandleProps}
+                                                    style={getItemStyle(
+                                                        snapshotDraggable.isDragging,
+                                                        providedDraggable.draggableProps.style,
+                                                    )}
+                                                >
+                                                    <GroceryLineItem
+                                                        groceryItem={groceryItem}
+                                                        deleteGroceryItem={deleteGroceryItem}
+                                                    />
+                                                </div>
+                                            )}
+                                        </Draggable>
+                                    );
+                                })}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
+            </div>
         </List>
     );
 }

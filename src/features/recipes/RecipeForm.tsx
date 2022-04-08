@@ -101,7 +101,7 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
             <Grid item xs={1}>
                 <Typography>Ingredients:</Typography>
             </Grid>
-            <GroceryItems items={groceries} deleteGroceryItem={deleteGroceryItem} />
+            <GroceryItems items={groceries} deleteGroceryItem={deleteGroceryItem} setItems={setGroceries} />
             <Grid container direction="row" spacing={1}>
                 <Grid item xs={6}>
                     <Button onClick={handleClose} variant="outlined" color="error">
