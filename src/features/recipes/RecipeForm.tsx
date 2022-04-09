@@ -102,14 +102,14 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
                 <Typography>Ingredients:</Typography>
             </Grid>
             <GroceryItems items={groceries} deleteGroceryItem={deleteGroceryItem} setItems={setGroceries} />
-            <Grid container direction="row" spacing={1}>
-                <Grid item xs={6}>
-                    <Button onClick={handleClose} variant="outlined" color="error">
+            <Grid container direction="row" spacing={1} columns={3}>
+                <Grid item xs={1}>
+                    <Button fullWidth onClick={handleClose} variant="outlined" color="error">
                         Cancel
                     </Button>
                 </Grid>
-                <Grid item xs={6}>
-                    <Button onClick={handleSave} disabled={!enableSave()} variant="contained">
+                <Grid item alignSelf="end" xs={2}>
+                    <Button fullWidth onClick={handleSave} disabled={!enableSave()} variant="contained">
                         {`Save${recipeToEdit ? ' changes' : ''}`}
                     </Button>
                 </Grid>
