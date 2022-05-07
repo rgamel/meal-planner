@@ -33,7 +33,7 @@ export const useFirebase = () => {
 const useGenericFns = <T extends { id: string }>(
     list: Record<string, T>,
     setList: Dispatch<SetStateAction<Record<string, T>>>,
-    listName: 'ingredients' | 'uoms' | 'recipes' | 'categories',
+    listName: 'ingredients' | 'uoms' | 'recipes' | 'categories' | 'selectedRecipes',
 ) => {
     const { addRecord: upsertRecord, deleteRecord } = useFirebase();
     const addFn = (item: Omit<T, 'id'>) => {
@@ -111,16 +111,21 @@ export const useCategories = () => {
 
 export const useSelectedRecipes = () => {
     const { selectedRecipes, setSelectedRecipes, recipes } = useContext(RecipesContext);
+    const { addRecord } = useFirebase();
 
     const handleSelectRecipe = (id: string) => {
         if (!recipes[id]) return;
 
         if (selectedRecipes.includes(id)) {
-            setSelectedRecipes((prev) => prev.filter((prevId) => prevId !== id));
+            const selectedWithout = selectedRecipes.filter((r) => r !== id);
+            setSelectedRecipes(selectedWithout);
+            void addRecord('selectedRecipes', 'selected', { ids: selectedWithout });
             return;
         }
 
-        setSelectedRecipes((prev) => [...prev, id]);
+        const selectedWith = [...selectedRecipes, id];
+        setSelectedRecipes(selectedWith);
+        void addRecord('selectedRecipes', 'selected', { ids: selectedWith });
     };
 
     return {

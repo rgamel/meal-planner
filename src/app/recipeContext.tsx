@@ -83,14 +83,20 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
         async function loadData() {
             if (!user) return;
             try {
-                const [ingredientsCollection, uomsCollection, categoriesCollection, recipesCollection] =
-                    await Promise.all(['ingredients', 'uoms', 'categories', 'recipes'].map(getCollection));
-
+                const [
+                    ingredientsCollection,
+                    uomsCollection,
+                    categoriesCollection,
+                    recipesCollection,
+                    selectedRecipesCollection,
+                ] = await Promise.all(
+                    ['ingredients', 'uoms', 'categories', 'recipes', 'selectedRecipes'].map(getCollection),
+                );
                 setRecipes(recipesCollection);
                 setIngredients(ingredientsCollection);
                 setUoms(uomsCollection);
                 setCategories(categoriesCollection);
-                setSelectedRecipes([] as string[]);
+                setSelectedRecipes(selectedRecipesCollection.selected.ids);
             } catch {
                 throw new Error('error loading data');
             }
