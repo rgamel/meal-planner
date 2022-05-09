@@ -1,8 +1,10 @@
-import { Fab, Icon, List, Paper, Dialog, DialogContent, DialogTitle, Grid, Typography } from '@mui/material';
+import { Fab, Icon, List, Paper, Dialog, DialogContent, DialogTitle, Grid, Typography, Box } from '@mui/material';
+import { groupBy, startCase } from 'lodash/fp';
 import RecipeForm from 'features/recipes/RecipeForm';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Recipe } from 'types';
 import { RecipesContext } from 'app/recipeContext';
+import { useCategories } from 'app/hooks';
 import RecipeListItem from './RecipeListItem';
 
 function NoRecipes() {
@@ -11,6 +13,25 @@ function NoRecipes() {
             <Typography variant="h4">Nothing here yet.</Typography>
             <Typography variant="body1">Click the + button below to get started</Typography>
         </div>
+    );
+}
+
+type RecipeSectionProps = {
+    recipes: Recipe[];
+    categoryId: string;
+    editRecipe: (recipe: Recipe) => void;
+};
+
+function RecipeCategorySection({ recipes, editRecipe, categoryId }: RecipeSectionProps) {
+    const { categories } = useCategories();
+    const label = startCase(categories[categoryId]?.name);
+    return (
+        <Box sx={{ mb: 4 }}>
+            <Typography variant="h4">{label}</Typography>
+            {recipes.map((r) => (
+                <RecipeListItem key={r.id} recipe={r} editRecipe={editRecipe} />
+            ))}
+        </Box>
     );
 }
 
@@ -27,13 +48,22 @@ export default function Recipes() {
     );
 
     const recipesMemo = useMemo(() => Object.values(recipes), [recipes]);
+    const recipesByCategory = groupBy('categoryId', recipesMemo);
+
     return (
         <Paper sx={{ p: 2, mb: 24 }}>
             <List>
                 {!recipesMemo.length ? (
                     <NoRecipes />
                 ) : (
-                    recipesMemo.map((r) => <RecipeListItem key={r.id} recipe={r} editRecipe={editRecipe} />)
+                    Object.keys(recipesByCategory).map((categoryId) => (
+                        <RecipeCategorySection
+                            key={categoryId}
+                            recipes={recipesByCategory[categoryId]}
+                            editRecipe={editRecipe}
+                            categoryId={categoryId}
+                        />
+                    ))
                 )}
             </List>
             <Dialog fullWidth open={isRecipeDialogOpen}>
