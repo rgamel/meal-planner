@@ -148,8 +148,6 @@ export const useShoppedItems = () => {
         const shoppedWith = [...shoppedItems, id];
         setShoppedItems(shoppedWith);
         void addRecord('shoppedItems', 'shopped', { ids: shoppedWith });
-
-        console.log(shoppedItems);
     };
 
     return {
