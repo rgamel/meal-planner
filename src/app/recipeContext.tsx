@@ -15,6 +15,8 @@ type RecipesContextProps = {
     setCategories: Dispatch<SetStateAction<CategoryList>>;
     selectedRecipes: string[];
     setSelectedRecipes: Dispatch<SetStateAction<string[]>>;
+    shoppedItems: string[];
+    setShoppedItems: Dispatch<SetStateAction<string[]>>;
 };
 
 export const RecipesContext = createContext<RecipesContextProps>({
@@ -28,6 +30,8 @@ export const RecipesContext = createContext<RecipesContextProps>({
     setCategories: noop,
     selectedRecipes: [] as string[],
     setSelectedRecipes: noop,
+    shoppedItems: [] as string[],
+    setShoppedItems: noop,
 });
 
 export type AppState = {
@@ -37,6 +41,7 @@ export type AppState = {
     uoms: UomList;
     categories: CategoryList;
     isRecipeDialogOpen: boolean;
+    shoppedItems: string[];
 };
 
 interface RecipesContextProviderProps {
@@ -51,6 +56,7 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
     const [uoms, setUoms] = useState<UomList>({});
     const [categories, setCategories] = useState<CategoryList>({});
     const [selectedRecipes, setSelectedRecipes] = useState<string[]>([]);
+    const [shoppedItems, setShoppedItems] = useState<string[]>([]);
 
     const storeMemo = useMemo(
         () => ({
@@ -64,6 +70,8 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
             setCategories,
             selectedRecipes,
             setSelectedRecipes,
+            shoppedItems,
+            setShoppedItems,
         }),
         [
             recipes,
@@ -76,6 +84,8 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
             setCategories,
             selectedRecipes,
             setSelectedRecipes,
+            shoppedItems,
+            setShoppedItems,
         ],
     );
 
@@ -89,14 +99,18 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
                     categoriesCollection,
                     recipesCollection,
                     selectedRecipesCollection,
+                    shoppedItemsCollection,
                 ] = await Promise.all(
-                    ['ingredients', 'uoms', 'categories', 'recipes', 'selectedRecipes'].map(getCollection),
+                    ['ingredients', 'uoms', 'categories', 'recipes', 'selectedRecipes', 'shoppedItems'].map(
+                        getCollection,
+                    ),
                 );
                 setRecipes(recipesCollection);
                 setIngredients(ingredientsCollection);
                 setUoms(uomsCollection);
                 setCategories(categoriesCollection);
                 setSelectedRecipes(selectedRecipesCollection.selected.ids);
+                setShoppedItems(shoppedItemsCollection.shopped.ids);
             } catch {
                 throw new Error('error loading data');
             }

@@ -20,12 +20,13 @@ import {
     NotDraggingStyle,
 } from 'react-beautiful-dnd';
 import { GroceryItem } from 'types';
-import { useIngredients, useUoms } from 'app/hooks';
+import { useIngredients, useShoppedItems, useUoms } from 'app/hooks';
 import { Dispatch, SetStateAction } from 'react';
 
 type GroceryLineItemProps = {
     groceryItem: GroceryItem;
     deleteGroceryItem?: (item: GroceryItem) => void;
+    itemId: string;
 };
 
 function move(array: any[], fromIndex: number, toIndex: number) {
@@ -55,12 +56,19 @@ function move(array: any[], fromIndex: number, toIndex: number) {
     return array;
 }
 
-function GroceryLineItem({ groceryItem, deleteGroceryItem }: GroceryLineItemProps) {
+function GroceryLineItem({ groceryItem, deleteGroceryItem, itemId }: GroceryLineItemProps) {
     const { uoms } = useUoms();
     const { ingredients } = useIngredients();
+
+    const { shoppedItems, handleToggleShopped } = useShoppedItems();
+
     return (
         <ListItem disableGutters key={`${groceryItem.uomId}|${groceryItem.itemId}|${String(groceryItem.isAldi)}`}>
-            {!deleteGroceryItem ? <Checkbox /> : <Icon sx={{ ml: -1, opacity: 0.5 }}>drag_indicator</Icon>}
+            {!deleteGroceryItem ? (
+                <Checkbox checked={shoppedItems.includes(itemId)} onClick={() => handleToggleShopped(itemId)} />
+            ) : (
+                <Icon sx={{ ml: -1, opacity: 0.5 }}>drag_indicator</Icon>
+            )}
             <ListItemText
                 primary={
                     <span>
@@ -96,7 +104,7 @@ export function GroceryItems({ items, setItems, deleteGroceryItem }: GroceryItem
         backgroundColor: isDraggingOver ? 'rgb(21, 101, 192, 0.1)' : '#FFF',
     });
 
-    const getItemStyle = (isDragging: boolean, draggableStyle: DraggingStyle | NotDraggingStyle | undefined) => ({
+    const getItemStyle = (_: boolean, draggableStyle: DraggingStyle | NotDraggingStyle | undefined) => ({
         padding: 16,
         margin: `0 0 16 0`,
         background: '#FFF',
@@ -131,6 +139,7 @@ export function GroceryItems({ items, setItems, deleteGroceryItem }: GroceryItem
                                                     <GroceryLineItem
                                                         groceryItem={groceryItem}
                                                         deleteGroceryItem={deleteGroceryItem}
+                                                        itemId={itemId}
                                                     />
                                                 </div>
                                             )}
@@ -162,6 +171,7 @@ export function StoreListAccordion({ label, children }: { label?: string; childr
 
 export default function GroceryMasterList({ groceries }: { groceries: GroceryItem[] }) {
     const [aldi, schnucks] = partition('isAldi', groceries);
+
     return (
         <Grid container columns={{ xs: 2, sm: 8 }}>
             <StoreListAccordion label="Aldi list">

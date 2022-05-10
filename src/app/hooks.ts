@@ -133,3 +133,27 @@ export const useSelectedRecipes = () => {
         handleSelectRecipe,
     };
 };
+
+export const useShoppedItems = () => {
+    const { shoppedItems, setShoppedItems } = useContext(RecipesContext);
+    const { addRecord } = useFirebase();
+
+    const handleToggleShopped = (id: string) => {
+        if (shoppedItems?.includes(id)) {
+            const shoppedWithout = shoppedItems.filter((item) => item !== id);
+            setShoppedItems(shoppedWithout);
+            void addRecord('shoppedItems', 'shopped', { ids: shoppedWithout });
+            return;
+        }
+        const shoppedWith = [...shoppedItems, id];
+        setShoppedItems(shoppedWith);
+        void addRecord('shoppedItems', 'shopped', { ids: shoppedWith });
+
+        console.log(shoppedItems);
+    };
+
+    return {
+        shoppedItems,
+        handleToggleShopped,
+    };
+};
