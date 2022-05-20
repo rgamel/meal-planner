@@ -1,18 +1,30 @@
-import { Fab, Icon, List, Paper, Dialog, DialogContent, DialogTitle, Grid, Typography, Box } from '@mui/material';
+import {
+    Fab,
+    Icon,
+    List,
+    Paper,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Typography,
+    Box,
+    Button,
+} from '@mui/material';
 import { groupBy, startCase } from 'lodash/fp';
 import RecipeForm from 'features/recipes/RecipeForm';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Recipe } from 'types';
 import { RecipesContext } from 'app/recipeContext';
-import { useCategories } from 'app/hooks';
+import { useCategories, useSelectedRecipes } from 'app/hooks';
 import RecipeListItem from './RecipeListItem';
 
 function NoRecipes() {
     return (
-        <div>
+        <>
             <Typography variant="h4">Nothing here yet.</Typography>
             <Typography variant="body1">Click the + button below to get started</Typography>
-        </div>
+        </>
     );
 }
 
@@ -37,6 +49,7 @@ function RecipeCategorySection({ recipes, editRecipe, categoryId }: RecipeSectio
 
 export default function Recipes() {
     const { recipes } = useContext(RecipesContext);
+    const { clearAllSelected } = useSelectedRecipes();
     const [isRecipeDialogOpen, setRecipeDialogOpen] = useState(false);
     const [recipeToEdit, setRecipeToEdit] = useState<null | Recipe>(null);
     const editRecipe = useCallback(
@@ -51,45 +64,50 @@ export default function Recipes() {
     const recipesByCategory = groupBy('categoryId', recipesMemo);
 
     return (
-        <Paper sx={{ p: 2, mb: 24 }}>
-            <List>
-                {!recipesMemo.length ? (
-                    <NoRecipes />
-                ) : (
-                    Object.keys(recipesByCategory).map((categoryId) => (
-                        <RecipeCategorySection
-                            key={categoryId}
-                            recipes={recipesByCategory[categoryId]}
-                            editRecipe={editRecipe}
-                            categoryId={categoryId}
-                        />
-                    ))
-                )}
-            </List>
-            <Dialog fullWidth open={isRecipeDialogOpen}>
-                <Grid container direction="column">
-                    <Grid item xs={1}>
-                        <DialogTitle sx={{ pb: 0 }}>{`${recipeToEdit ? 'Edit' : 'Create'} Recipe`}</DialogTitle>
-                    </Grid>
-                    <Grid item xs={11}>
-                        <DialogContent>
-                            <RecipeForm
-                                setRecipeDialogOpen={setRecipeDialogOpen}
-                                recipeToEdit={recipeToEdit}
-                                setRecipeToEdit={setRecipeToEdit}
+        <>
+            <Paper sx={{ p: 2, mb: 24 }}>
+                <List>
+                    {!recipesMemo.length ? (
+                        <NoRecipes />
+                    ) : (
+                        Object.keys(recipesByCategory).map((categoryId) => (
+                            <RecipeCategorySection
+                                key={categoryId}
+                                recipes={recipesByCategory[categoryId]}
+                                editRecipe={editRecipe}
+                                categoryId={categoryId}
                             />
-                        </DialogContent>
+                        ))
+                    )}
+                </List>
+                <Dialog fullWidth open={isRecipeDialogOpen}>
+                    <Grid container direction="column">
+                        <Grid item xs={1}>
+                            <DialogTitle sx={{ pb: 0 }}>{`${recipeToEdit ? 'Edit' : 'Create'} Recipe`}</DialogTitle>
+                        </Grid>
+                        <Grid item xs={11}>
+                            <DialogContent>
+                                <RecipeForm
+                                    setRecipeDialogOpen={setRecipeDialogOpen}
+                                    recipeToEdit={recipeToEdit}
+                                    setRecipeToEdit={setRecipeToEdit}
+                                />
+                            </DialogContent>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Dialog>
-            <Fab
-                color="primary"
-                aria-label="add"
-                onClick={() => setRecipeDialogOpen(true)}
-                sx={{ position: 'fixed', bottom: 24, right: 24 }}
-            >
-                <Icon>add</Icon>
-            </Fab>
-        </Paper>
+                </Dialog>
+                <Fab
+                    color="primary"
+                    aria-label="add"
+                    onClick={() => setRecipeDialogOpen(true)}
+                    sx={{ position: 'fixed', bottom: 24, right: 24 }}
+                >
+                    <Icon>add</Icon>
+                </Fab>
+            </Paper>
+            <Button variant="contained" onClick={clearAllSelected} sx={{ mb: 2 }}>
+                Clear All
+            </Button>
+        </>
     );
 }

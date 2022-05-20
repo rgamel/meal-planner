@@ -7,7 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Icon from '@mui/material/Icon';
-import { ListItemSecondaryAction, ListItemText } from '@mui/material';
+import { Box, Button, ListItemSecondaryAction, ListItemText } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -171,15 +171,23 @@ export function StoreListAccordion({ label, children }: { label?: string; childr
 
 export default function GroceryMasterList({ groceries }: { groceries: GroceryItem[] }) {
     const [aldi, schnucks] = partition('isAldi', groceries);
+    const { clearAllShopped } = useShoppedItems();
 
     return (
-        <Grid container columns={{ xs: 2, sm: 8 }}>
-            <StoreListAccordion label="Aldi list">
-                <GroceryItems items={aldi} />
-            </StoreListAccordion>
-            <StoreListAccordion label="Schnucks list">
-                <GroceryItems items={schnucks} />
-            </StoreListAccordion>
-        </Grid>
+        <>
+            <Grid container columns={{ xs: 2, sm: 8 }}>
+                <StoreListAccordion label="Aldi list">
+                    <GroceryItems items={aldi} />
+                </StoreListAccordion>
+                <StoreListAccordion label="Schnucks list">
+                    <GroceryItems items={schnucks} />
+                </StoreListAccordion>
+            </Grid>
+            <Box sx={{ mt: 2 }}>
+                <Button variant="contained" onClick={clearAllShopped} sx={{ mb: 2 }}>
+                    Clear All
+                </Button>
+            </Box>
+        </>
     );
 }

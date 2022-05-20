@@ -109,31 +109,6 @@ export const useCategories = () => {
     };
 };
 
-export const useSelectedRecipes = () => {
-    const { selectedRecipes, setSelectedRecipes, recipes } = useContext(RecipesContext);
-    const { addRecord } = useFirebase();
-
-    const handleSelectRecipe = (id: string) => {
-        if (!recipes[id]) return;
-
-        if (selectedRecipes.includes(id)) {
-            const selectedWithout = selectedRecipes.filter((r) => r !== id);
-            setSelectedRecipes(selectedWithout);
-            void addRecord('selectedRecipes', 'selected', { ids: selectedWithout });
-            return;
-        }
-
-        const selectedWith = [...selectedRecipes, id];
-        setSelectedRecipes(selectedWith);
-        void addRecord('selectedRecipes', 'selected', { ids: selectedWith });
-    };
-
-    return {
-        selectedRecipes,
-        handleSelectRecipe,
-    };
-};
-
 export const useShoppedItems = () => {
     const { shoppedItems, setShoppedItems } = useContext(RecipesContext);
     const { addRecord } = useFirebase();
@@ -150,8 +125,47 @@ export const useShoppedItems = () => {
         void addRecord('shoppedItems', 'shopped', { ids: shoppedWith });
     };
 
+    const clearAllShopped = () => {
+        setShoppedItems([]);
+        void addRecord('shoppedItems', 'shopped', { ids: [] });
+    };
+
     return {
         shoppedItems,
         handleToggleShopped,
+        clearAllShopped,
+    };
+};
+
+export const useSelectedRecipes = () => {
+    const { selectedRecipes, setSelectedRecipes, recipes } = useContext(RecipesContext);
+    const { addRecord } = useFirebase();
+    const { clearAllShopped } = useShoppedItems();
+
+    const handleSelectRecipe = (id: string) => {
+        if (!recipes[id]) return;
+
+        if (selectedRecipes.includes(id)) {
+            const selectedWithout = selectedRecipes.filter((r) => r !== id);
+            setSelectedRecipes(selectedWithout);
+            void addRecord('selectedRecipes', 'selected', { ids: selectedWithout });
+            return;
+        }
+
+        const selectedWith = [...selectedRecipes, id];
+        setSelectedRecipes(selectedWith);
+        void addRecord('selectedRecipes', 'selected', { ids: selectedWith });
+    };
+
+    const clearAllSelected = () => {
+        clearAllShopped();
+        setSelectedRecipes([]);
+        void addRecord('selectedRecipes', 'selected', { ids: [] });
+    };
+
+    return {
+        selectedRecipes,
+        handleSelectRecipe,
+        clearAllSelected,
     };
 };
