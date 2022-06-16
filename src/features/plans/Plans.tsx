@@ -13,6 +13,7 @@ import {
     Typography,
 } from '@mui/material';
 import { usePlans } from 'app/hooks';
+import { startCase } from 'lodash';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -33,7 +34,7 @@ export default function Plans() {
                             nav(`${plan.id}`);
                         }}
                     >
-                        <ListItemText primary={`${plan.name}`} />
+                        <ListItemText primary={startCase(plan.name)} />
                     </ListItem>
                 ))}
             </List>

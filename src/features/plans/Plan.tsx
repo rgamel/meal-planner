@@ -14,8 +14,7 @@ import {
     Typography,
 } from '@mui/material';
 import { usePlannedQuantity, usePlans, useRecipes } from 'app/hooks';
-import { noop } from 'lodash';
-import { isEmpty } from 'lodash/fp';
+import { isEmpty, noop, startCase } from 'lodash/fp';
 import { useConfirm } from 'material-ui-confirm';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -120,7 +119,7 @@ export default function Plan() {
                         const recipeId = recipeWithQuantity.id;
                         return (
                             <ListItem key={recipeId}>
-                                <ListItemText primary={recipes[recipeId]?.name || recipeId} />
+                                <ListItemText primary={startCase(recipes[recipeId]?.name) || recipeId} />
                                 <QuantitySelect recipeWithQuantity={recipeWithQuantity} />
                             </ListItem>
                         );
