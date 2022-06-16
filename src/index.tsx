@@ -6,6 +6,8 @@ import App from './App';
 import RecipesContextProvider from './app/recipeContext';
 import Groceries from './features/groceries/Groceries';
 import Recipes from './features/recipes/Recipes';
+import Plans from './features/plans/Plans';
+import Plan from './features/plans/Plan';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -14,12 +16,10 @@ ReactDOM.render(
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<App />}>
-                            <Route path="recipes" element={<Recipes />}>
-                                Recipes
-                            </Route>
-                            <Route path="groceries" element={<Groceries />}>
-                                Groceries
-                            </Route>
+                            <Route path="recipes" element={<Recipes />} />
+                            <Route path="groceries" element={<Groceries />} />
+                            <Route path="plans" element={<Plans />} />
+                            <Route path="plans/:id" element={<Plan />} />
                         </Route>
                     </Routes>
                 </BrowserRouter>

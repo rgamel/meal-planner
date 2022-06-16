@@ -86,6 +86,11 @@ export default function ButtonAppBar() {
                 sx={{ mt: '45px' }}
             >
                 <MenuItem onClick={handleCloseNavMenu}>
+                    <Link to="/plans" style={{ textDecoration: 'none', color: 'black' }}>
+                        Plans
+                    </Link>
+                </MenuItem>
+                <MenuItem onClick={handleCloseNavMenu}>
                     <Link to="/recipes" style={{ textDecoration: 'none', color: 'black' }}>
                         Recipes
                     </Link>

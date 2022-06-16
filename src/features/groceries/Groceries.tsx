@@ -1,12 +1,17 @@
 import { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Typography } from '@mui/material';
 import { GroceryItem } from 'types';
 import Fraction from 'fraction.js';
 import GroceryList from './GroceryList';
-import { useRecipes, useSelectedRecipes } from '../../app/hooks';
+import { usePlans, useRecipes, useSelectedPlan, useSelectedRecipes } from '../../app/hooks';
 
 function Groceries() {
     const { selectedRecipes } = useSelectedRecipes();
+    const { plans } = usePlans();
+    const { selectedPlan, setSelectedPlan } = useSelectedPlan();
     const { recipes } = useRecipes();
+    const nav = useNavigate();
 
     const compactGroceries = useCallback((groceries: GroceryItem[]) => {
         const list = groceries.reduce((acc, val) => {
@@ -27,12 +32,29 @@ function Groceries() {
         () =>
             compactGroceries(
                 Object.values(selectedRecipes || [])
-                    .map((id) => recipes[id].groceries)
+                    .map((r) => recipes[r].groceries)
                     .flat(),
             ),
         [selectedRecipes, compactGroceries, recipes],
     );
-    return <GroceryList groceries={allGroceries} />;
+    return (
+        <div>
+            {selectedPlan ? (
+                <Typography variant="h6">
+                    Groceries for plan:{' '}
+                    <Button
+                        onClick={() => {
+                            nav(`/plans/${selectedPlan}`);
+                            setSelectedPlan('');
+                        }}
+                    >
+                        {plans[selectedPlan].name}
+                    </Button>
+                </Typography>
+            ) : null}
+            <GroceryList groceries={allGroceries} />
+        </div>
+    );
 }
 
 export default Groceries;

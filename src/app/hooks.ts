@@ -1,4 +1,5 @@
 import { collection, deleteDoc, doc, DocumentData, getDocs, QuerySnapshot, setDoc } from 'firebase/firestore/lite';
+// import Fraction from 'fraction.js';
 import { omit, set, unset } from 'lodash/fp';
 import { nanoid } from 'nanoid';
 import { Dispatch, SetStateAction, useContext } from 'react';
@@ -33,7 +34,7 @@ export const useFirebase = () => {
 const useGenericFns = <T extends { id: string }>(
     list: Record<string, T>,
     setList: Dispatch<SetStateAction<Record<string, T>>>,
-    listName: 'ingredients' | 'uoms' | 'recipes' | 'categories' | 'selectedRecipes',
+    listName: 'plans' | 'ingredients' | 'uoms' | 'recipes' | 'categories' | 'selectedRecipes',
 ) => {
     const { addRecord: upsertRecord, deleteRecord } = useFirebase();
     const addFn = (item: Omit<T, 'id'>) => {
@@ -109,62 +110,95 @@ export const useCategories = () => {
     };
 };
 
+export const usePlans = () => {
+    const { plans, setPlans } = useContext(RecipesContext);
+    const { addFn, deleteFn, updateFn } = useGenericFns(plans, setPlans, 'plans');
+
+    return {
+        plans,
+        addPlan: addFn,
+        deletePlan: deleteFn,
+        updatePlan: updateFn,
+    };
+};
+
+export const useSelectedPlan = () => {
+    const { selectedPlan, setSelectedPlan } = useContext(RecipesContext);
+
+    return {
+        selectedPlan,
+        setSelectedPlan,
+    };
+};
+
 export const useShoppedItems = () => {
-    const { shoppedItems, setShoppedItems } = useContext(RecipesContext);
+    const { plans, updatePlan } = usePlans();
+    const { selectedPlan } = useSelectedPlan();
     const { addRecord } = useFirebase();
 
+    const document = selectedPlan || 'shopped';
+
+    const shoppedItemsForCurrentPlan = plans[selectedPlan]?.shoppedItems || [];
+
     const handleToggleShopped = (id: string) => {
-        if (shoppedItems?.includes(id)) {
-            const shoppedWithout = shoppedItems.filter((item) => item !== id);
-            setShoppedItems(shoppedWithout);
-            void addRecord('shoppedItems', 'shopped', { ids: shoppedWithout });
+        // if (!selectedPlan || !plans[selectedPlan]) return;
+
+        if (shoppedItemsForCurrentPlan.includes(id)) {
+            const shoppedWithout = shoppedItemsForCurrentPlan.filter((item) => item !== id);
+            updatePlan({ ...plans[selectedPlan], shoppedItems: shoppedWithout });
+            void addRecord('shoppedItems', document, { ids: shoppedWithout });
             return;
         }
-        const shoppedWith = [...shoppedItems, id];
-        setShoppedItems(shoppedWith);
-        void addRecord('shoppedItems', 'shopped', { ids: shoppedWith });
+        const shoppedWith = [...shoppedItemsForCurrentPlan, id];
+        updatePlan({ ...plans[selectedPlan], shoppedItems: shoppedWith });
+        void addRecord('shoppedItems', document, { ids: shoppedWith });
     };
 
     const clearAllShopped = () => {
-        setShoppedItems([]);
-        void addRecord('shoppedItems', 'shopped', { ids: [] });
+        updatePlan({ ...plans[selectedPlan], shoppedItems: [] });
+        void addRecord('shoppedItems', document, { ids: [] });
     };
 
     return {
-        shoppedItems,
+        shoppedItems: shoppedItemsForCurrentPlan || [],
         handleToggleShopped,
         clearAllShopped,
     };
 };
 
 export const useSelectedRecipes = () => {
-    const { selectedRecipes, setSelectedRecipes, recipes } = useContext(RecipesContext);
+    const { recipes } = useContext(RecipesContext);
     const { addRecord } = useFirebase();
-    const { clearAllShopped } = useShoppedItems();
+    const { plans, updatePlan } = usePlans();
+    const { selectedPlan } = useSelectedPlan();
+
+    const document = selectedPlan || 'selected';
+    const recipesForCurrentPlan = plans[selectedPlan]?.recipes || [];
 
     const handleSelectRecipe = (id: string) => {
         if (!recipes[id]) return;
 
-        if (selectedRecipes.includes(id)) {
-            const selectedWithout = selectedRecipes.filter((r) => r !== id);
-            setSelectedRecipes(selectedWithout);
-            void addRecord('selectedRecipes', 'selected', { ids: selectedWithout });
+        if (!plans[selectedPlan]) return;
+
+        if (recipesForCurrentPlan.includes(id)) {
+            const selectedWithout = recipesForCurrentPlan.filter((r) => r !== id);
+            updatePlan({ ...plans[selectedPlan], recipes: selectedWithout });
+            void addRecord('selectedRecipes', document, { ids: selectedWithout });
             return;
         }
 
-        const selectedWith = [...selectedRecipes, id];
-        setSelectedRecipes(selectedWith);
-        void addRecord('selectedRecipes', 'selected', { ids: selectedWith });
+        const selectedWith = [...recipesForCurrentPlan, id];
+        updatePlan({ ...plans[selectedPlan], recipes: selectedWith });
+        void addRecord('selectedRecipes', document, { ids: selectedWith });
     };
 
     const clearAllSelected = () => {
-        clearAllShopped();
-        setSelectedRecipes([]);
-        void addRecord('selectedRecipes', 'selected', { ids: [] });
+        updatePlan({ ...plans[selectedPlan], recipes: [], shoppedItems: [] });
+        void addRecord('selectedRecipes', document, { ids: [] });
     };
 
     return {
-        selectedRecipes,
+        selectedRecipes: recipesForCurrentPlan,
         handleSelectRecipe,
         clearAllSelected,
     };

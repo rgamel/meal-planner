@@ -1,10 +1,16 @@
 import { noop } from 'lodash/fp';
 import { createContext, Dispatch, SetStateAction, useEffect, useState, useMemo, useContext } from 'react';
-import { CategoryList, IngredientList, RecipeList, UomList } from 'types';
+import { PlanList, CategoryList, IngredientList, RecipeList, UomList } from 'types';
 import { useFirebase } from './hooks';
 import { UserContext } from './userContext';
 
+// TODO: remove selectedRecipes and shoppedItems entirely in current form, replace as properties of plans
+
 type RecipesContextProps = {
+    plans: PlanList;
+    setPlans: Dispatch<SetStateAction<PlanList>>;
+    selectedPlan: string;
+    setSelectedPlan: Dispatch<SetStateAction<string>>;
     recipes: RecipeList;
     setRecipes: Dispatch<SetStateAction<RecipeList>>;
     ingredients: IngredientList;
@@ -20,6 +26,10 @@ type RecipesContextProps = {
 };
 
 export const RecipesContext = createContext<RecipesContextProps>({
+    plans: {} as PlanList,
+    setPlans: noop,
+    selectedPlan: '',
+    setSelectedPlan: noop,
     recipes: {} as RecipeList,
     setRecipes: noop,
     ingredients: {} as IngredientList,
@@ -35,6 +45,8 @@ export const RecipesContext = createContext<RecipesContextProps>({
 });
 
 export type AppState = {
+    plans: PlanList;
+    selectedPlan: string;
     ingredients: IngredientList;
     recipes: RecipeList;
     selectedRecipes: string[];
@@ -51,6 +63,8 @@ interface RecipesContextProviderProps {
 export default function RecipesContextProvider({ children }: RecipesContextProviderProps) {
     const { getCollection } = useFirebase();
     const { user } = useContext(UserContext);
+    const [plans, setPlans] = useState<PlanList>({});
+    const [selectedPlan, setSelectedPlan] = useState<string>('');
     const [recipes, setRecipes] = useState<RecipeList>({});
     const [ingredients, setIngredients] = useState<IngredientList>({});
     const [uoms, setUoms] = useState<UomList>({});
@@ -60,6 +74,10 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
 
     const storeMemo = useMemo(
         () => ({
+            plans,
+            setPlans,
+            selectedPlan,
+            setSelectedPlan,
             recipes,
             setRecipes,
             ingredients,
@@ -74,6 +92,10 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
             setShoppedItems,
         }),
         [
+            plans,
+            setPlans,
+            selectedPlan,
+            setSelectedPlan,
             recipes,
             setRecipes,
             ingredients,
@@ -94,6 +116,7 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
             if (!user) return;
             try {
                 const [
+                    plansCollection,
                     ingredientsCollection,
                     uomsCollection,
                     categoriesCollection,
@@ -101,10 +124,11 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
                     selectedRecipesCollection,
                     shoppedItemsCollection,
                 ] = await Promise.all(
-                    ['ingredients', 'uoms', 'categories', 'recipes', 'selectedRecipes', 'shoppedItems'].map(
+                    ['plans', 'ingredients', 'uoms', 'categories', 'recipes', 'selectedRecipes', 'shoppedItems'].map(
                         getCollection,
                     ),
                 );
+                setPlans(plansCollection);
                 setRecipes(recipesCollection);
                 setIngredients(ingredientsCollection);
                 setUoms(uomsCollection);

@@ -1,3 +1,11 @@
+export type Plan = {
+    name: string;
+    id: string;
+    recipes: string[];
+    shoppedItems: string[];
+};
+export type PlanList = Record<string, Plan>;
+
 export type Uom = { name: string; id: string };
 export type UomList = Record<string, Uom>;
 

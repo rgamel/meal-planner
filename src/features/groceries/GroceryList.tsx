@@ -2,7 +2,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import partition from 'lodash/fp/partition';
-import { startCase } from 'lodash';
+import { isEmpty, startCase } from 'lodash';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
@@ -156,12 +156,21 @@ export function GroceryItems({ items, setItems, deleteGroceryItem }: GroceryItem
     );
 }
 
-export function StoreListAccordion({ label, children }: { label?: string; children: JSX.Element | JSX.Element[] }) {
+export function StoreListAccordion({
+    label,
+    count,
+    children,
+}: {
+    label?: string;
+    count?: number;
+    children: JSX.Element | JSX.Element[];
+}) {
+    const summaryText = (label || '') + (count ? `: ${count}` : '');
     return (
         <Grid item xs={2} sm={4}>
             <Accordion>
                 <AccordionSummary expandIcon={<Icon>expand_more</Icon>}>
-                    <Typography>{label}</Typography>
+                    <Typography>{summaryText}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>{children}</AccordionDetails>
             </Accordion>
@@ -176,12 +185,16 @@ export default function GroceryMasterList({ groceries }: { groceries: GroceryIte
     return (
         <>
             <Grid container columns={{ xs: 2, sm: 8 }}>
-                <StoreListAccordion label="Aldi list">
-                    <GroceryItems items={aldi} />
-                </StoreListAccordion>
-                <StoreListAccordion label="Schnucks list">
-                    <GroceryItems items={schnucks} />
-                </StoreListAccordion>
+                {!isEmpty(aldi) ? (
+                    <StoreListAccordion count={aldi.length} label="Aldi">
+                        <GroceryItems items={aldi} />
+                    </StoreListAccordion>
+                ) : null}
+                {!isEmpty(schnucks) ? (
+                    <StoreListAccordion count={schnucks.length} label="Schnucks">
+                        <GroceryItems items={schnucks} />
+                    </StoreListAccordion>
+                ) : null}
             </Grid>
             <Box sx={{ mt: 2 }}>
                 <Button variant="contained" onClick={clearAllShopped} sx={{ mb: 2 }}>
