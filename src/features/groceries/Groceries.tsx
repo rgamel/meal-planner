@@ -4,12 +4,11 @@ import { Button, Typography } from '@mui/material';
 import { GroceryItem } from 'types';
 import Fraction from 'fraction.js';
 import GroceryList from './GroceryList';
-import { usePlans, useRecipes, useSelectedPlan, useSelectedRecipes } from '../../app/hooks';
+import { usePlans, useRecipes, useSelectedRecipes } from '../../app/hooks';
 
 function Groceries() {
     const { selectedRecipes } = useSelectedRecipes();
-    const { plans } = usePlans();
-    const { selectedPlan, setSelectedPlan } = useSelectedPlan();
+    const { plans, selectedPlan, setSelectedPlan } = usePlans();
     const { recipes } = useRecipes();
     const nav = useNavigate();
 

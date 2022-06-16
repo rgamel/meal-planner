@@ -17,7 +17,7 @@ import RecipeForm from 'features/recipes/RecipeForm';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Recipe } from 'types';
 import { RecipesContext } from 'app/recipeContext';
-import { useCategories, usePlans, useSelectedPlan, useSelectedRecipes } from 'app/hooks';
+import { useCategories, usePlans, useSelectedRecipes } from 'app/hooks';
 import RecipeListItem from './RecipeListItem';
 
 function NoRecipes() {
@@ -51,8 +51,7 @@ function RecipeCategorySection({ recipes, editRecipe, categoryId }: RecipeSectio
 export default function Recipes() {
     const { recipes } = useContext(RecipesContext);
     const { clearAllSelected } = useSelectedRecipes();
-    const { plans } = usePlans();
-    const { selectedPlan, setSelectedPlan } = useSelectedPlan();
+    const { plans, selectedPlan, setSelectedPlan } = usePlans();
     const [isRecipeDialogOpen, setRecipeDialogOpen] = useState(false);
     const [recipeToEdit, setRecipeToEdit] = useState<null | Recipe>(null);
     const nav = useNavigate();

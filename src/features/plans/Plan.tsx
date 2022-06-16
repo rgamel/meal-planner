@@ -13,7 +13,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { usePlans, useRecipes, useSelectedPlan } from 'app/hooks';
+import { usePlans, useRecipes } from 'app/hooks';
 import { noop } from 'lodash';
 import { isEmpty } from 'lodash/fp';
 import { useConfirm } from 'material-ui-confirm';
@@ -43,8 +43,7 @@ function QuantitySelect({ recipeId: _recipeId }: { recipeId: string }) {
 export default function Plan() {
     const { id } = useParams();
     const { recipes } = useRecipes();
-    const { plans, deletePlan, updatePlan } = usePlans();
-    const { setSelectedPlan } = useSelectedPlan();
+    const { plans, setSelectedPlan, deletePlan, updatePlan } = usePlans();
     const nav = useNavigate();
     const confirm = useConfirm();
 
