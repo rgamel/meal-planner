@@ -14,7 +14,9 @@ import {
     Typography,
 } from '@mui/material';
 import { usePlans, useRecipes, useSelectedPlan } from 'app/hooks';
+import { noop } from 'lodash';
 import { isEmpty } from 'lodash/fp';
+import { useConfirm } from 'material-ui-confirm';
 // import Fraction from 'fraction.js';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -44,6 +46,7 @@ export default function Plan() {
     const { plans, deletePlan, updatePlan } = usePlans();
     const { setSelectedPlan } = useSelectedPlan();
     const nav = useNavigate();
+    const confirm = useConfirm();
 
     const plan = plans[id as string];
 
@@ -51,6 +54,19 @@ export default function Plan() {
     const [planName, setPlanName] = useState(plan?.name);
 
     const currentRecipes = plan?.recipes || [];
+
+    const handleDelete = () => {
+        confirm({
+            title: `Delete ${planName}?`,
+            description: 'This cannot be undone',
+            confirmationButtonProps: { color: 'error', variant: 'contained' },
+        })
+            .then(() => {
+                deletePlan(id as string);
+                nav('/plans');
+            })
+            .catch(noop);
+    };
 
     return (
         <div>
@@ -128,22 +144,7 @@ export default function Plan() {
                     </Button>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button
-                        onClick={() => {
-                            // eslint-disable-next-line no-alert
-                            const response = prompt(
-                                'If you are sure you want to delete, please type the name of the plan below. This cannot be undone',
-                            );
-                            if (response?.toLowerCase() === plan?.name.toLowerCase()) {
-                                deletePlan(id as string);
-                                // eslint-disable-next-line no-alert
-                                alert('Plan deleted');
-                                nav('/plans');
-                            }
-                        }}
-                        fullWidth
-                        color="error"
-                    >
+                    <Button onClick={handleDelete} fullWidth color="error">
                         Delete Plan
                     </Button>
                 </Grid>
