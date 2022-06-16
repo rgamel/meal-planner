@@ -54,6 +54,7 @@ export default function Plans() {
                         <TextField
                             required
                             variant="filled"
+                            autoFocus
                             label="Plan name"
                             onChange={(e) => {
                                 setPlanName(e.target.value);
