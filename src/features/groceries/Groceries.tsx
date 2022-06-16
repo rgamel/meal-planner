@@ -31,7 +31,12 @@ function Groceries() {
         () =>
             compactGroceries(
                 Object.values(selectedRecipes || [])
-                    .map((r) => recipes[r].groceries)
+                    .map((r) =>
+                        recipes[r.id].groceries.map((gi) => ({
+                            ...gi,
+                            quantity: new Fraction(gi.quantity).mul(r.quantity).toString(),
+                        })),
+                    )
                     .flat(),
             ),
         [selectedRecipes, compactGroceries, recipes],

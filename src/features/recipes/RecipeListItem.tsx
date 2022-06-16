@@ -16,7 +16,7 @@ export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemPro
         handleSelectRecipe(recipe.id);
     }, [recipe.id, handleSelectRecipe]);
 
-    const checked = useMemo(() => selectedRecipes.includes(recipe.id), [selectedRecipes, recipe]);
+    const checked = useMemo(() => selectedRecipes.map((sr) => sr.id).includes(recipe.id), [selectedRecipes, recipe]);
 
     const onClickEdit = useCallback(() => {
         editRecipe(recipe);

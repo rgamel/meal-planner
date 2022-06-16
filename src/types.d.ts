@@ -1,7 +1,7 @@
 export type Plan = {
     name: string;
     id: string;
-    recipes: string[];
+    recipes: { id: string; quantity: string }[];
     shoppedItems: string[];
 };
 export type PlanList = Record<string, Plan>;

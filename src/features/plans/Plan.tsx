@@ -13,23 +13,28 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { usePlans, useRecipes } from 'app/hooks';
+import { usePlannedQuantity, usePlans, useRecipes } from 'app/hooks';
 import { noop } from 'lodash';
 import { isEmpty } from 'lodash/fp';
 import { useConfirm } from 'material-ui-confirm';
-// import Fraction from 'fraction.js';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function QuantitySelect({ recipeId: _recipeId }: { recipeId: string }) {
+function QuantitySelect({
+    recipeWithQuantity: { id, quantity },
+}: {
+    recipeWithQuantity: { id: string; quantity: string };
+}) {
     // TODO: implement persisting quantities
-    const [quantity, setQuantity] = useState('1');
+    const [q, setQ] = useState(quantity);
+    const updatePlannedQuantity = usePlannedQuantity();
     return (
         <Select
-            value={quantity}
+            value={q}
             onChange={(e) => {
-                setQuantity(e.target.value);
+                setQ(e.target.value);
+                updatePlannedQuantity(id, e.target.value);
             }}
             sx={{ minWidth: 75 }}
         >
@@ -41,18 +46,22 @@ function QuantitySelect({ recipeId: _recipeId }: { recipeId: string }) {
 }
 
 export default function Plan() {
-    const { id } = useParams();
+    const planId = useParams().id as string;
     const { recipes } = useRecipes();
     const { plans, setSelectedPlan, deletePlan, updatePlan } = usePlans();
     const nav = useNavigate();
     const confirm = useConfirm();
 
-    const plan = plans[id as string];
+    const plan = plans[planId];
 
     const [editingName, setEditingName] = useState(false);
     const [planName, setPlanName] = useState(plan?.name);
 
     const currentRecipes = plan?.recipes || [];
+
+    useEffect(() => {
+        setSelectedPlan(planId);
+    }, [planId, setSelectedPlan]);
 
     const handleDelete = () => {
         confirm({
@@ -61,7 +70,7 @@ export default function Plan() {
             confirmationButtonProps: { color: 'error', variant: 'contained' },
         })
             .then(() => {
-                deletePlan(id as string);
+                deletePlan(planId);
                 nav('/plans');
             })
             .catch(noop);
@@ -107,12 +116,15 @@ export default function Plan() {
                     sx={{ width: '100%', bgcolor: 'background.paper' }}
                     subheader={<ListSubheader>Recipes</ListSubheader>}
                 >
-                    {currentRecipes.map((recipeId) => (
-                        <ListItem key={recipeId}>
-                            <ListItemText primary={recipes[recipeId]?.name || recipeId} />
-                            <QuantitySelect recipeId={recipeId} />
-                        </ListItem>
-                    ))}
+                    {currentRecipes.map((recipeWithQuantity: { id: string; quantity: string }) => {
+                        const recipeId = recipeWithQuantity.id;
+                        return (
+                            <ListItem key={recipeId}>
+                                <ListItemText primary={recipes[recipeId]?.name || recipeId} />
+                                <QuantitySelect recipeWithQuantity={recipeWithQuantity} />
+                            </ListItem>
+                        );
+                    })}
                 </List>
             ) : (
                 <Typography variant="h6">No recipes for this plan</Typography>
@@ -123,7 +135,7 @@ export default function Plan() {
                         fullWidth
                         variant={isEmpty(currentRecipes) ? 'contained' : 'outlined'}
                         onClick={() => {
-                            setSelectedPlan(id as string);
+                            setSelectedPlan(planId);
                             nav('/recipes');
                         }}
                     >
@@ -135,7 +147,7 @@ export default function Plan() {
                         fullWidth
                         variant={!isEmpty(currentRecipes) ? 'contained' : 'outlined'}
                         onClick={() => {
-                            setSelectedPlan(id as string);
+                            setSelectedPlan(planId);
                             nav('/groceries');
                         }}
                     >

@@ -1,5 +1,4 @@
 import { collection, deleteDoc, doc, DocumentData, getDocs, QuerySnapshot, setDoc } from 'firebase/firestore/lite';
-// import Fraction from 'fraction.js';
 import { omit, set, unset } from 'lodash/fp';
 import { nanoid } from 'nanoid';
 import { Dispatch, SetStateAction, useContext } from 'react';
@@ -124,6 +123,27 @@ export const usePlans = () => {
     };
 };
 
+export const usePlannedQuantity = () => {
+    const { plans, updatePlan, selectedPlan } = usePlans();
+
+    const currentPlan = plans[selectedPlan];
+
+    const updatePlannedQuantity = (id: string, quantity: string) => {
+        const _recipes = currentPlan?.recipes || [];
+
+        const indexToUpdate = _recipes?.findIndex((r) => r.id === id);
+
+        if (indexToUpdate === -1) return;
+
+        const updatedRecipes = [..._recipes];
+        updatedRecipes.splice(indexToUpdate, 1, { id, quantity });
+
+        updatePlan({ ...currentPlan, recipes: updatedRecipes });
+    };
+
+    return updatePlannedQuantity;
+};
+
 export const useShoppedItems = () => {
     const { plans, updatePlan, selectedPlan } = usePlans();
 
@@ -167,12 +187,12 @@ export const useSelectedRecipes = () => {
     const recipesForCurrentPlan = plans[selectedPlan]?.recipes || [];
 
     const removeRecipe = (id: string) => {
-        const selectedWithout = recipesForCurrentPlan.filter((r) => r !== id);
+        const selectedWithout = recipesForCurrentPlan.filter((r) => r.id !== id);
         updatePlan({ ...plans[selectedPlan], recipes: selectedWithout });
     };
 
     const addRecipe = (id: string) => {
-        const selectedWith = [...recipesForCurrentPlan, id];
+        const selectedWith = [...recipesForCurrentPlan, { id, quantity: '1' }];
         updatePlan({ ...plans[selectedPlan], recipes: selectedWith });
     };
 
@@ -181,7 +201,7 @@ export const useSelectedRecipes = () => {
 
         if (!plans[selectedPlan]) return;
 
-        if (recipesForCurrentPlan.includes(id)) {
+        if (recipesForCurrentPlan.map((r) => r.id).includes(id)) {
             removeRecipe(id);
             return;
         }
