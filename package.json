@@ -68,6 +68,7 @@
         "eslint-plugin-react": "^7.29.4",
         "eslint-plugin-react-hooks": "^4.3.0",
         "eslint-stats": "^1.0.1",
+        "nth-check": "^2.0.1",
         "prettier": "^2.6.1"
     }
 }
