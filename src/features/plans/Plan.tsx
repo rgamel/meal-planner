@@ -54,7 +54,7 @@ export default function Plan() {
     const plan = plans[planId];
 
     const [editingName, setEditingName] = useState(false);
-    const [planName, setPlanName] = useState(plan?.name);
+    const [planName, setPlanName] = useState(startCase(plan?.name));
 
     const currentRecipes = plan?.recipes || [];
 

@@ -26,7 +26,8 @@ function IngredientInput({
         setQuantity(e.target.value);
     }, []);
 
-    const validQuantity = quantity.trim().match(/^(?:\d+ )?\d+\/\d+$|^\d+$/);
+    const validQuantity = quantity.trim().match(/^(?:\d+)?\d+\/\d+$|^\d+$/);
+    const enableSave = Boolean(validQuantity && selectedUom?.id && selectedIngredient?.id);
 
     const handleCommitGroceryItem = useCallback(() => {
         if (validQuantity && selectedUom?.id && selectedIngredient?.id) {
@@ -55,7 +56,6 @@ function IngredientInput({
                     onChange={handleChangeQuantity}
                     fullWidth
                     label="Quantity"
-                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     required
                 />
             </Grid>
@@ -93,7 +93,7 @@ function IngredientInput({
                         />
                     </Grid>
                     <Grid item xs={1} sm={3} md={4}>
-                        <Button onClick={handleCommitGroceryItem} variant="outlined" fullWidth disabled={false}>
+                        <Button onClick={handleCommitGroceryItem} variant="outlined" fullWidth disabled={!enableSave}>
                             Add
                         </Button>
                     </Grid>
