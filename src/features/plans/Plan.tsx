@@ -154,7 +154,7 @@ export default function Plan() {
                     </Button>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button onClick={handleDelete} fullWidth color="error">
+                    <Button onClick={handleDelete} fullWidth color="error" sx={{ mt: 2 }}>
                         Delete Plan
                     </Button>
                 </Grid>
