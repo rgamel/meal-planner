@@ -10,9 +10,10 @@ import {
     Typography,
     Box,
     Button,
+    Link,
 } from '@mui/material';
 import { groupBy, startCase } from 'lodash/fp';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import RecipeForm from 'features/recipes/RecipeForm';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Recipe } from 'types';
@@ -51,10 +52,9 @@ function RecipeCategorySection({ recipes, editRecipe, categoryId }: RecipeSectio
 export default function Recipes() {
     const { recipes } = useContext(RecipesContext);
     const { clearAllSelected } = useSelectedRecipes();
-    const { plans, selectedPlan, setSelectedPlan } = usePlans();
+    const { plans, selectedPlan } = usePlans();
     const [isRecipeDialogOpen, setRecipeDialogOpen] = useState(false);
     const [recipeToEdit, setRecipeToEdit] = useState<null | Recipe>(null);
-    const nav = useNavigate();
     const editRecipe = useCallback(
         (recipe: Recipe) => {
             setRecipeToEdit(recipe);
@@ -70,15 +70,10 @@ export default function Recipes() {
         <>
             {selectedPlan ? (
                 <Typography variant="h6">
-                    Recipes for plan:{' '}
-                    <Button
-                        onClick={() => {
-                            nav(`/plans/${selectedPlan}`);
-                            setSelectedPlan('');
-                        }}
-                    >
+                    {`Recipes for plan: `}
+                    <Link component={RouterLink} to={`/plans/${selectedPlan}`}>
                         {plans[selectedPlan].name}
-                    </Button>
+                    </Link>
                 </Typography>
             ) : null}
             <Paper sx={{ p: 2, mb: 24 }}>
@@ -121,7 +116,7 @@ export default function Recipes() {
                     <Icon>add</Icon>
                 </Fab>
             </Paper>
-            <Button variant="contained" onClick={clearAllSelected} sx={{ mb: 2 }}>
+            <Button variant="outlined" onClick={clearAllSelected} sx={{ mb: 2 }}>
                 Clear All
             </Button>
         </>

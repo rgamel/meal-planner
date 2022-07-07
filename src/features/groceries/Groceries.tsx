@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { Link, Typography } from '@mui/material';
 import { GroceryItem } from 'types';
 import Fraction from 'fraction.js';
 import GroceryList from './GroceryList';
@@ -8,9 +8,8 @@ import { usePlans, useRecipes, useSelectedRecipes } from '../../app/hooks';
 
 function Groceries() {
     const { selectedRecipes } = useSelectedRecipes();
-    const { plans, selectedPlan, setSelectedPlan } = usePlans();
+    const { plans, selectedPlan } = usePlans();
     const { recipes } = useRecipes();
-    const nav = useNavigate();
 
     const compactGroceries = useCallback((groceries: GroceryItem[]) => {
         const list = groceries.reduce((acc, val) => {
@@ -45,15 +44,10 @@ function Groceries() {
         <div>
             {selectedPlan ? (
                 <Typography variant="h6">
-                    Groceries for plan:{' '}
-                    <Button
-                        onClick={() => {
-                            nav(`/plans/${selectedPlan}`);
-                            setSelectedPlan('');
-                        }}
-                    >
+                    {`Groceries for plan: `}
+                    <Link component={RouterLink} to={`/plans/${selectedPlan}`}>
                         {plans[selectedPlan].name}
-                    </Button>
+                    </Link>
                 </Typography>
             ) : null}
             <GroceryList groceries={allGroceries} />

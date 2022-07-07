@@ -1,5 +1,6 @@
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -8,7 +9,7 @@ import Icon from '@mui/material/Icon';
 import { useState, MouseEvent, useContext } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { UserContext } from 'app/userContext';
 import { Avatar } from '@mui/material';
 
@@ -86,17 +87,17 @@ export default function ButtonAppBar() {
                 sx={{ mt: '45px' }}
             >
                 <MenuItem onClick={handleCloseNavMenu}>
-                    <Link to="/plans" style={{ textDecoration: 'none', color: 'black' }}>
+                    <Link component={RouterLink} to="/plans">
                         Plans
                     </Link>
                 </MenuItem>
                 <MenuItem onClick={handleCloseNavMenu}>
-                    <Link to="/recipes" style={{ textDecoration: 'none', color: 'black' }}>
+                    <Link component={RouterLink} to="/recipes">
                         Recipes
                     </Link>
                 </MenuItem>
                 <MenuItem onClick={handleCloseNavMenu}>
-                    <Link to="/groceries" style={{ textDecoration: 'none', color: 'black' }}>
+                    <Link component={RouterLink} to="/groceries">
                         Groceries
                     </Link>
                 </MenuItem>

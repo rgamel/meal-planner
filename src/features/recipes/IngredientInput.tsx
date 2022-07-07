@@ -93,7 +93,7 @@ function IngredientInput({
                         />
                     </Grid>
                     <Grid item xs={1} sm={3} md={4}>
-                        <Button onClick={handleCommitGroceryItem} variant="outlined" fullWidth disabled={!enableSave}>
+                        <Button onClick={handleCommitGroceryItem} variant="contained" fullWidth disabled={!enableSave}>
                             Add
                         </Button>
                     </Grid>
