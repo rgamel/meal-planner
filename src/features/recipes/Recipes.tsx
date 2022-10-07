@@ -76,49 +76,58 @@ export default function Recipes() {
                     </Link>
                 </Typography>
             ) : null}
-            <Paper sx={{ p: 2, mb: 24 }}>
-                <List>
-                    {!recipesMemo.length ? (
-                        <NoRecipes />
-                    ) : (
-                        Object.keys(recipesByCategory).map((categoryId) => (
-                            <RecipeCategorySection
-                                key={categoryId}
-                                recipes={recipesByCategory[categoryId]}
-                                editRecipe={editRecipe}
-                                categoryId={categoryId}
-                            />
-                        ))
-                    )}
-                </List>
-                <Dialog fullWidth open={isRecipeDialogOpen}>
-                    <Grid container direction="column">
-                        <Grid item xs={1}>
-                            <DialogTitle sx={{ pb: 0 }}>{`${recipeToEdit ? 'Edit' : 'Create'} Recipe`}</DialogTitle>
-                        </Grid>
-                        <Grid item xs={11}>
-                            <DialogContent>
-                                <RecipeForm
-                                    setRecipeDialogOpen={setRecipeDialogOpen}
-                                    recipeToEdit={recipeToEdit}
-                                    setRecipeToEdit={setRecipeToEdit}
+            <Box sx={{ mb: 12 }}>
+                <Paper sx={{ p: 2, mb: 2 }}>
+                    <List>
+                        {!recipesMemo.length ? (
+                            <NoRecipes />
+                        ) : (
+                            Object.keys(recipesByCategory).map((categoryId) => (
+                                <RecipeCategorySection
+                                    key={categoryId}
+                                    recipes={recipesByCategory[categoryId]}
+                                    editRecipe={editRecipe}
+                                    categoryId={categoryId}
                                 />
-                            </DialogContent>
+                            ))
+                        )}
+                    </List>
+                    <Dialog fullWidth open={isRecipeDialogOpen}>
+                        <Grid container direction="column">
+                            <Grid item xs={1}>
+                                <DialogTitle sx={{ pb: 0 }}>{`${recipeToEdit ? 'Edit' : 'Create'} Recipe`}</DialogTitle>
+                            </Grid>
+                            <Grid item xs={11}>
+                                <DialogContent>
+                                    <RecipeForm
+                                        setRecipeDialogOpen={setRecipeDialogOpen}
+                                        recipeToEdit={recipeToEdit}
+                                        setRecipeToEdit={setRecipeToEdit}
+                                    />
+                                </DialogContent>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </Dialog>
-                <Fab
-                    color="primary"
-                    aria-label="add"
-                    onClick={() => setRecipeDialogOpen(true)}
-                    sx={{ position: 'fixed', bottom: 24, right: 24 }}
-                >
-                    <Icon>add</Icon>
-                </Fab>
-            </Paper>
-            <Button variant="outlined" onClick={clearAllSelected} sx={{ mb: 2 }}>
-                Clear All
-            </Button>
+                    </Dialog>
+                    <Fab
+                        color="primary"
+                        aria-label="add"
+                        onClick={() => setRecipeDialogOpen(true)}
+                        sx={{ position: 'fixed', bottom: 24, right: 24 }}
+                    >
+                        <Icon>add</Icon>
+                    </Fab>
+                </Paper>
+                <Box sx={{ display: 'flex' }}>
+                    <Button variant="outlined" onClick={clearAllSelected} sx={{ mr: 2 }}>
+                        Clear All
+                    </Button>
+                    <Button variant="contained" sx={{ flexGrow: 1 }}>
+                        <Link component={RouterLink} to="/groceries" sx={{ textDecoration: 'none', color: '#FFF' }}>
+                            Groceries
+                        </Link>
+                    </Button>
+                </Box>
+            </Box>
         </>
     );
 }
