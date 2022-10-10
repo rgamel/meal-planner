@@ -33,7 +33,7 @@ function Groceries() {
                     .map((r) =>
                         recipes[r.id].groceries.map((gi) => ({
                             ...gi,
-                            quantity: new Fraction(gi.quantity).mul(r.quantity).toString(),
+                            quantity: new Fraction(gi.quantity).mul(r.quantity).toFraction(),
                         })),
                     )
                     .flat(),
