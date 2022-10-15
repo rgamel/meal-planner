@@ -1,24 +1,25 @@
 import {
-    Fab,
-    Icon,
-    List,
-    Paper,
+    Box,
+    Button,
     Dialog,
     DialogContent,
     DialogTitle,
+    Fab,
     Grid,
-    Typography,
-    Box,
-    Button,
+    Icon,
     Link,
+    List,
+    Paper,
+    Typography,
 } from '@mui/material';
-import { groupBy, startCase } from 'lodash/fp';
-import { Link as RouterLink } from 'react-router-dom';
-import RecipeForm from 'features/recipes/RecipeForm';
-import { useCallback, useContext, useMemo, useState } from 'react';
-import { Recipe } from 'types';
-import { RecipesContext } from 'app/recipeContext';
 import { useCategories, usePlans, useSelectedRecipes } from 'app/hooks';
+import { RecipesContext } from 'app/recipeContext';
+import RecipeForm from 'features/recipes/RecipeForm';
+import { titleCase } from 'helpers';
+import groupBy from 'lodash/fp/groupBy';
+import { useCallback, useContext, useMemo, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { Recipe } from 'types';
 import RecipeListItem from './RecipeListItem';
 
 function NoRecipes() {
@@ -38,7 +39,7 @@ type RecipeSectionProps = {
 
 function RecipeCategorySection({ recipes, editRecipe, categoryId }: RecipeSectionProps) {
     const { categories } = useCategories();
-    const label = startCase(categories[categoryId]?.name);
+    const label = titleCase(categories[categoryId]?.name);
     return (
         <Box sx={{ mb: 4 }}>
             <Typography variant="h4">{label}</Typography>

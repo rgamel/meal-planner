@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
     Button,
     Dialog,
@@ -13,16 +12,17 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import startCase from 'lodash/fp/startCase';
-import { Link as RouterLink } from 'react-router-dom';
 import { usePlans } from 'app/hooks';
+import { titleCase } from 'helpers';
+import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
 function PlanListItem({ id, name }: { id: string; name: string }) {
     return (
         <ListItem key={id}>
             <Typography>
                 <Link component={RouterLink} to={`${id}`}>
-                    {startCase(name)}
+                    {titleCase(name)}
                 </Link>
             </Typography>
         </ListItem>

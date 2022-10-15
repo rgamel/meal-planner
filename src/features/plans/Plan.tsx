@@ -14,9 +14,10 @@ import {
     Typography,
 } from '@mui/material';
 import { usePlannedQuantity, usePlans, useRecipes } from 'app/hooks';
-import { isEmpty, noop, startCase } from 'lodash/fp';
+import { titleCase } from 'helpers';
+import { isEmpty, noop } from 'lodash/fp';
 import { useConfirm } from 'material-ui-confirm';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -54,7 +55,7 @@ export default function Plan() {
     const plan = plans[planId];
 
     const [editingName, setEditingName] = useState(false);
-    const [planName, setPlanName] = useState(startCase(plan?.name));
+    const [planName, setPlanName] = useState(titleCase(plan?.name));
 
     const currentRecipes = plan?.recipes || [];
 
@@ -122,7 +123,7 @@ export default function Plan() {
                         const recipeId = recipeWithQuantity.id;
                         return (
                             <ListItem key={recipeId}>
-                                <ListItemText primary={startCase(recipes[recipeId]?.name) || recipeId} />
+                                <ListItemText primary={titleCase(recipes[recipeId]?.name) || recipeId} />
                                 <QuantitySelect recipeWithQuantity={recipeWithQuantity} />
                             </ListItem>
                         );
