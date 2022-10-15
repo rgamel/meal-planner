@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
     Button,
     Dialog,
@@ -14,7 +15,6 @@ import {
 } from '@mui/material';
 import startCase from 'lodash/fp/startCase';
 import { Link as RouterLink } from 'react-router-dom';
-import { useState } from 'react';
 import { usePlans } from 'app/hooks';
 
 function PlanListItem({ id, name }: { id: string; name: string }) {
@@ -61,7 +61,7 @@ export default function Plans() {
                             variant="filled"
                             autoFocus
                             label="Plan name"
-                            onChange={(e: ) => {
+                            onChange={(e: { target: { value: string } }) => {
                                 setPlanName(e.target.value);
                             }}
                             sx={{ mb: 1 }}

@@ -1,8 +1,8 @@
 import { useCategories, useSelectedRecipes } from 'app/hooks';
 import { Checkbox, Icon, IconButton, ListItem, ListItemText } from '@mui/material';
-import { startCase } from 'lodash';
 import { Recipe } from 'types';
 import { useCallback, useMemo } from 'react';
+import { titleCase } from '../../helpers';
 
 type RecipeListItemProps = {
     recipe: Recipe;
@@ -22,9 +22,9 @@ export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemPro
         editRecipe(recipe);
     }, [editRecipe, recipe]);
 
-    const label = startCase(recipe.name);
+    const label = titleCase(recipe.name);
     const categoryLabel = categories[recipe?.categoryId || '']
-        ? `${startCase(categories[recipe?.categoryId || '']?.name)} `
+        ? `${titleCase(categories[recipe?.categoryId || '']?.name)} `
         : '';
 
     return (
