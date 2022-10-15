@@ -39,7 +39,7 @@ export default function Plans() {
             <Typography variant="h1">Plans</Typography>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {Object.values(plans).map((plan) => (
-                    <PlanListItem id={plan.id} name={plan.name} />
+                    <PlanListItem key={plan.id} id={plan.id} name={plan.name} />
                 ))}
             </List>
             <Fab
@@ -61,7 +61,7 @@ export default function Plans() {
                             variant="filled"
                             autoFocus
                             label="Plan name"
-                            onChange={(e) => {
+                            onChange={(e: ) => {
                                 setPlanName(e.target.value);
                             }}
                             sx={{ mb: 1 }}
