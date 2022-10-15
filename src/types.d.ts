@@ -3,6 +3,7 @@ export type Plan = {
     id: string;
     recipes: { id: string; quantity: string }[];
     shoppedItems: string[];
+    groceries: GroceryItem[];
 };
 export type PlanList = Record<string, Plan>;
 

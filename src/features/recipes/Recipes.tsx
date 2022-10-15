@@ -52,7 +52,7 @@ function RecipeCategorySection({ recipes, editRecipe, categoryId }: RecipeSectio
 export default function Recipes() {
     const { recipes } = useContext(RecipesContext);
     const { clearAllSelected } = useSelectedRecipes();
-    const { plans, selectedPlan } = usePlans();
+    const { plans, selectedPlanId } = usePlans();
     const [isRecipeDialogOpen, setRecipeDialogOpen] = useState(false);
     const [recipeToEdit, setRecipeToEdit] = useState<null | Recipe>(null);
     const editRecipe = useCallback(
@@ -68,11 +68,11 @@ export default function Recipes() {
 
     return (
         <>
-            {selectedPlan ? (
+            {selectedPlanId ? (
                 <Typography variant="h6">
                     {`Recipes for plan: `}
-                    <Link component={RouterLink} to={`/plans/${selectedPlan}`}>
-                        {plans[selectedPlan].name}
+                    <Link component={RouterLink} to={`/plans/${selectedPlanId}`}>
+                        {plans[selectedPlanId].name}
                     </Link>
                 </Typography>
             ) : null}

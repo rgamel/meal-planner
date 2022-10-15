@@ -110,13 +110,13 @@ export const useCategories = () => {
 };
 
 export const usePlans = () => {
-    const { plans, setPlans, selectedPlan, setSelectedPlan } = useContext(RecipesContext);
+    const { plans, setPlans, selectedPlanId, setSelectedPlanId } = useContext(RecipesContext);
     const { addFn, deleteFn, updateFn } = useGenericFns(plans, setPlans, 'plans');
 
     return {
         plans,
-        selectedPlan,
-        setSelectedPlan,
+        selectedPlanId,
+        setSelectedPlanId,
         addPlan: addFn,
         deletePlan: deleteFn,
         updatePlan: updateFn,
@@ -124,9 +124,9 @@ export const usePlans = () => {
 };
 
 export const usePlannedQuantity = () => {
-    const { plans, updatePlan, selectedPlan } = usePlans();
+    const { plans, updatePlan, selectedPlanId } = usePlans();
 
-    const currentPlan = plans[selectedPlan];
+    const currentPlan = plans[selectedPlanId];
 
     const updatePlannedQuantity = (id: string, quantity: string) => {
         const _recipes = currentPlan?.recipes || [];
@@ -145,9 +145,9 @@ export const usePlannedQuantity = () => {
 };
 
 export const useShoppedItems = () => {
-    const { plans, updatePlan, selectedPlan } = usePlans();
+    const { plans, updatePlan, selectedPlanId } = usePlans();
 
-    const currentPlan = plans[selectedPlan];
+    const currentPlan = plans[selectedPlanId];
     const shoppedItems = currentPlan?.shoppedItems || [];
 
     const removeShopped = (id: string) => {
@@ -182,24 +182,24 @@ export const useShoppedItems = () => {
 
 export const useSelectedRecipes = () => {
     const { recipes } = useContext(RecipesContext);
-    const { plans, updatePlan, selectedPlan } = usePlans();
+    const { plans, updatePlan, selectedPlanId } = usePlans();
 
-    const recipesForCurrentPlan = plans[selectedPlan]?.recipes || [];
+    const recipesForCurrentPlan = plans[selectedPlanId]?.recipes || [];
 
     const removeRecipe = (id: string) => {
         const selectedWithout = recipesForCurrentPlan.filter((r) => r.id !== id);
-        updatePlan({ ...plans[selectedPlan], recipes: selectedWithout });
+        updatePlan({ ...plans[selectedPlanId], recipes: selectedWithout });
     };
 
     const addRecipe = (id: string) => {
         const selectedWith = [...recipesForCurrentPlan, { id, quantity: '1' }];
-        updatePlan({ ...plans[selectedPlan], recipes: selectedWith });
+        updatePlan({ ...plans[selectedPlanId], recipes: selectedWith });
     };
 
     const handleSelectRecipe = (id: string) => {
         if (!recipes[id]) return;
 
-        if (!plans[selectedPlan]) return;
+        if (!plans[selectedPlanId]) return;
 
         if (recipesForCurrentPlan.map((r) => r.id).includes(id)) {
             removeRecipe(id);
@@ -210,7 +210,7 @@ export const useSelectedRecipes = () => {
     };
 
     const clearAllSelected = () => {
-        updatePlan({ ...plans[selectedPlan], recipes: [], shoppedItems: [] });
+        updatePlan({ ...plans[selectedPlanId], recipes: [], shoppedItems: [] });
     };
 
     return {

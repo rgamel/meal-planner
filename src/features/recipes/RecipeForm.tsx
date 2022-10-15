@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { Button, DialogContentText, Divider, Grid, TextField, Typography } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { EntityOptionType, GroceryItem, Recipe } from 'types';
@@ -50,7 +50,10 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
         setRecipeName(input);
     };
 
-    const enableSave = () => Boolean(recipeName.trim().length && groceries.length);
+    const enableSave = useMemo(
+        () => Boolean(recipeName.trim().length && groceries.length),
+        [recipeName, groceries.length],
+    );
 
     const handleClose = () => {
         setRecipeToEdit(null);
@@ -58,15 +61,13 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     };
 
     const handleSave = () => {
-        if (enableSave()) {
-            const recipe = { name: recipeName.trim(), groceries, categoryId: category?.id || '' };
-            if (!isNil(recipeToEdit)) {
-                updateRecipe({ id: recipeToEdit.id, ...recipe });
-            } else {
-                addRecipe(recipe);
-            }
-            handleClose();
+        const recipe = { name: recipeName.trim(), groceries, categoryId: category?.id || '' };
+        if (!isNil(recipeToEdit)) {
+            updateRecipe({ id: recipeToEdit.id, ...recipe });
+        } else {
+            addRecipe(recipe);
         }
+        handleClose();
     };
 
     const handleDelete = (id: string) => {
@@ -123,7 +124,7 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
                     </Button>
                 </Grid>
                 <Grid item alignSelf="end" xs={2}>
-                    <Button fullWidth onClick={handleSave} disabled={!enableSave()} variant="contained">
+                    <Button fullWidth onClick={handleSave} disabled={!enableSave} variant="contained">
                         {`Save${recipeToEdit ? ' changes' : ''}`}
                     </Button>
                 </Grid>

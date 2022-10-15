@@ -9,8 +9,8 @@ import { UserContext } from './userContext';
 type RecipesContextProps = {
     plans: PlanList;
     setPlans: Dispatch<SetStateAction<PlanList>>;
-    selectedPlan: string;
-    setSelectedPlan: Dispatch<SetStateAction<string>>;
+    selectedPlanId: string;
+    setSelectedPlanId: Dispatch<SetStateAction<string>>;
     recipes: RecipeList;
     setRecipes: Dispatch<SetStateAction<RecipeList>>;
     ingredients: IngredientList;
@@ -28,8 +28,8 @@ type RecipesContextProps = {
 export const RecipesContext = createContext<RecipesContextProps>({
     plans: {} as PlanList,
     setPlans: noop,
-    selectedPlan: '',
-    setSelectedPlan: noop,
+    selectedPlanId: '',
+    setSelectedPlanId: noop,
     recipes: {} as RecipeList,
     setRecipes: noop,
     ingredients: {} as IngredientList,
@@ -46,7 +46,7 @@ export const RecipesContext = createContext<RecipesContextProps>({
 
 export type AppState = {
     plans: PlanList;
-    selectedPlan: string;
+    selectedPlanId: string;
     ingredients: IngredientList;
     recipes: RecipeList;
     selectedRecipes: string[];
@@ -64,7 +64,7 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
     const { getCollection } = useFirebase();
     const { user } = useContext(UserContext);
     const [plans, setPlans] = useState<PlanList>({});
-    const [selectedPlan, setSelectedPlan] = useState<string>('');
+    const [selectedPlanId, setSelectedPlanId] = useState<string>('');
     const [recipes, setRecipes] = useState<RecipeList>({});
     const [ingredients, setIngredients] = useState<IngredientList>({});
     const [uoms, setUoms] = useState<UomList>({});
@@ -76,8 +76,8 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
         () => ({
             plans,
             setPlans,
-            selectedPlan,
-            setSelectedPlan,
+            selectedPlanId,
+            setSelectedPlanId,
             recipes,
             setRecipes,
             ingredients,
@@ -94,8 +94,8 @@ export default function RecipesContextProvider({ children }: RecipesContextProvi
         [
             plans,
             setPlans,
-            selectedPlan,
-            setSelectedPlan,
+            selectedPlanId,
+            setSelectedPlanId,
             recipes,
             setRecipes,
             ingredients,

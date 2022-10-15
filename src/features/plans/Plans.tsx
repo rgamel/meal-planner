@@ -69,7 +69,7 @@ export default function Plans() {
                         <Button
                             variant="contained"
                             onClick={() => {
-                                addPlan({ name: planName, recipes: [], shoppedItems: [] });
+                                addPlan({ name: planName, recipes: [], shoppedItems: [], groceries: [] });
                                 setIsPlanDialogOpen(false);
                             }}
                         >

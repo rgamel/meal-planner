@@ -47,7 +47,7 @@ function QuantitySelect({
 export default function Plan() {
     const planId = useParams().id as string;
     const { recipes } = useRecipes();
-    const { plans, setSelectedPlan, deletePlan, updatePlan } = usePlans();
+    const { plans, setSelectedPlanId, deletePlan, updatePlan } = usePlans();
     const nav = useNavigate();
     const confirm = useConfirm();
 
@@ -59,8 +59,8 @@ export default function Plan() {
     const currentRecipes = plan?.recipes || [];
 
     useEffect(() => {
-        setSelectedPlan(planId);
-    }, [planId, setSelectedPlan]);
+        setSelectedPlanId(planId);
+    }, [planId, setSelectedPlanId]);
 
     const handleDelete = () => {
         confirm({
@@ -87,7 +87,10 @@ export default function Plan() {
             <Stack direction="row">
                 {editingName ? (
                     <>
-                        <TextField onChange={(e) => setPlanName(e.target.value)} value={planName} />
+                        <TextField
+                            onChange={(e: { target: { value: string } }) => setPlanName(e.target.value)}
+                            value={planName}
+                        />
                         <Button
                             onClick={() => {
                                 updatePlan({ ...plan, name: planName });
@@ -134,7 +137,7 @@ export default function Plan() {
                         fullWidth
                         variant={isEmpty(currentRecipes) ? 'contained' : 'outlined'}
                         onClick={() => {
-                            setSelectedPlan(planId);
+                            setSelectedPlanId(planId);
                             nav('/recipes');
                         }}
                     >
@@ -146,7 +149,7 @@ export default function Plan() {
                         fullWidth
                         variant={!isEmpty(currentRecipes) ? 'contained' : 'outlined'}
                         onClick={() => {
-                            setSelectedPlan(planId);
+                            setSelectedPlanId(planId);
                             nav('/groceries');
                         }}
                     >

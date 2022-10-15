@@ -2,7 +2,8 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import partition from 'lodash/fp/partition';
-import { isEmpty, startCase } from 'lodash';
+import { titleCase } from 'helpers';
+import { isEmpty } from 'lodash';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
@@ -63,7 +64,7 @@ function GroceryLineItem({ groceryItem, deleteGroceryItem, itemId }: GroceryLine
     const { shoppedItems, handleToggleShopped } = useShoppedItems();
 
     return (
-        <ListItem disableGutters key={`${groceryItem.uomId}|${groceryItem.itemId}|${String(groceryItem.isAldi)}`}>
+        <ListItem disableGutters>
             {!deleteGroceryItem ? (
                 <Checkbox checked={shoppedItems.includes(itemId)} onClick={() => handleToggleShopped(itemId)} />
             ) : (
@@ -72,7 +73,7 @@ function GroceryLineItem({ groceryItem, deleteGroceryItem, itemId }: GroceryLine
             <ListItemText
                 primary={
                     <span>
-                        <strong>{startCase(ingredients[groceryItem.itemId]?.name)}</strong>
+                        <strong>{titleCase(ingredients[groceryItem.itemId]?.name)}</strong>
                         <em>{`, ${groceryItem.quantity} ${uoms[groceryItem.uomId]?.name}`}</em>
                     </span>
                 }
@@ -125,7 +126,8 @@ export function GroceryItems({ items, setItems, deleteGroceryItem }: GroceryItem
                                 {items.map((groceryItem: GroceryItem, i: number) => {
                                     const itemId = `${groceryItem.uomId}|${groceryItem.itemId}`;
                                     return (
-                                        <Draggable key={itemId} draggableId={itemId} index={i}>
+                                        // eslint-disable-next-line react/no-array-index-key
+                                        <Draggable key={i} draggableId={itemId} index={i}>
                                             {(providedDraggable, snapshotDraggable) => (
                                                 <div
                                                     ref={providedDraggable.innerRef}

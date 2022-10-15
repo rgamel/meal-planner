@@ -31,7 +31,7 @@ function IngredientInput({
 
     const handleCommitGroceryItem = useCallback(() => {
         if (validQuantity && selectedUom?.id && selectedIngredient?.id) {
-            const fractionalQuantity = new Fraction(quantity);
+            const fractionalQuantity = new Fraction(quantity.trim());
             commitGroceryItem(fractionalQuantity, selectedUom.id, selectedIngredient.id, isAldi);
             setQuantity('');
             setSelectedUom(null);
