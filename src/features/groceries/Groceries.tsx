@@ -49,7 +49,7 @@ function Groceries() {
                         })),
                     )
                     .flat()
-                    .concat(plans[selectedPlanId].groceries ?? []),
+                    .concat(plans[selectedPlanId]?.groceries ?? []),
             ),
         [selectedRecipes, recipes, plans, compactGroceries, selectedPlanId],
     );
