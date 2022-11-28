@@ -1,6 +1,6 @@
 import {
     Button,
-    Grid,
+    DialogActions,
     Icon,
     IconButton,
     List,
@@ -132,37 +132,31 @@ export default function Plan() {
             ) : (
                 <Typography variant="h6">No recipes for this plan</Typography>
             )}
-            <Grid container columns={12}>
-                <Grid item xs={6}>
-                    <Button
-                        fullWidth
-                        variant={isEmpty(currentRecipes) ? 'contained' : 'outlined'}
-                        onClick={() => {
-                            setSelectedPlanId(planId);
-                            nav('/recipes');
-                        }}
-                    >
-                        Recipes
-                    </Button>
-                </Grid>
-                <Grid item xs={6}>
-                    <Button
-                        fullWidth
-                        variant={!isEmpty(currentRecipes) ? 'contained' : 'outlined'}
-                        onClick={() => {
-                            setSelectedPlanId(planId);
-                            nav('/groceries');
-                        }}
-                    >
-                        Groceries
-                    </Button>
-                </Grid>
-                <Grid item xs={12}>
-                    <Button onClick={handleDelete} fullWidth color="error" sx={{ mt: 2 }}>
-                        Delete Plan
-                    </Button>
-                </Grid>
-            </Grid>
+            <DialogActions>
+                <Button
+                    fullWidth
+                    variant={isEmpty(currentRecipes) ? 'contained' : 'outlined'}
+                    onClick={() => {
+                        setSelectedPlanId(planId);
+                        nav('/recipes');
+                    }}
+                >
+                    Recipes
+                </Button>
+                <Button
+                    fullWidth
+                    variant={!isEmpty(currentRecipes) ? 'contained' : 'outlined'}
+                    onClick={() => {
+                        setSelectedPlanId(planId);
+                        nav('/groceries');
+                    }}
+                >
+                    Groceries
+                </Button>
+            </DialogActions>
+            <Button onClick={handleDelete} fullWidth color="error" sx={{ mt: 2 }}>
+                Delete Plan
+            </Button>
         </div>
     );
 }

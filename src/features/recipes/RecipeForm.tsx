@@ -1,5 +1,5 @@
 import { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { Button, DialogContentText, Divider, Grid, TextField, Typography } from '@mui/material';
+import { Button, DialogContentText, DialogActions, Divider, Grid, TextField, Typography } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { EntityOptionType, GroceryItem, Recipe } from 'types';
 import { isNil, noop } from 'lodash';
@@ -117,18 +117,14 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
                 <Typography>Ingredients:</Typography>
             </Grid>
             <GroceryItems items={groceries} deleteGroceryItem={deleteGroceryItem} setItems={setGroceries} />
-            <Grid container direction="row" spacing={1} columns={3}>
-                <Grid item xs={1}>
-                    <Button fullWidth onClick={handleClose} variant="outlined">
-                        Cancel
-                    </Button>
-                </Grid>
-                <Grid item alignSelf="end" xs={2}>
-                    <Button fullWidth onClick={handleSave} disabled={!enableSave} variant="contained">
-                        {`Save${recipeToEdit ? ' changes' : ''}`}
-                    </Button>
-                </Grid>
-            </Grid>
+            <DialogActions>
+                <Button fullWidth onClick={handleClose} variant="outlined">
+                    Cancel
+                </Button>
+                <Button fullWidth onClick={handleSave} disabled={!enableSave} variant="contained">
+                    {`Save${recipeToEdit ? ' changes' : ''}`}
+                </Button>
+            </DialogActions>
             {recipeToEdit && (
                 <Button sx={{ mt: 4 }} onClick={() => handleDelete(recipeToEdit.id)} fullWidth color="error">
                     Delete Recipe
