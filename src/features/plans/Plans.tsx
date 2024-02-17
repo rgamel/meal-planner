@@ -1,33 +1,8 @@
-import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Fab,
-    Icon,
-    Link,
-    List,
-    ListItem,
-    Stack,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Button, Dialog, DialogContent, DialogTitle, List, Stack, TextField, Typography } from '@mui/material';
 import { usePlans } from 'app/hooks';
-import { titleCase } from 'helpers';
+import { AddFab } from 'features/groceries/AddFab';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-
-function PlanListItem({ id, name }: { id: string; name: string }) {
-    return (
-        <ListItem key={id}>
-            <Typography>
-                <Link component={RouterLink} to={`${id}`}>
-                    {titleCase(name)}
-                </Link>
-            </Typography>
-        </ListItem>
-    );
-}
+import { PlanListItem } from './PlanListItem';
 
 export default function Plans() {
     const { plans, addPlan } = usePlans();
@@ -42,16 +17,11 @@ export default function Plans() {
                     <PlanListItem key={plan.id} id={plan.id} name={plan.name} />
                 ))}
             </List>
-            <Fab
-                color="primary"
-                aria-label="add"
+            <AddFab
                 onClick={() => {
                     setIsPlanDialogOpen(true);
                 }}
-                sx={{ position: 'fixed', bottom: 24, right: 24 }}
-            >
-                <Icon>add</Icon>
-            </Fab>
+            />
             <Dialog fullWidth open={isPlanDialogOpen} onClose={() => setIsPlanDialogOpen(false)}>
                 <DialogTitle>Create Plan</DialogTitle>
                 <DialogContent>

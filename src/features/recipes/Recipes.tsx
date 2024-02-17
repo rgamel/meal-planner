@@ -1,35 +1,15 @@
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Fab,
-    Grid,
-    Icon,
-    Link,
-    List,
-    Paper,
-    Typography,
-} from '@mui/material';
+import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, Link, List, Paper, Typography } from '@mui/material';
 import { useCategories, usePlans, useSelectedRecipes } from 'app/hooks';
 import { RecipesContext } from 'app/recipeContext';
+import { AddFab } from 'features/groceries/AddFab';
 import RecipeForm from 'features/recipes/RecipeForm';
 import { titleCase } from 'helpers';
 import groupBy from 'lodash/fp/groupBy';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Recipe } from 'types';
+import { NoRecipes } from './NoRecipes';
 import RecipeListItem from './RecipeListItem';
-
-function NoRecipes() {
-    return (
-        <>
-            <Typography variant="h4">Nothing here yet.</Typography>
-            <Typography variant="body1">Click the + button below to get started</Typography>
-        </>
-    );
-}
 
 type RecipeSectionProps = {
     recipes: Recipe[];
@@ -109,14 +89,7 @@ export default function Recipes() {
                             </Grid>
                         </Grid>
                     </Dialog>
-                    <Fab
-                        color="primary"
-                        aria-label="add"
-                        onClick={() => setRecipeDialogOpen(true)}
-                        sx={{ position: 'fixed', bottom: 24, right: 24 }}
-                    >
-                        <Icon>add</Icon>
-                    </Fab>
+                    <AddFab onClick={() => setRecipeDialogOpen(true)} />
                 </Paper>
                 <Box sx={{ display: 'flex' }}>
                     <Button variant="outlined" onClick={clearAllSelected} sx={{ mr: 2 }}>
