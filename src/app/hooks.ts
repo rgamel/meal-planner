@@ -1,12 +1,12 @@
-import { collection, deleteDoc, doc, DocumentData, getDocs, QuerySnapshot, setDoc } from 'firebase/firestore/lite';
-import { omit, set, unset } from 'lodash/fp';
+import { collection, deleteDoc, doc, getDocs, QuerySnapshot, setDoc } from 'firebase/firestore/lite';
+import { omit, set } from 'lodash/fp';
 import { nanoid } from 'nanoid';
 import { Dispatch, SetStateAction, useContext } from 'react';
 import { db } from './firebase';
 import { RecipesContext } from './recipeContext';
 
 export const useFirebase = () => {
-    const formatCollectionAsList = (snapshot: QuerySnapshot<DocumentData>) => {
+    const formatCollectionAsList = (snapshot: QuerySnapshot) => {
         const result = {} as any; // TODO: figure out this type
         snapshot.forEach((document) => {
             result[document.id] = { ...document.data(), id: document.id };
@@ -30,22 +30,35 @@ export const useFirebase = () => {
     return { getCollection, addRecord, deleteRecord };
 };
 
+const listNames = {
+    plans: 'plans',
+    ingredients: 'ingredients',
+    uoms: 'uoms',
+    recipes: 'recipes',
+    categories: 'categories',
+    selectedRecipes: 'selectedRecipes',
+} as const;
+
+type ListName = typeof listNames[keyof typeof listNames];
+
 const useGenericFns = <T extends { id: string }>(
     list: Record<string, T>,
     setList: Dispatch<SetStateAction<Record<string, T>>>,
-    listName: 'plans' | 'ingredients' | 'uoms' | 'recipes' | 'categories' | 'selectedRecipes',
+    listName: ListName,
 ) => {
     const { addRecord: upsertRecord, deleteRecord } = useFirebase();
     const addFn = (item: Omit<T, 'id'>) => {
         const id = nanoid();
         const itemWithId = { ...item, id } as T;
+
         setList((prev) => ({ ...prev, ...{ [id]: itemWithId } }));
         void upsertRecord(listName, id, item);
+
         return itemWithId;
     };
 
     const deleteFn = (id: string) => {
-        setList((prev) => unset(id, prev));
+        setList((prev) => omit(id, prev));
         void deleteRecord(listName, id);
     };
 
@@ -64,7 +77,7 @@ const useGenericFns = <T extends { id: string }>(
 export const useIngredients = () => {
     const { ingredients, setIngredients } = useContext(RecipesContext);
 
-    const { addFn, deleteFn } = useGenericFns(ingredients, setIngredients, 'ingredients');
+    const { addFn, deleteFn } = useGenericFns(ingredients, setIngredients, listNames.ingredients);
 
     return {
         ingredients,
@@ -76,7 +89,7 @@ export const useIngredients = () => {
 export const useUoms = () => {
     const { uoms, setUoms } = useContext(RecipesContext);
 
-    const { addFn, deleteFn } = useGenericFns(uoms, setUoms, 'uoms');
+    const { addFn, deleteFn } = useGenericFns(uoms, setUoms, listNames.uoms);
 
     return {
         uoms,
@@ -88,7 +101,7 @@ export const useUoms = () => {
 export const useRecipes = () => {
     const { recipes, setRecipes } = useContext(RecipesContext);
 
-    const { addFn, deleteFn, updateFn } = useGenericFns(recipes, setRecipes, 'recipes');
+    const { addFn, deleteFn, updateFn } = useGenericFns(recipes, setRecipes, listNames.recipes);
 
     return {
         recipes,
@@ -100,7 +113,7 @@ export const useRecipes = () => {
 
 export const useCategories = () => {
     const { categories, setCategories } = useContext(RecipesContext);
-    const { addFn, deleteFn } = useGenericFns(categories, setCategories, 'categories');
+    const { addFn, deleteFn } = useGenericFns(categories, setCategories, listNames.categories);
 
     return {
         categories,
@@ -111,7 +124,7 @@ export const useCategories = () => {
 
 export const usePlans = () => {
     const { plans, setPlans, selectedPlanId, setSelectedPlanId } = useContext(RecipesContext);
-    const { addFn, deleteFn, updateFn } = useGenericFns(plans, setPlans, 'plans');
+    const { addFn, deleteFn, updateFn } = useGenericFns(plans, setPlans, listNames.plans);
 
     return {
         plans,
