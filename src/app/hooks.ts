@@ -1,13 +1,4 @@
-import {
-    collection,
-    deleteDoc,
-    doc,
-    DocumentData,
-    getDocs,
-    QueryDocumentSnapshot,
-    QuerySnapshot,
-    setDoc,
-} from 'firebase/firestore/lite';
+import { collection, deleteDoc, doc, getDocs, QuerySnapshot, setDoc } from 'firebase/firestore/lite';
 import { omit, set } from 'lodash/fp';
 import { nanoid } from 'nanoid';
 import { Dispatch, SetStateAction, useContext } from 'react';
