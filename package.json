@@ -28,7 +28,7 @@
     "scripts": {
         "clean": "rm -rf ./dist",
         "start": "vite",
-        "build": "tsc && vite build",
+        "build": "npm run clean && tsc && vite build",
         "preview": "vite preview",
         "format": "prettier --config .prettierrc 'src/**/*.t(s|sx)' --write",
         "lint": "npx eslint src/** --fix"
