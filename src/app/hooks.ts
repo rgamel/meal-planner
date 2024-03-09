@@ -5,6 +5,8 @@ import { Dispatch, SetStateAction, useContext } from 'react';
 import { db } from './firebase';
 import { RecipesContext } from './recipeContext';
 
+console.log('nonsense commit');
+
 export const useFirebase = () => {
     const formatCollectionAsList = (snapshot: QuerySnapshot) =>
         snapshot.docs.reduce(
