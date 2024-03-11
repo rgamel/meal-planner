@@ -10,8 +10,8 @@ export const getAllGroceries = (
     recipes: RecipeList,
     plans: PlanList,
     selectedPlanId: string,
-) =>
-    compactGroceries(
+) => {
+    return compactGroceries(
         Object.values(selectedRecipes ?? [])
             .map((r) =>
                 recipes[r.id].groceries.map((gi) => ({
@@ -22,3 +22,4 @@ export const getAllGroceries = (
             .flat()
             .concat(plans[selectedPlanId]?.groceries ?? []),
     );
+};

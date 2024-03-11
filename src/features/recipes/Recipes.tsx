@@ -57,7 +57,7 @@ export default function Recipes() {
                     </Link>
                 </Typography>
             ) : null}
-            <Box sx={{ mb: 12 }}>
+            <Box sx={{ pb: 12 }}>
                 <Paper sx={{ p: 2, mb: 2 }}>
                     <List>
                         {!recipesMemo.length ? (

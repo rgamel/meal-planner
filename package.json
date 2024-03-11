@@ -30,8 +30,9 @@
         "start": "vite",
         "build": "npm run clean && tsc && vite build",
         "preview": "vite preview",
-        "format": "prettier --config .prettierrc 'src/**/*.t(s|sx)' --write",
-        "lint": "npx eslint src/** --fix"
+        "format": "npx prettier . --write",
+        "lint": "npx eslint src/** --fix",
+        "style:dev": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch"
     },
     "eslintConfig": {
         "extends": [
@@ -60,6 +61,7 @@
         "@types/react-router-dom": "^5.3.3",
         "@typescript-eslint/eslint-plugin": "^5.16.0",
         "@typescript-eslint/parser": "^5.16.0",
+        "autoprefixer": "^10.4.18",
         "eslint-config-airbnb": "^19.0.4",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-airbnb-typescript": "^16.1.4",
@@ -73,6 +75,9 @@
         "eslint-plugin-react-hooks": "^4.3.0",
         "eslint-stats": "^1.0.1",
         "nth-check": "^2.0.1",
-        "prettier": "^2.6.1"
+        "postcss": "^8.4.35",
+        "prettier": "^3.2.5",
+        "prettier-plugin-tailwindcss": "^0.5.12",
+        "tailwindcss": "^3.4.1"
     }
 }

@@ -1,7 +1,6 @@
 import './styles.css';
 import { Outlet, useNavigate } from 'react-router-dom';
 import ButtonAppBar from 'components/ButtonAppBar';
-import { Box } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { UserContext } from 'app/userContext';
 
@@ -19,9 +18,11 @@ export default function App() {
     }, [user, nav]);
 
     return (
-        <Box sx={{ maxWidth: 'md', mx: 'auto' }}>
-            <ButtonAppBar />
-            <Outlet />
-        </Box>
+        <div className="h-full w-full bg-gray-100 min-h-screen">
+            <div className="mx-auto max-w-md">
+                <ButtonAppBar />
+                <Outlet />
+            </div>
+        </div>
     );
 }

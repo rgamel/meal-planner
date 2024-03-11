@@ -1,53 +1,21 @@
-import {
-    Button,
-    DialogActions,
-    Icon,
-    IconButton,
-    List,
-    ListItem,
-    ListItemText,
-    ListSubheader,
-    MenuItem,
-    Select,
-    Stack,
-    TextField,
-    Typography,
-} from '@mui/material';
-import { usePlannedQuantity, usePlans, useRecipes } from 'app/hooks';
+import { Button, DialogActions, Icon, IconButton, TextField, Typography } from '@mui/material';
+import { usePlans } from 'app/hooks';
+import { PageTitle } from 'components/PageTitle';
 import { titleCase } from 'helpers';
 import { isEmpty, noop } from 'lodash/fp';
 import { useConfirm } from 'material-ui-confirm';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { PlanItem } from './PlanItem';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function QuantitySelect({
-    recipeWithQuantity: { id, quantity },
-}: {
-    recipeWithQuantity: { id: string; quantity: string };
-}) {
-    // TODO: implement persisting quantities
-    const [q, setQ] = useState(quantity);
-    const updatePlannedQuantity = usePlannedQuantity();
-    return (
-        <Select
-            value={q}
-            onChange={(e) => {
-                setQ(e.target.value);
-                updatePlannedQuantity(id, e.target.value);
-            }}
-            sx={{ minWidth: 75 }}
-        >
-            <MenuItem value="0.5">0.5</MenuItem>
-            <MenuItem value="1">1</MenuItem>
-            <MenuItem value="2">2</MenuItem>
-        </Select>
-    );
-}
+const DEFAULT_BUTTON_STYLES =
+    'mb-2 w-full bg-blue-700 px-5 py-4 text-md font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300';
 
-export default function Plan() {
+const ALTERNATIVE_BUTTON_STYLES =
+    'py-4 px-5 mb-2 text-md font-medium text-gray-900 focus:outline-none bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100';
+
+export default function Plan(): JSX.Element {
     const planId = useParams().id as string;
-    const { recipes } = useRecipes();
     const { plans, setSelectedPlanId, deletePlan, updatePlan } = usePlans();
     const nav = useNavigate();
     const confirm = useConfirm();
@@ -76,16 +44,27 @@ export default function Plan() {
             .catch(noop);
     };
 
+    const navToRecipes = useCallback(() => {
+        setSelectedPlanId(planId);
+        nav('/recipes');
+    }, [planId]);
+
+    const navToGroceries = useCallback(() => {
+        setSelectedPlanId(planId);
+        nav('/groceries');
+    }, [planId]);
+
     return (
         <div>
-            <IconButton
-                onClick={() => {
-                    nav('/plans');
-                }}
-            >
-                <Icon>arrow_back</Icon>
-            </IconButton>
-            <Stack direction="row">
+            <div className="align-center flex flex-row justify-center">
+                <IconButton
+                    sx={{ position: 'absolute', left: 0, top: 68 }} // ew, David TODO: don't do this
+                    onClick={() => {
+                        nav('/plans');
+                    }}
+                >
+                    <Icon>arrow_back</Icon>
+                </IconButton>
                 {editingName ? (
                     <>
                         <TextField
@@ -103,8 +82,9 @@ export default function Plan() {
                     </>
                 ) : (
                     <>
-                        <Typography variant="h4">{planName}</Typography>
+                        <PageTitle label={planName} />
                         <IconButton
+                            sx={{ pb: 0, mb: -1 }}
                             onClick={() => {
                                 setEditingName(true);
                             }}
@@ -113,50 +93,49 @@ export default function Plan() {
                         </IconButton>
                     </>
                 )}
-            </Stack>
+            </div>
             {!isEmpty(currentRecipes) ? (
-                <List
-                    sx={{ width: '100%', bgcolor: 'background.paper' }}
-                    subheader={<ListSubheader>Recipes</ListSubheader>}
-                >
-                    {currentRecipes.map((recipeWithQuantity: { id: string; quantity: string }) => {
-                        const recipeId = recipeWithQuantity.id;
-                        return (
-                            <ListItem key={recipeId}>
-                                <ListItemText primary={titleCase(recipes[recipeId]?.name) || recipeId} />
-                                <QuantitySelect recipeWithQuantity={recipeWithQuantity} />
-                            </ListItem>
-                        );
-                    })}
-                </List>
+                <div className="m-4">
+                    <ul className="w-full divide-y divide-gray-200 rounded-xl border-2 border-gray-200 bg-white">
+                        {currentRecipes.map((recipeWithQuantity: { id: string; quantity: string }) => (
+                            <PlanItem
+                                recipeWithQuantity={recipeWithQuantity}
+                                key={recipeWithQuantity.id}
+                                planId={planId}
+                            />
+                        ))}
+                    </ul>
+                </div>
             ) : (
-                <Typography variant="h6">No recipes for this plan</Typography>
+                <div className="my-20 flex justify-center text-lg">
+                    <p>No recipes found for this plan. Add some?</p>
+                </div>
             )}
-            <DialogActions>
-                <Button
-                    fullWidth
-                    variant={isEmpty(currentRecipes) ? 'contained' : 'outlined'}
-                    onClick={() => {
-                        setSelectedPlanId(planId);
-                        nav('/recipes');
-                    }}
+            <div className="m-4 flex">
+                <button
+                    type="button"
+                    className={`${isEmpty(currentRecipes) ? DEFAULT_BUTTON_STYLES : ALTERNATIVE_BUTTON_STYLES} rounded-l-lg`}
+                    onClick={navToRecipes}
                 >
                     Recipes
-                </Button>
-                <Button
-                    fullWidth
-                    variant={!isEmpty(currentRecipes) ? 'contained' : 'outlined'}
-                    onClick={() => {
-                        setSelectedPlanId(planId);
-                        nav('/groceries');
-                    }}
+                </button>
+                <button
+                    type="button"
+                    className={`${!isEmpty(currentRecipes) ? DEFAULT_BUTTON_STYLES : ALTERNATIVE_BUTTON_STYLES} rounded-r-lg`}
+                    onClick={navToGroceries}
                 >
                     Groceries
-                </Button>
-            </DialogActions>
-            <Button onClick={handleDelete} fullWidth color="error" sx={{ mt: 2 }}>
-                Delete Plan
-            </Button>
+                </button>
+            </div>
+            <div className="flex justify-center">
+                <button
+                    type="button"
+                    className="mb-8 rounded-lg text-center text-sm font-medium text-red-700 underline"
+                    onClick={handleDelete}
+                >
+                    Delete Plan
+                </button>
+            </div>
         </div>
     );
 }
