@@ -1,17 +1,11 @@
-import { Fab, Icon } from '@mui/material';
-
 export function AddFab({ onClick }: { onClick: () => void }) {
-    return false ? (
-        <Fab color="primary" aria-label="add" onClick={onClick} sx={{ position: 'fixed', bottom: 24, right: 24 }}>
-            <Icon>add</Icon>
-        </Fab>
-    ) : (
-        <div className="fixed bottom-4 right-4">
+    return (
+        <div className="fixed bottom-4 right-4 z-50">
             <button
                 onClick={onClick}
                 className="mouse h-16 w-16 rounded-full bg-blue-700 p-0 shadow transition duration-200 ease-in hover:bg-blue-800 focus:outline-none active:shadow-lg"
             >
-                <svg viewBox="0 0 20 20" enable-background="new 0 0 20 20" className="inline-block h-6 w-6">
+                <svg viewBox="0 0 20 20" enableBackground="new 0 0 20 20" className="inline-block h-6 w-6">
                     <path
                         fill="#FFFFFF"
                         d="M16,10c0,0.553-0.048,1-0.601,1H11v4.399C11,15.951,10.553,16,10,16c-0.553,0-1-0.049-1-0.601V11H4.601

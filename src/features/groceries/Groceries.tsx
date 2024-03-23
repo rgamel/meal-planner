@@ -1,10 +1,11 @@
-import { Dialog, DialogContent, DialogTitle, Link, Typography } from '@mui/material';
-import IngredientInput from 'features/recipes/IngredientInput';
+import { Button } from 'components/Button';
+import { PageTitle } from 'components/PageTitle';
 import Fraction from 'fraction.js';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { usePlans, useRecipes, useSelectedRecipes } from '../../app/hooks';
+import { usePlans, useRecipes, useSelectedRecipes, useShoppedItems } from '../../app/hooks';
 import { AddFab } from './AddFab';
+import { AddGroceryItemModal } from './AddGroceryItemModal';
 import GroceryList from './GroceryList';
 import { compactGroceries } from './compactGroceries';
 import { getAllGroceries } from './getAllGroceries';
@@ -14,6 +15,7 @@ function Groceries() {
     const { selectedRecipes } = useSelectedRecipes();
     const { plans, selectedPlanId, updatePlan } = usePlans();
     const { recipes } = useRecipes();
+    const { clearAllShopped } = useShoppedItems();
 
     const handleSave = (quantity: Fraction, uomId: string, itemId: string, isAldi: boolean) => {
         const plan = plans[selectedPlanId];
@@ -22,7 +24,7 @@ function Groceries() {
             ...plan,
             groceries: compactGroceries([...(plan.groceries ?? []), newGroceryItem]),
         });
-        setIsGroceryDialogOpen(false);
+        handleCloseDialog();
     };
 
     const handleCloseDialog = () => {
@@ -30,24 +32,27 @@ function Groceries() {
     };
 
     return (
-        <div>
+        <>
             {selectedPlanId ? (
-                <Typography variant="h6">
-                    {`Groceries for plan: `}
-                    <Link component={RouterLink} to={`/plans/${selectedPlanId}`}>
-                        {plans[selectedPlanId].name}
-                    </Link>
-                </Typography>
+                <Button>
+                    <PageTitle>
+                        <RouterLink to={`/plans/${selectedPlanId}`}>{plans[selectedPlanId].name}</RouterLink>
+                    </PageTitle>
+                </Button>
             ) : null}
-            <GroceryList groceries={getAllGroceries(selectedRecipes, recipes, plans, selectedPlanId)} />
-            <Dialog open={isGroceryDialogOpen} onClose={handleCloseDialog}>
-                <DialogTitle>Add Grocery Item</DialogTitle>
-                <DialogContent>
-                    <IngredientInput commitGroceryItem={handleSave} />
-                </DialogContent>
-            </Dialog>
+            <div className="mx-1">
+                <GroceryList groceries={getAllGroceries(selectedRecipes, recipes, plans, selectedPlanId)} />
+            </div>
+            <div className="my-2 flex flex-row justify-center">
+                <Button onClick={clearAllShopped}>Clear All</Button>
+            </div>
+            <AddGroceryItemModal
+                isGroceryDialogOpen={isGroceryDialogOpen}
+                handleCloseDialog={handleCloseDialog}
+                handleSave={handleSave}
+            />
             <AddFab onClick={() => setIsGroceryDialogOpen(true)} />
-        </div>
+        </>
     );
 }
 

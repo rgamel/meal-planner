@@ -1,18 +1,16 @@
-import { Button, DialogActions, Icon, IconButton, TextField, Typography } from '@mui/material';
 import { usePlans } from 'app/hooks';
+import { Button, DeleteButton, IconButton } from 'components/Button';
 import { PageTitle } from 'components/PageTitle';
+import { ArrowBack } from 'components/icons/ArrowBack';
+import { Edit } from 'components/icons/Edit';
+import { Save } from 'components/icons/Save';
 import { titleCase } from 'helpers';
 import { isEmpty, noop } from 'lodash/fp';
 import { useConfirm } from 'material-ui-confirm';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { EmptyPlanMessage } from './EmptyPlanMessage';
 import { PlanItem } from './PlanItem';
-
-const DEFAULT_BUTTON_STYLES =
-    'mb-2 w-full bg-blue-700 px-5 py-4 text-md font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300';
-
-const ALTERNATIVE_BUTTON_STYLES =
-    'py-4 px-5 mb-2 text-md font-medium text-gray-900 focus:outline-none bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100';
 
 export default function Plan(): JSX.Element {
     const planId = useParams().id as string;
@@ -24,8 +22,6 @@ export default function Plan(): JSX.Element {
 
     const [editingName, setEditingName] = useState(false);
     const [planName, setPlanName] = useState(titleCase(plan?.name));
-
-    const currentRecipes = plan?.recipes || [];
 
     useEffect(() => {
         setSelectedPlanId(planId);
@@ -44,6 +40,12 @@ export default function Plan(): JSX.Element {
             .catch(noop);
     };
 
+    const onInputChange = (e: { target: { value: string } }) => {
+        const inputValue = e.target.value ?? '';
+        if (!inputValue.trim().length) return;
+        setPlanName(e.target.value);
+    };
+
     const navToRecipes = useCallback(() => {
         setSelectedPlanId(planId);
         nav('/recipes');
@@ -54,50 +56,63 @@ export default function Plan(): JSX.Element {
         nav('/groceries');
     }, [planId]);
 
+    const hasRecipes = !isEmpty(plan?.recipes ?? []);
+
     return (
-        <div>
-            <div className="align-center flex flex-row justify-center">
+        <>
+            <div className="align-center flex flex-row justify-around">
                 <IconButton
-                    sx={{ position: 'absolute', left: 0, top: 68 }} // ew, David TODO: don't do this
+                    className="m-2 p-2"
                     onClick={() => {
                         nav('/plans');
                     }}
                 >
-                    <Icon>arrow_back</Icon>
+                    <div className="opacity-50">
+                        <ArrowBack />
+                    </div>
                 </IconButton>
                 {editingName ? (
                     <>
-                        <TextField
-                            onChange={(e: { target: { value: string } }) => setPlanName(e.target.value)}
+                        <input
+                            className="block w-full rounded-lg py-2 pl-6 pr-20 text-lg ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-700"
                             value={planName}
+                            onChange={onInputChange}
                         />
-                        <Button
+                        <IconButton
+                            className="m-2 p-2"
                             onClick={() => {
                                 updatePlan({ ...plan, name: planName });
                                 setEditingName(false);
                             }}
                         >
-                            Save
-                        </Button>
+                            <div className="opacity-50">
+                                <Save />
+                            </div>
+                        </IconButton>
                     </>
                 ) : (
                     <>
-                        <PageTitle label={planName} />
+                        <PageTitle>
+                            <span className="align-middle">{planName}</span>
+                        </PageTitle>
                         <IconButton
-                            sx={{ pb: 0, mb: -1 }}
+                            className="m-2 p-2"
+                            type="button"
                             onClick={() => {
                                 setEditingName(true);
                             }}
                         >
-                            <Icon>edit</Icon>
+                            <div className="opacity-50">
+                                <Edit />
+                            </div>
                         </IconButton>
                     </>
                 )}
             </div>
-            {!isEmpty(currentRecipes) ? (
+            {hasRecipes ? (
                 <div className="m-4">
                     <ul className="w-full divide-y divide-gray-200 rounded-xl border-2 border-gray-200 bg-white">
-                        {currentRecipes.map((recipeWithQuantity: { id: string; quantity: string }) => (
+                        {(plan?.recipes || []).map((recipeWithQuantity: { id: string; quantity: string }) => (
                             <PlanItem
                                 recipeWithQuantity={recipeWithQuantity}
                                 key={recipeWithQuantity.id}
@@ -107,35 +122,34 @@ export default function Plan(): JSX.Element {
                     </ul>
                 </div>
             ) : (
-                <div className="my-20 flex justify-center text-lg">
-                    <p>No recipes found for this plan. Add some?</p>
-                </div>
+                <EmptyPlanMessage />
             )}
-            <div className="m-4 flex">
-                <button
-                    type="button"
-                    className={`${isEmpty(currentRecipes) ? DEFAULT_BUTTON_STYLES : ALTERNATIVE_BUTTON_STYLES} rounded-l-lg`}
-                    onClick={navToRecipes}
-                >
-                    Recipes
-                </button>
-                <button
-                    type="button"
-                    className={`${!isEmpty(currentRecipes) ? DEFAULT_BUTTON_STYLES : ALTERNATIVE_BUTTON_STYLES} rounded-r-lg`}
-                    onClick={navToGroceries}
-                >
-                    Groceries
-                </button>
+
+            <div className="flex flex-col">
+                <div className="m-4 inline-flex">
+                    <Button
+                        type="button"
+                        variant={!hasRecipes ? 'contained' : 'outlined'}
+                        className="w-full rounded-none rounded-l-md"
+                        onClick={navToRecipes}
+                    >
+                        Recipes
+                    </Button>
+                    <Button
+                        type="button"
+                        variant={hasRecipes ? 'contained' : 'outlined'}
+                        className="w-full rounded-none rounded-r-md"
+                        onClick={navToGroceries}
+                    >
+                        Groceries
+                    </Button>
+                </div>
+                <div className="flex justify-center">
+                    <DeleteButton type="button" onClick={handleDelete}>
+                        Delete Plan
+                    </DeleteButton>
+                </div>
             </div>
-            <div className="flex justify-center">
-                <button
-                    type="button"
-                    className="mb-8 rounded-lg text-center text-sm font-medium text-red-700 underline"
-                    onClick={handleDelete}
-                >
-                    Delete Plan
-                </button>
-            </div>
-        </div>
+        </>
     );
 }

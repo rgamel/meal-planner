@@ -4,31 +4,19 @@ import { useState } from 'react';
 import { PageTitle } from '../../components/PageTitle';
 import { PlanListItem } from './PlanListItem';
 import { CreatePlanDialog } from './CreatePlanDialog';
+import { planNameComparator } from './planNameComparator';
 
 export default function Plans() {
     const { plans } = usePlans();
     const [isPlanDialogOpen, setIsPlanDialogOpen] = useState(false);
 
     return (
-        <div>
-            <PageTitle label="Meal Plans" />
+        <div className="pb-24">
+            <PageTitle>Meal Plans</PageTitle>
             <div className="flex flex-col gap-3">
-                <ul
-                    role="list"
-                    className="m-6 border-spacing-0 divide-y divide-gray-200 rounded-xl border-2 border-gray-200 bg-white text-xl shadow-sm"
-                >
+                <ul className="m-6 border-spacing-0 divide-y divide-gray-200 rounded-xl border-2 border-gray-200 bg-white text-xl shadow-sm">
                     {Object.values(plans)
-                        .sort((a, b) => {
-                            const nameA = a.name.toUpperCase();
-                            const nameB = b.name.toUpperCase();
-
-                            if (nameA > nameB) {
-                                return 1;
-                            } else if (nameA < nameB) {
-                                return -1;
-                            }
-                            return 0;
-                        })
+                        .sort(planNameComparator)
                         .map((plan) => (
                             <PlanListItem key={plan.id} id={plan.id} name={plan.name} />
                         ))}

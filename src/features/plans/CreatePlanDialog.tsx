@@ -1,5 +1,7 @@
-import { Button, Dialog, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Dialog } from '@mui/material';
 import { usePlans } from 'app/hooks';
+import { Button } from 'components/Button';
+import { DialogTitle } from 'components/DialogTitle';
 import { Dispatch, SetStateAction, useState } from 'react';
 
 type CreatePlanDialogProps = {
@@ -12,19 +14,9 @@ export function CreatePlanDialog({ setIsPlanDialogOpen }: CreatePlanDialogProps)
 
     return (
         <Dialog fullWidth open onClose={() => setIsPlanDialogOpen(false)}>
-            <DialogTitle>Create Plan</DialogTitle>
-            <DialogContent>
-                <div className="my-6 flex flex-col">
-                    {/* <TextField
-                        required
-                        variant="filled"
-                        autoFocus
-                        label="Plan name"
-                        onChange={(e: { target: { value: string } }) => {
-                            setPlanName(e.target.value);
-                        }}
-                        sx={{ mb: 1 }}
-                    /> */}
+            <div className="mx-6 my-4 space-y-4">
+                <DialogTitle>Create Plan</DialogTitle>
+                <div className="flex flex-col">
                     <input
                         id="planNameInput"
                         className="block w-full rounded-t-lg py-2 pl-6 pr-20 text-lg ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-700"
@@ -35,8 +27,9 @@ export function CreatePlanDialog({ setIsPlanDialogOpen }: CreatePlanDialogProps)
                             setPlanName(e.target.value);
                         }}
                     />
-                    <button
-                        className="w-full rounded-b-lg bg-blue-700 py-2 text-white disabled:cursor-not-allowed disabled:bg-gray-300"
+                    <Button
+                        className="rounded-none rounded-b-lg"
+                        variant="outlined"
                         disabled={planName.trim() === ''}
                         onClick={() => {
                             addPlan({ name: planName, recipes: [], shoppedItems: [], groceries: [] });
@@ -44,9 +37,9 @@ export function CreatePlanDialog({ setIsPlanDialogOpen }: CreatePlanDialogProps)
                         }}
                     >
                         Create Meal Plan
-                    </button>
+                    </Button>
                 </div>
-            </DialogContent>
+            </div>
         </Dialog>
     );
 }

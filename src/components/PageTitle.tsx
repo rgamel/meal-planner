@@ -1,7 +1,7 @@
-export function PageTitle({ label }: { label: string }) {
+export function PageTitle({ children }: { children: string | JSX.Element | (string | JSX.Element)[] }) {
     return (
-        <div className="flex justify-center text-gray-900">
-            <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-gray-900">{label}</h2>
+        <div className="flex items-center justify-center text-gray-900">
+            <h2 className="text-3xl font-extrabold tracking-tight text-gray-900">{children}</h2>
         </div>
     );
 }
