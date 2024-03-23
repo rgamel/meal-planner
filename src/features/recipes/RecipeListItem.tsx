@@ -12,7 +12,6 @@ type RecipeListItemProps = {
 
 export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemProps) {
     const { selectedRecipes, handleSelectRecipe } = useSelectedRecipes();
-    const { categories } = useCategories();
     const handleChange = useCallback(() => {
         handleSelectRecipe(recipe.id);
     }, [recipe.id, handleSelectRecipe]);
@@ -24,9 +23,6 @@ export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemPro
     }, [editRecipe, recipe]);
 
     const label = titleCase(recipe.name);
-    const categoryLabel = categories[recipe?.categoryId || '']
-        ? `${titleCase(categories[recipe?.categoryId || '']?.name)} `
-        : '';
 
     return (
         <li className="m-6 flex flex-row justify-between">
@@ -34,7 +30,7 @@ export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemPro
                 <input type="checkbox" className="mr-3 h-5 w-5" checked={checked} onChange={handleChange} />
                 <div className="text-md">{label}</div>
             </div>
-            <IconButton className="absolute right-0" onClick={onClickEdit}>
+            <IconButton className="absolute right-0 pr-0" onClick={onClickEdit}>
                 <div className="opacity-50">
                     <Edit />
                 </div>
