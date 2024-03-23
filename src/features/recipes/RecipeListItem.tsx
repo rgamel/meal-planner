@@ -1,4 +1,4 @@
-import { useCategories, useSelectedRecipes } from 'app/hooks';
+import { useSelectedRecipes } from 'app/hooks';
 import { IconButton } from 'components/Button';
 import { Edit } from 'components/icons/Edit';
 import { useCallback, useMemo } from 'react';
@@ -25,7 +25,7 @@ export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemPro
     const label = titleCase(recipe.name);
 
     return (
-        <li className="m-6 flex flex-row justify-between">
+        <li className="mx-6 flex flex-row justify-between">
             <div className="flex items-center">
                 <input type="checkbox" className="mr-3 h-5 w-5" checked={checked} onChange={handleChange} />
                 <div className="text-md">{label}</div>
