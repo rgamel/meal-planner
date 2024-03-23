@@ -12,8 +12,8 @@ export function RecipeCategorySection({ recipes, editRecipe, categoryId }: Recip
     const { categories } = useCategories();
     const label = titleCase(categories[categoryId]?.name);
     return (
-        <div className="py-4">
-            <h2 className="flex text-2xl font-medium text-gray-700">{label}</h2>
+        <div className="px-6 py-4">
+            <h2 className="flex text-xl font-semibold text-gray-900">{label}</h2>
             <ul>
                 {recipes.map((r) => (
                     <RecipeListItem key={r.id} recipe={r} editRecipe={editRecipe} />

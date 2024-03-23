@@ -15,11 +15,11 @@ export function PlanListItem({ id, name }: { id: string; name: string }) {
     const { recipes } = useRecipes();
 
     return (
-        <div className="flex justify-between gap-x-6 px-10 py-5">
+        <div className="flex justify-between px-6 py-4">
             <RouterLink to={`${id}`}>
                 <li key={id}>
                     <div className="w-full">
-                        <p className="text-md font-semibold leading-6 text-gray-900">{titleCase(name)}</p>
+                        <h3 className="text-xl font-semibold leading-6 text-gray-900">{titleCase(name)}</h3>
                         <p className="mt-1 text-sm leading-5 text-gray-500">{getRecipeNames(plans, id, recipes)}</p>
                     </div>
                 </li>

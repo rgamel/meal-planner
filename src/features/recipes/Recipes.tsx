@@ -12,6 +12,7 @@ import { Recipe } from 'types';
 import { RecipeCategorySection } from './RecipeCategorySection';
 import { DialogTitle } from 'components/DialogTitle';
 import { EmptyPlanMessage } from 'features/plans/EmptyPlanMessage';
+import { Card } from 'components/Card';
 
 export default function Recipes() {
     const { recipes } = useContext(RecipesContext);
@@ -39,11 +40,11 @@ export default function Recipes() {
                 </PageTitle>
             ) : null}
             <div>
-                <div className="m-2 rounded-lg bg-white p-2">
+                <Card>
                     {!recipesMemo.length ? (
                         <EmptyPlanMessage />
                     ) : (
-                        <ul className="divide-y-2 divide-gray-200">
+                        <ul className="font-regular divide-y-2 divide-gray-200">
                             {Object.keys(recipesByCategory).map((categoryId) => (
                                 <RecipeCategorySection
                                     key={categoryId}
@@ -65,7 +66,7 @@ export default function Recipes() {
                         </div>
                     </Dialog>
                     <AddFab onClick={() => setRecipeDialogOpen(true)} />
-                </div>
+                </Card>
                 <div className="m-2 flex">
                     <Button onClick={clearAllSelected}>Clear Selected</Button>
                     <Button onClick={() => nav('/groceries')}>Groceries</Button>
