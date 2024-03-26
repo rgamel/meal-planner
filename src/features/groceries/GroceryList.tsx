@@ -1,8 +1,8 @@
 import { isEmpty } from 'lodash';
 import partition from 'lodash/fp/partition';
 import { GroceryItem } from 'types';
-import { StoreListAccordion } from './StoreListAccordion';
 import { GroceryItems } from './GroceryItems';
+import { AccordionSummary } from '../../components/AccordionSummary';
 
 export type GroceryLineItemProps = {
     groceryItem: GroceryItem;
@@ -14,16 +14,20 @@ export default function GroceryMasterList({ groceries }: { groceries: GroceryIte
     const [aldi, schnucks] = partition('isAldi', groceries);
 
     return (
-        <div className="space-y-2">
+        <div className="divide-y-2">
             {!isEmpty(aldi) ? (
-                <StoreListAccordion count={aldi.length} label="Aldi">
-                    <GroceryItems items={aldi} />
-                </StoreListAccordion>
+                <div className="px-6 py-4">
+                    <AccordionSummary label={`Aldi: ${aldi.length}`}>
+                        <GroceryItems items={aldi} />
+                    </AccordionSummary>
+                </div>
             ) : null}
             {!isEmpty(schnucks) ? (
-                <StoreListAccordion count={schnucks.length} label="Schnucks">
-                    <GroceryItems items={schnucks} />
-                </StoreListAccordion>
+                <div className="px-6 py-4">
+                    <AccordionSummary label={`Schnucks: ${schnucks.length}`}>
+                        <GroceryItems items={schnucks} />
+                    </AccordionSummary>
+                </div>
             ) : null}
         </div>
     );

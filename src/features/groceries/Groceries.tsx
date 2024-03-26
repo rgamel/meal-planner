@@ -9,6 +9,7 @@ import { AddGroceryItemModal } from './AddGroceryItemModal';
 import GroceryList from './GroceryList';
 import { compactGroceries } from './compactGroceries';
 import { getAllGroceries } from './getAllGroceries';
+import { Card } from 'components/Card';
 
 function Groceries() {
     const [isGroceryDialogOpen, setIsGroceryDialogOpen] = useState(false);
@@ -34,24 +35,32 @@ function Groceries() {
     return (
         <>
             {selectedPlanId ? (
-                <Button>
-                    <PageTitle>
-                        <RouterLink to={`/plans/${selectedPlanId}`}>{plans[selectedPlanId].name}</RouterLink>
-                    </PageTitle>
-                </Button>
-            ) : null}
-            <div className="mx-1">
-                <GroceryList groceries={getAllGroceries(selectedRecipes, recipes, plans, selectedPlanId)} />
-            </div>
-            <div className="my-2 flex flex-row justify-center">
-                <Button onClick={clearAllShopped}>Clear All</Button>
-            </div>
-            <AddGroceryItemModal
-                isGroceryDialogOpen={isGroceryDialogOpen}
-                handleCloseDialog={handleCloseDialog}
-                handleSave={handleSave}
-            />
-            <AddFab onClick={() => setIsGroceryDialogOpen(true)} />
+                <div>
+                    <div className="flex justify-center">
+                        <PageTitle>
+                            <RouterLink to={`/plans/${selectedPlanId}`}>{plans[selectedPlanId].name}</RouterLink>
+                        </PageTitle>
+                    </div>
+                    <Card>
+                        <div>
+                            <GroceryList groceries={getAllGroceries(selectedRecipes, recipes, plans, selectedPlanId)} />
+                        </div>
+                    </Card>
+                    <div className="my-2 flex flex-row justify-center">
+                        <Button onClick={clearAllShopped}>Clear All</Button>
+                    </div>
+                    <AddGroceryItemModal
+                        isGroceryDialogOpen={isGroceryDialogOpen}
+                        handleCloseDialog={handleCloseDialog}
+                        handleSave={handleSave}
+                    />
+                    <AddFab onClick={() => setIsGroceryDialogOpen(true)} />
+                </div>
+            ) : (
+                <div className="my-6 flex justify-center">
+                    <p className="text-lg">No plan selected. Select a plan to see groceries.</p>
+                </div>
+            )}
         </>
     );
 }

@@ -26,6 +26,7 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     const confirm = useConfirm();
 
     useEffect(() => {
+        // TODO: get rid of this useEffect, use the props as default values for state instead
         if (!recipeToEdit) return;
         setRecipeName(recipeToEdit.name);
         setCategory(categories[recipeToEdit.categoryId || '']);
@@ -62,7 +63,7 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     };
 
     const handleSave = () => {
-        const recipe = { name: recipeName.trim(), groceries, categoryId: category?.id || '' };
+        const recipe = { name: recipeName.trim().toLowerCase(), groceries, categoryId: category?.id || '' };
         if (!isNil(recipeToEdit)) {
             updateRecipe({ id: recipeToEdit.id, ...recipe });
         } else {
