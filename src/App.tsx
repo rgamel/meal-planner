@@ -1,5 +1,4 @@
 import { Outlet } from 'react-router-dom';
-import './styles.css';
 import { BottomAppBar } from 'components/BottomAppBar';
 
 export default function App() {

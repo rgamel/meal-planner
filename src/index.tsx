@@ -11,6 +11,7 @@ import Groceries from './features/groceries/Groceries';
 import Plan from './features/plans/Plan';
 import Plans from './features/plans/Plans';
 import Recipes from './features/recipes/Recipes';
+import './styles.css';
 
 ReactDOM.render(
     <React.StrictMode>
