@@ -1,53 +1,34 @@
-import { Button, Dialog, DialogContent, DialogTitle, List, Stack, TextField, Typography } from '@mui/material';
 import { usePlans } from 'app/hooks';
 import { AddFab } from 'features/groceries/AddFab';
 import { useState } from 'react';
+import { Card } from '../../components/Card';
+import { PageTitle } from '../../components/PageTitle';
+import { CreatePlanDialog } from './CreatePlanDialog';
 import { PlanListItem } from './PlanListItem';
+import { planNameComparator } from './planNameComparator';
 
 export default function Plans() {
-    const { plans, addPlan } = usePlans();
+    const { plans } = usePlans();
     const [isPlanDialogOpen, setIsPlanDialogOpen] = useState(false);
-    const [planName, setPlanName] = useState('');
 
     return (
-        <>
-            <Typography variant="h1">Plans</Typography>
-            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {Object.values(plans).map((plan) => (
-                    <PlanListItem key={plan.id} id={plan.id} name={plan.name} />
-                ))}
-            </List>
+        <div className="pb-24">
+            <PageTitle>Meal Plans</PageTitle>
+            <Card className="">
+                <ul className="divide-y divide-gray-200">
+                    {Object.values(plans)
+                        .sort(planNameComparator)
+                        .map((plan) => (
+                            <PlanListItem key={plan.id} id={plan.id} name={plan.name} />
+                        ))}
+                </ul>
+            </Card>
             <AddFab
                 onClick={() => {
                     setIsPlanDialogOpen(true);
                 }}
             />
-            <Dialog fullWidth open={isPlanDialogOpen} onClose={() => setIsPlanDialogOpen(false)}>
-                <DialogTitle>Create Plan</DialogTitle>
-                <DialogContent>
-                    <Stack direction="column">
-                        <TextField
-                            required
-                            variant="filled"
-                            autoFocus
-                            label="Plan name"
-                            onChange={(e: { target: { value: string } }) => {
-                                setPlanName(e.target.value);
-                            }}
-                            sx={{ mb: 1 }}
-                        />
-                        <Button
-                            variant="contained"
-                            onClick={() => {
-                                addPlan({ name: planName, recipes: [], shoppedItems: [], groceries: [] });
-                                setIsPlanDialogOpen(false);
-                            }}
-                        >
-                            Create
-                        </Button>
-                    </Stack>
-                </DialogContent>
-            </Dialog>
-        </>
+            {isPlanDialogOpen ? <CreatePlanDialog setIsPlanDialogOpen={setIsPlanDialogOpen} /> : null}
+        </div>
     );
 }

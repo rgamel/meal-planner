@@ -1,20 +1,21 @@
-import { Button, Checkbox, FormControlLabel, Grid, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
+import { Button } from 'components/Button';
 import Fraction from 'fraction.js';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { EntityOptionType } from 'types';
 import { useIngredients, useUoms } from '../../app/hooks';
 import Autocomplete from '../../components/Autocomplete';
 
-function IngredientInput({
-    commitGroceryItem,
-}: {
+interface IngredientInputProps {
     commitGroceryItem: (
         quantity: Fraction,
         selectedUomId: string,
         selectedIngredientId: string,
         isAldi: boolean,
     ) => void;
-}) {
+}
+
+function IngredientInput({ commitGroceryItem }: IngredientInputProps) {
     const { ingredients, addIngredient, deleteIngredient } = useIngredients();
     const { uoms, addUom, deleteUom } = useUoms();
     const [quantity, setQuantity] = useState('');
@@ -48,58 +49,51 @@ function IngredientInput({
     const ingredientsMemo = useMemo(() => Object.values(ingredients), [ingredients]);
 
     return (
-        <Grid container spacing={1} direction="column">
-            <Grid item xs={1}>
-                <TextField
-                    error={quantity.length > 0 && !validQuantity}
-                    value={quantity}
-                    onChange={handleChangeQuantity}
-                    fullWidth
-                    label="Quantity"
-                    required
-                />
-            </Grid>
-            <Grid item xs={1}>
-                <Autocomplete
-                    suggestions={uomsMemo}
-                    addItem={addUom}
-                    deleteItem={deleteUom}
-                    selected={selectedUom}
-                    setSelected={setSelectedUom}
-                    label="UOM"
-                />
-            </Grid>
-            <Grid item xs={1}>
-                <Autocomplete
-                    suggestions={ingredientsMemo}
-                    addItem={addIngredient}
-                    deleteItem={deleteIngredient}
-                    selected={selectedIngredient}
-                    setSelected={setSelectedIngredient}
-                    label="Ingredient"
-                />
-            </Grid>
-            <Grid item xs={1}>
-                <Grid
-                    container
-                    columns={{ xs: 4, sm: 8, md: 12 }}
-                    spacing={{ xs: 2, md: 3 }}
-                    sx={{ justifyContent: 'end', alignItems: 'end' }}
-                >
-                    <Grid item xs={3} sm={5} md={8}>
-                        <FormControlLabel
-                            control={<Checkbox checked={isAldi} onChange={handleSetIsAldi} />}
-                            label="Available at Aldi"
+        <div className="space-y-2">
+            <TextField
+                error={quantity.length > 0 && !validQuantity}
+                value={quantity}
+                onChange={handleChangeQuantity}
+                fullWidth
+                label="Quantity"
+                required
+            />
+            <Autocomplete
+                suggestions={uomsMemo}
+                addItem={addUom}
+                deleteItem={deleteUom}
+                selected={selectedUom}
+                setSelected={setSelectedUom}
+                label="UOM"
+            />
+            <Autocomplete
+                suggestions={ingredientsMemo}
+                addItem={addIngredient}
+                deleteItem={deleteIngredient}
+                selected={selectedIngredient}
+                setSelected={setSelectedIngredient}
+                label="Ingredient"
+            />
+            <div className="ml-2 mt-2">
+                <div className="flex flex-row items-center justify-between">
+                    <span className="mb-2">
+                        <input
+                            type="checkbox"
+                            name="is-aldi"
+                            id="is-aldi"
+                            checked={isAldi}
+                            onChange={handleSetIsAldi}
                         />
-                    </Grid>
-                    <Grid item xs={1} sm={3} md={4}>
-                        <Button onClick={handleCommitGroceryItem} variant="contained" fullWidth disabled={!enableSave}>
-                            Add
-                        </Button>
-                    </Grid>
-                </Grid>
-            </Grid>
-        </Grid>
+                        <label className="ml-2" htmlFor="is-aldi">
+                            Available at Aldi
+                        </label>
+                    </span>
+                    <Button onClick={handleCommitGroceryItem} variant="text" disabled={!enableSave}>
+                        Add
+                    </Button>
+                </div>
+            </div>
+        </div>
     );
 }
 

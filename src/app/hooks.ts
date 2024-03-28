@@ -37,7 +37,7 @@ const listNames = {
     selectedRecipes: 'selectedRecipes',
 } as const;
 
-type ListName = typeof listNames[keyof typeof listNames];
+type ListName = (typeof listNames)[keyof typeof listNames];
 
 const useGenericFns = <T extends { id: string }>(
     list: Record<string, T>,
@@ -140,7 +140,7 @@ export const usePlannedQuantity = () => {
     const currentPlan = plans[selectedPlanId];
 
     const updatePlannedQuantity = (id: string, quantity: string) => {
-        const _recipes = currentPlan?.recipes || [];
+        const _recipes = currentPlan?.recipes ?? [];
 
         const indexToUpdate = _recipes?.findIndex((r) => r.id === id);
 
@@ -159,7 +159,7 @@ export const useShoppedItems = () => {
     const { plans, updatePlan, selectedPlanId } = usePlans();
 
     const currentPlan = plans[selectedPlanId];
-    const shoppedItems = currentPlan?.shoppedItems || [];
+    const shoppedItems = currentPlan?.shoppedItems ?? [];
 
     const removeShopped = (id: string) => {
         const shoppedWithout = shoppedItems.filter((item) => item !== id);
@@ -185,7 +185,7 @@ export const useShoppedItems = () => {
     };
 
     return {
-        shoppedItems: shoppedItems || [],
+        shoppedItems: shoppedItems ?? [],
         handleToggleShopped,
         clearAllShopped,
     };
@@ -195,7 +195,7 @@ export const useSelectedRecipes = () => {
     const { recipes } = useContext(RecipesContext);
     const { plans, updatePlan, selectedPlanId } = usePlans();
 
-    const recipesForCurrentPlan = plans[selectedPlanId]?.recipes || [];
+    const recipesForCurrentPlan = plans[selectedPlanId]?.recipes ?? [];
 
     const removeRecipe = (id: string) => {
         const selectedWithout = recipesForCurrentPlan.filter((r) => r.id !== id);

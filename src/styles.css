@@ -1,3 +1,7 @@
-html {
-    background-color: #fafafa;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    background-color: black;
 }

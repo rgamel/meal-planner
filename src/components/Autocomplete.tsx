@@ -47,7 +47,7 @@ export default function ComboBox({ suggestions, label, selected, setSelected, ad
                     name: newValue,
                 });
             } else if (newValue && newValue.inputValue) {
-                setSelected(addItem({ name: newValue.inputValue }));
+                setSelected(addItem({ name: newValue.inputValue.trim().toLowerCase() }));
             } else {
                 setSelected(newValue);
             }

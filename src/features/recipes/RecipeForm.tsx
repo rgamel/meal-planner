@@ -1,13 +1,14 @@
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { Button, DialogContentText, DialogActions, Divider, Grid, TextField, Typography } from '@mui/material';
-import { useConfirm } from 'material-ui-confirm';
-import { EntityOptionType, GroceryItem, Recipe } from 'types';
-import { isNil, noop } from 'lodash';
+import { TextField } from '@mui/material';
+import { Button, DeleteButton } from 'components/Button';
+import { GroceryItems } from 'features/groceries/GroceryItems';
 import Fraction from 'fraction.js';
-import IngredientInput from './IngredientInput';
-import { GroceryItems } from '../groceries/GroceryList';
-import { useRecipes, useCategories } from '../../app/hooks';
+import { isNil, noop } from 'lodash';
+import { useConfirm } from 'material-ui-confirm';
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { EntityOptionType, GroceryItem, Recipe } from 'types';
+import { useCategories, useRecipes } from '../../app/hooks';
 import Autocomplete from '../../components/Autocomplete';
+import IngredientInput from './IngredientInput';
 
 type RecipeFormProps = {
     setRecipeDialogOpen: Dispatch<SetStateAction<boolean>>;
@@ -25,6 +26,7 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     const confirm = useConfirm();
 
     useEffect(() => {
+        // TODO: get rid of this useEffect, use the props as default values for state instead
         if (!recipeToEdit) return;
         setRecipeName(recipeToEdit.name);
         setCategory(categories[recipeToEdit.categoryId || '']);
@@ -61,7 +63,7 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     };
 
     const handleSave = () => {
-        const recipe = { name: recipeName.trim(), groceries, categoryId: category?.id || '' };
+        const recipe = { name: recipeName.trim().toLowerCase(), groceries, categoryId: category?.id || '' };
         if (!isNil(recipeToEdit)) {
             updateRecipe({ id: recipeToEdit.id, ...recipe });
         } else {
@@ -84,8 +86,8 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     };
 
     return (
-        <Grid container direction="column" spacing={1}>
-            <Grid item xs={1}>
+        <div className="space-y-4">
+            <div className="space-y-4 pt-2">
                 <TextField
                     label="Recipe name"
                     variant="outlined"
@@ -94,8 +96,6 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
                     onChange={handleSetRecipeName}
                     required
                 />
-            </Grid>
-            <Grid item>
                 <Autocomplete
                     suggestions={Object.values(categories)}
                     label="Category"
@@ -104,32 +104,36 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
                     addItem={addCategory}
                     deleteItem={deleteCategory}
                 />
-            </Grid>
-            <Divider sx={{ mt: 2 }} />
-            <Grid item xs={1}>
-                <DialogContentText>Please add ingredients for your recipe below:</DialogContentText>
-            </Grid>
-            <Grid item xs={1}>
+            </div>
+
+            <div className="pt-2">
+                <p className="mb-2 text-base font-normal text-black opacity-60">
+                    Please add ingredients for your recipe below:
+                </p>
                 <IngredientInput commitGroceryItem={commitGroceryItem} />
-            </Grid>
-            <Divider sx={{ mt: 2 }} />
-            <Grid item xs={1}>
-                <Typography>Ingredients:</Typography>
-            </Grid>
-            <GroceryItems items={groceries} deleteGroceryItem={deleteGroceryItem} setItems={setGroceries} />
-            <DialogActions>
-                <Button fullWidth onClick={handleClose} variant="outlined">
-                    Cancel
-                </Button>
-                <Button fullWidth onClick={handleSave} disabled={!enableSave} variant="contained">
-                    {`Save${recipeToEdit ? ' changes' : ''}`}
-                </Button>
-            </DialogActions>
-            {recipeToEdit && (
-                <Button sx={{ mt: 4 }} onClick={() => handleDelete(recipeToEdit.id)} fullWidth color="error">
-                    Delete Recipe
-                </Button>
-            )}
-        </Grid>
+            </div>
+
+            <div className="pt-2">
+                <p className="m-0 text-base font-normal text-black opacity-60">Ingredients:</p>
+                <GroceryItems items={groceries} deleteGroceryItem={deleteGroceryItem} setItems={setGroceries} />
+
+                <div id="dialog-actions">
+                    <div className="flex flex-row justify-around">
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button onClick={handleSave} variant="outlined" disabled={!enableSave}>
+                            Save
+                        </Button>
+                    </div>
+
+                    {recipeToEdit && (
+                        <div className="flex justify-center">
+                            <DeleteButton type="button" onClick={() => handleDelete(recipeToEdit.id)}>
+                                Delete Recipe
+                            </DeleteButton>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
     );
 }
