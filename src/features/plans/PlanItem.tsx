@@ -1,7 +1,7 @@
 import { titleCase } from 'helpers';
-import { QuantitySelect } from './QuantitySelect';
-import { getAllGroceries } from 'features/groceries/getAllGroceries';
+import { getAllGroceries } from 'features/groceries/utils/getAllGroceries';
 import { useIngredients, usePlans, useRecipes } from 'app/hooks';
+import { QuantitySelect } from './QuantitySelect';
 
 type PlanItemProps = {
     recipeWithQuantity: { id: string; quantity: string };
@@ -30,7 +30,7 @@ export function PlanItem({ recipeWithQuantity, planId }: PlanItemProps): JSX.Ele
                 </ul>
             </div>
             <div>
-                {'x'}
+                x
                 <QuantitySelect recipeWithQuantity={recipeWithQuantity} />
             </div>
         </li>

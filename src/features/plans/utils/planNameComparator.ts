@@ -6,7 +6,8 @@ export function planNameComparator(a: Plan, b: Plan) {
 
     if (nameA > nameB) {
         return 1;
-    } else if (nameA < nameB) {
+    }
+    if (nameA < nameB) {
         return -1;
     }
     return 0;

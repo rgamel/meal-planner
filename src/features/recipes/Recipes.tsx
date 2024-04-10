@@ -9,10 +9,10 @@ import groupBy from 'lodash/fp/groupBy';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Recipe } from 'types';
-import { RecipeCategorySection } from './RecipeCategorySection';
 import { DialogTitle } from 'components/DialogTitle';
 import { EmptyPlanMessage } from 'features/plans/EmptyPlanMessage';
 import { Card } from 'components/Card';
+import { RecipeCategorySection } from './RecipeCategorySection';
 
 export default function Recipes() {
     const { recipes } = useContext(RecipesContext);

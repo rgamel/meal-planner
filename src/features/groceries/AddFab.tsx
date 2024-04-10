@@ -2,6 +2,7 @@ export function AddFab({ onClick }: { onClick: () => void }) {
     return (
         <div className="fixed bottom-4 right-4 z-50">
             <button
+                type="button"
                 onClick={onClick}
                 className="mouse h-16 w-16 rounded-full bg-blue-700 p-0 shadow transition duration-200 ease-in hover:bg-blue-800 focus:outline-none active:shadow-lg"
             >

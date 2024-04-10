@@ -77,14 +77,15 @@ function IngredientInput({ commitGroceryItem }: IngredientInputProps) {
             <div className="ml-2 mt-2">
                 <div className="flex flex-row items-center justify-between">
                     <span className="mb-2">
-                        <input
-                            type="checkbox"
-                            name="is-aldi"
-                            id="is-aldi"
-                            checked={isAldi}
-                            onChange={handleSetIsAldi}
-                        />
-                        <label className="ml-2" htmlFor="is-aldi">
+                        <label htmlFor="is-aldi">
+                            <input
+                                className="mr-2"
+                                type="checkbox"
+                                name="is-aldi"
+                                id="is-aldi"
+                                checked={isAldi}
+                                onChange={handleSetIsAldi}
+                            />
                             Available at Aldi
                         </label>
                     </span>

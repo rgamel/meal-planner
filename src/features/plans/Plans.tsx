@@ -5,7 +5,7 @@ import { Card } from '../../components/Card';
 import { PageTitle } from '../../components/PageTitle';
 import { CreatePlanDialog } from './CreatePlanDialog';
 import { PlanListItem } from './PlanListItem';
-import { planNameComparator } from './planNameComparator';
+import { planNameComparator } from './utils/planNameComparator';
 
 export default function Plans() {
     const { plans } = usePlans();

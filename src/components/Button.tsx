@@ -13,10 +13,11 @@ export function Button({ className, variant = 'text', ...rest }: Props) {
 
     return (
         <button
+            type="button"
             className={clsx({
                 'text-md relative mb-2 inline-flex cursor-pointer items-center justify-center rounded-md px-8 py-2 font-semibold uppercase leading-6 tracking-wide':
                     true,
-                ['transition']: true,
+                transition: true,
                 'focus:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-blue-300 focus-visible:ring-2': true,
                 'disabled:cursor-not-allowed disabled:opacity-30': true,
                 [textStyles]: variant === 'text',

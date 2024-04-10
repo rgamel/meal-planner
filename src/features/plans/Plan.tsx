@@ -49,12 +49,12 @@ export default function Plan(): JSX.Element {
     const navToRecipes = useCallback(() => {
         setSelectedPlanId(planId);
         nav('/recipes');
-    }, [planId]);
+    }, [planId, setSelectedPlanId, nav]);
 
     const navToGroceries = useCallback(() => {
         setSelectedPlanId(planId);
         nav('/groceries');
-    }, [planId]);
+    }, [planId, setSelectedPlanId, nav]);
 
     const hasRecipes = !isEmpty(plan?.recipes ?? []);
 

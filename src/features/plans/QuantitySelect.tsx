@@ -14,10 +14,13 @@ export function QuantitySelect({ recipeWithQuantity: { id, quantity } }: Quantit
     const [q, setQ] = useState(quantity);
     const updatePlannedQuantity = usePlannedQuantity();
 
-    const handleChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-        setQ(e.target.value);
-        updatePlannedQuantity(id, e.target.value);
-    }, []);
+    const handleChange = useCallback(
+        (e: React.ChangeEvent<HTMLSelectElement>) => {
+            setQ(e.target.value);
+            updatePlannedQuantity(id, e.target.value);
+        },
+        [id, updatePlannedQuantity],
+    );
 
     return (
         <select value={q} onChange={handleChange}>

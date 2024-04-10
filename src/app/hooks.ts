@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDocs, QuerySnapshot, setDoc } from 'firebase/firestore/lite';
+import { collection, deleteDoc, doc, DocumentData, getDocs, QuerySnapshot, setDoc } from 'firebase/firestore/lite';
 import { omit, set } from 'lodash/fp';
 import { nanoid } from 'nanoid';
 import { Dispatch, SetStateAction, useContext } from 'react';
@@ -6,11 +6,13 @@ import { db } from './firebase';
 import { RecipesContext } from './recipeContext';
 
 export const useFirebase = () => {
-    const formatCollectionAsList = (snapshot: QuerySnapshot) =>
-        snapshot.docs.reduce(
-            (result, document) => ({ ...result, [document.id]: { ...document.data(), id: document.id } }),
-            {} as Record<string, any>,
-        );
+    const formatCollectionAsList = (snapshot: QuerySnapshot<DocumentData>) => {
+        const result = {} as any; // TODO: figure out this type
+        snapshot.forEach((document) => {
+            result[document.id] = { ...document.data(), id: document.id };
+        });
+        return result;
+    };
 
     const getCollection = async (collectionName: string) => {
         const c = await getDocs(collection(db, collectionName));

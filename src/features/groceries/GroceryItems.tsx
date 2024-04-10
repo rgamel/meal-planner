@@ -9,7 +9,7 @@ import {
 } from 'react-beautiful-dnd';
 import { GroceryItem } from 'types';
 import { GroceryLineItem } from './GroceryLineItem';
-import { move } from './move';
+import { move } from './utils/move';
 
 type GroceryItemsProps = {
     items: GroceryItem[];
@@ -46,7 +46,7 @@ export function GroceryItems({ items, setItems, deleteGroceryItem }: GroceryItem
                         >
                             <ul className="list-inside">
                                 {items.map((groceryItem: GroceryItem, i: number) => {
-                                    const itemId = `${groceryItem.uomId}|${groceryItem.itemId}/${groceryItem.isAldi}`;
+                                    const itemId = `${groceryItem.uomId}|${groceryItem.itemId}/${String(groceryItem.isAldi)}`;
                                     return (
                                         // eslint-disable-next-line react/no-array-index-key
                                         <Draggable key={itemId} draggableId={itemId} index={i}>

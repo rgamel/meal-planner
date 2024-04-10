@@ -21,7 +21,6 @@ export function CreatePlanDialog({ setIsPlanDialogOpen }: CreatePlanDialogProps)
                         id="planNameInput"
                         className="block w-full rounded-t-lg py-2 pl-6 pr-20 text-lg ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-700"
                         placeholder="Plan name"
-                        autoFocus
                         value={planName}
                         onChange={(e: { target: { value: string } }) => {
                             setPlanName(e.target.value);
