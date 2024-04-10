@@ -13,9 +13,9 @@ export function AuthButton() {
 
     const handleClick = () => {
         if (!user) {
-            void signInUser();
+            return signInUser();
         }
-        void signOutUser();
+        return signOutUser();
     };
 
     const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
