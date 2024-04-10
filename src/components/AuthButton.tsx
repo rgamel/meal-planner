@@ -1,22 +1,21 @@
-import IconButton from '@mui/material/IconButton';
+import { Avatar } from '@mui/material';
 import Icon from '@mui/material/Icon';
-import { useState, MouseEvent, useContext } from 'react';
+import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { UserContext } from 'app/userContext';
-import { Avatar } from '@mui/material';
+import { useUserStore } from 'app/useUserStore';
+import { MouseEvent, useState } from 'react';
 import { Button } from './Button';
 
 export function AuthButton() {
-    const { user, signInWithGoogle, signOutUser } = useContext(UserContext);
+    const [user, signInUser, signOutUser] = useUserStore((state) => [state.user, state.signInUser, state.signOutUser]);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const handleClick = () => {
         if (!user) {
-            signInWithGoogle();
-            return;
+            return signInUser();
         }
-        signOutUser();
+        return signOutUser();
     };
 
     const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {

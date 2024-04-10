@@ -2,7 +2,7 @@ import { noop } from 'lodash/fp';
 import { createContext, Dispatch, SetStateAction, useEffect, useState, useMemo, useContext } from 'react';
 import { PlanList, CategoryList, IngredientList, RecipeList, UomList } from 'types';
 import { useFirebase } from './hooks';
-import { UserContext } from './userContext';
+import { useUserStore } from './useUserStore';
 
 // TODO: remove selectedRecipes and shoppedItems entirely in current form, replace as properties of plans
 
@@ -62,7 +62,7 @@ interface RecipesContextProviderProps {
 
 export default function RecipesContextProvider({ children }: RecipesContextProviderProps) {
     const { getCollection } = useFirebase();
-    const { user } = useContext(UserContext);
+    const user = useUserStore((state) => state.user);
     const [plans, setPlans] = useState<PlanList>({});
     const [selectedPlanId, setSelectedPlanId] = useState<string>('');
     const [recipes, setRecipes] = useState<RecipeList>({});
