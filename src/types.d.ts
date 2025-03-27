@@ -4,6 +4,7 @@ export type Plan = {
     recipes: { id: string; quantity: string }[];
     shoppedItems: string[];
     groceries: GroceryItem[];
+    pinned?: boolean;
 };
 export type PlanList = Record<string, Plan>;
 

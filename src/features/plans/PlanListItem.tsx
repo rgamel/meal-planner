@@ -5,9 +5,10 @@ import { useRecipeNames } from './hooks/useRecipeNames';
 interface PlanListItemProps {
     id: string;
     name: string;
+    togglePinned: (id: string) => void;
 }
 
-export function PlanListItem({ id, name }: PlanListItemProps) {
+export function PlanListItem({ id, name, togglePinned }: PlanListItemProps) {
     const recipeNames = useRecipeNames(id);
 
     return (
@@ -20,6 +21,12 @@ export function PlanListItem({ id, name }: PlanListItemProps) {
                     </div>
                 </li>
             </RouterLink>
+
+            <button type="button" onClick={() => togglePinned(id)}>
+                <div className="-mt-6 active:bg-gray-100">
+                    <span className="material-symbols-outlined opacity-50">keep</span>
+                </div>
+            </button>
         </div>
     );
 }

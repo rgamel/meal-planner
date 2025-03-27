@@ -1,5 +1,5 @@
 import { collection, deleteDoc, doc, DocumentData, getDocs, QuerySnapshot, setDoc } from 'firebase/firestore/lite';
-import { omit, set } from 'lodash/fp';
+import { omit, partition, set, values } from 'lodash/fp';
 import { nanoid } from 'nanoid';
 import { Dispatch, SetStateAction, useContext } from 'react';
 import { db } from './firebase';
@@ -125,9 +125,18 @@ export const useCategories = () => {
 export const usePlans = () => {
     const { plans, setPlans, selectedPlanId, setSelectedPlanId } = useContext(RecipesContext);
     const { addFn, deleteFn, updateFn } = useGenericFns(plans, setPlans, listNames.plans);
+    const [pinnedPlans, unpinnedPlans] = partition((plan) => plan.pinned, values(plans));
+
+    function togglePinned(id: string) {
+        const plan = plans[id];
+        updateFn({ ...plan, pinned: !plan.pinned });
+    }
 
     return {
         plans,
+        pinnedPlans,
+        unpinnedPlans,
+        togglePinned,
         selectedPlanId,
         setSelectedPlanId,
         addPlan: addFn,
