@@ -132,6 +132,14 @@ export const usePlans = () => {
         updateFn({ ...plan, pinned: !plan.pinned });
     }
 
+    function initPlan() {
+        return { name: '', recipes: [], shoppedItems: [], groceries: [] };
+    }
+
+    function addNewPlan(planName: string) {
+        addFn({ ...initPlan(), name: planName })
+    }
+
     return {
         plans,
         pinnedPlans,
@@ -140,6 +148,7 @@ export const usePlans = () => {
         selectedPlanId,
         setSelectedPlanId,
         addPlan: addFn,
+        addNewPlan,
         deletePlan: deleteFn,
         updatePlan: updateFn,
     };
