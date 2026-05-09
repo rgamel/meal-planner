@@ -63,7 +63,11 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     };
 
     const handleSave = () => {
-        const recipe = { name: recipeName.trim().toLowerCase(), groceries, categoryId: category?.id || '' };
+        const recipe = {
+            name: recipeName.trim().toLowerCase(),
+            groceries,
+            categoryId: category?.id || '',
+        };
         if (!isNil(recipeToEdit)) {
             updateRecipe({ id: recipeToEdit.id, ...recipe });
         } else {

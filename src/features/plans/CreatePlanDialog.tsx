@@ -2,10 +2,10 @@ import { Dialog } from '@mui/material';
 import { usePlans } from 'app/hooks';
 import { Button } from 'components/Button';
 import { DialogTitle } from 'components/DialogTitle';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, useState } from 'react';
 
 type CreatePlanDialogProps = {
-    setIsPlanDialogOpen(open: boolean): void
+    setIsPlanDialogOpen(open: boolean): void;
 };
 
 export function CreatePlanDialog({ setIsPlanDialogOpen }: CreatePlanDialogProps) {
@@ -13,7 +13,7 @@ export function CreatePlanDialog({ setIsPlanDialogOpen }: CreatePlanDialogProps)
     const { addNewPlan } = usePlans();
 
     function openDialog() {
-        setIsPlanDialogOpen(false)
+        setIsPlanDialogOpen(false);
     }
 
     function onNameChange(e: { target: { value: string } }) {
@@ -21,12 +21,11 @@ export function CreatePlanDialog({ setIsPlanDialogOpen }: CreatePlanDialogProps)
     }
 
     function handleClick() {
-        alert('a click was did')
         addNewPlan(planName);
         setIsPlanDialogOpen(false);
     }
 
-    const canCreate = planName.trim() !== ''
+    const canCreate = planName.trim() !== '';
 
     return (
         <Dialog fullWidth open onClose={openDialog}>

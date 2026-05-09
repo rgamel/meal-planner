@@ -14,12 +14,22 @@ export type UomList = Record<string, Uom>;
 export type Ingredient = { name: string; id: string };
 export type IngredientList = Record<string, Ingredient>;
 
-export type GroceryItem = { quantity: string; uomId: keyof UomList; itemId: keyof IngredientList; isAldi: boolean };
+export type GroceryItem = {
+    quantity: string;
+    uomId: keyof UomList;
+    itemId: keyof IngredientList;
+    isAldi: boolean;
+};
 
 export type Category = { name: string; id: string };
 export type CategoryList = Record<string, Category>;
 
-export type Recipe = { name: string; groceries: GroceryItem[]; categoryId?: keyof CategoryList; id: string };
+export type Recipe = {
+    name: string;
+    groceries: GroceryItem[];
+    categoryId?: keyof CategoryList;
+    id: string;
+};
 export type RecipeList = Record<string, Recipe>;
 
 export type Entity = { name: string; id: string };

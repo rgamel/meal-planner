@@ -27,7 +27,6 @@ export default function Plan(): JSX.Element {
     return (
         <>
             <PlanHeader />
-
             {hasRecipes ? (
                 <div className="m-4">
                     <ul className="w-full divide-y divide-gray-200 rounded-xl border-2 border-gray-200 bg-white">
@@ -43,8 +42,8 @@ export default function Plan(): JSX.Element {
             ) : (
                 <EmptyPlanMessage />
             )}
-
-            <PlanActions planId={planId} plan={plan} />        </>
+            <PlanActions planId={planId} plan={plan} />{' '}
+        </>
     );
 }
 
@@ -61,23 +60,20 @@ function PlanHeader(): JSX.Element {
     }, [planId, setSelectedPlanId]);
 
     function navToPlans() {
-        nav('/plans')
+        nav('/plans');
     }
 
     function onInputChange(e: { target: { value: string } }) {
-        const inputValue = e.target.value ?? ''
+        const inputValue = e.target.value ?? '';
         if (inputValue.trim() === '') {
             return;
         }
-        setPlanName(inputValue)
+        setPlanName(inputValue);
     }
 
     return (
         <div className="align-center flex flex-row justify-around">
-            <IconButton
-                className="m-2 p-2"
-                onClick={navToPlans}
-            >
+            <IconButton className="m-2 p-2" onClick={navToPlans}>
                 <div className="opacity-50">
                     <ArrowBack />
                 </div>
@@ -86,14 +82,14 @@ function PlanHeader(): JSX.Element {
             <PlanName editingName={editingName} planName={planName} onInputChange={onInputChange} />
             <ActionButton editing={editingName} setEditingName={setEditingName} plan={plan} planName={planName} />
         </div>
-    )
+    );
 }
 
 type PlanNameProps = {
-    editingName: boolean
-    planName: string
-    onInputChange(e: { target: { value: string } }): void
-}
+    editingName: boolean;
+    planName: string;
+    onInputChange(e: { target: { value: string } }): void;
+};
 
 function PlanName({ editingName, planName, onInputChange }: PlanNameProps) {
     if (!editingName) {
@@ -101,8 +97,7 @@ function PlanName({ editingName, planName, onInputChange }: PlanNameProps) {
             <PageTitle>
                 <span className="align-middle">{planName}</span>
             </PageTitle>
-
-        )
+        );
     }
     return (
         <input
@@ -110,17 +105,21 @@ function PlanName({ editingName, planName, onInputChange }: PlanNameProps) {
             value={planName}
             onChange={onInputChange}
         />
-
-    )
+    );
 }
 
-function ActionButton({ editing, plan, planName, setEditingName }: {
-    plan: IPlan
-    planName: string
-    editing: boolean
-    setEditingName(input: boolean): void
+function ActionButton({
+    editing,
+    plan,
+    planName,
+    setEditingName,
+}: {
+    plan: IPlan;
+    planName: string;
+    editing: boolean;
+    setEditingName(input: boolean): void;
 }) {
-    const { updatePlan } = usePlans()
+    const { updatePlan } = usePlans();
 
     function startEditingName() {
         setEditingName(true);
@@ -131,30 +130,26 @@ function ActionButton({ editing, plan, planName, setEditingName }: {
         setEditingName(false);
     }
 
-    const clickHandler = editing ? stopEditingName : startEditingName
-    const Icon = editing ? Save : Edit
+    const clickHandler = editing ? stopEditingName : startEditingName;
+    const Icon = editing ? Save : Edit;
 
     return (
-        <IconButton
-            className="m-2 p-2"
-            onClick={clickHandler}
-        >
+        <IconButton className="m-2 p-2" onClick={clickHandler}>
             <div className="opacity-50">
                 <Icon />
             </div>
         </IconButton>
-    )
+    );
 }
 
 type PlanActionsProps = {
-    planId: string
-    plan: IPlan
-}
+    planId: string;
+    plan: IPlan;
+};
 function PlanActions({ planId, plan }: PlanActionsProps) {
     const { setSelectedPlanId, deletePlan } = usePlans();
-    const nav = useNavigate()
-    const confirm = useConfirm()
-
+    const nav = useNavigate();
+    const confirm = useConfirm();
 
     const navToRecipes = useCallback(() => {
         setSelectedPlanId(planId);
@@ -207,6 +202,5 @@ function PlanActions({ planId, plan }: PlanActionsProps) {
                 </DeleteButton>
             </div>
         </div>
-
-    )
+    );
 }

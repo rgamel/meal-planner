@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { ArrowBack } from 'components/icons/ArrowBack';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 type Props = { label: string; children: JSX.Element[] | JSX.Element };
 

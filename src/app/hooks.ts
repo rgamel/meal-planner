@@ -137,7 +137,7 @@ export const usePlans = () => {
     }
 
     function addNewPlan(planName: string) {
-        addFn({ ...initPlan(), name: planName })
+        addFn({ ...initPlan(), name: planName });
     }
 
     return {

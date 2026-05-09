@@ -7,5 +7,11 @@ export const compactGroceries = (groceries: GroceryItem[]) =>
         if (!match) return [...acc, val];
 
         acc.splice(acc.indexOf(match), 1);
-        return [...acc, { ...match, quantity: new Fraction(val.quantity).add(match.quantity).toFraction(true) }];
+        return [
+            ...acc,
+            {
+                ...match,
+                quantity: new Fraction(val.quantity).add(match.quantity).toFraction(true),
+            },
+        ];
     }, [] as GroceryItem[]);
