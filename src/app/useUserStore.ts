@@ -1,6 +1,7 @@
 import { GoogleAuthProvider, User, signInWithPopup, signOut } from 'firebase/auth';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
 import { auth } from './firebase';
 
 const provider = new GoogleAuthProvider();

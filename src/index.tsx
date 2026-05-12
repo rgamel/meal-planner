@@ -4,6 +4,7 @@ import { ConfirmProvider } from 'material-ui-confirm';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
 import App from './App';
 import RecipesContextProvider from './app/recipeContext';
 import Groceries from './features/groceries/Groceries';

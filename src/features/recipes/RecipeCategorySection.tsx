@@ -1,6 +1,7 @@
 import { useCategories } from 'app/hooks';
 import { titleCase } from 'helpers';
 import { Recipe } from 'types';
+
 import RecipeListItem from './RecipeListItem';
 
 type RecipeSectionProps = {

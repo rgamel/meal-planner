@@ -1,5 +1,6 @@
 import Fraction from 'fraction.js';
 import { PlanList, RecipeList } from 'types';
+
 import { compactGroceries } from './compactGroceries';
 
 export const getAllGroceries = (

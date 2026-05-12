@@ -1,8 +1,9 @@
 import { isEmpty } from 'lodash';
 import partition from 'lodash/fp/partition';
 import { GroceryItem } from 'types';
-import { GroceryItems } from './GroceryItems';
+
 import { AccordionSummary } from '../../components/AccordionSummary';
+import { GroceryItems } from './GroceryItems';
 
 export type GroceryLineItemProps = {
     groceryItem: GroceryItem;

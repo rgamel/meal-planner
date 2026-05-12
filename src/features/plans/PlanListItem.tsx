@@ -1,11 +1,13 @@
 import { titleCase } from 'helpers';
 import { Link as RouterLink } from 'react-router-dom';
+
 import { useRecipeNames } from './hooks/useRecipeNames';
 
 interface PlanListItemProps {
     id: string;
     name: string;
     togglePinned: (id: string) => void;
+    isPinned?: boolean;
 }
 
 export function PlanListItem({ id, name, togglePinned }: PlanListItemProps) {
@@ -23,7 +25,7 @@ export function PlanListItem({ id, name, togglePinned }: PlanListItemProps) {
             </RouterLink>
 
             <button type="button" onClick={() => togglePinned(id)}>
-                <div className="-mt-6 active:bg-gray-100">
+                <div className="-mt-6 outline outline-1 outline-gray-200 active:bg-gray-100">
                     <span className="material-symbols-outlined opacity-50">keep</span>
                 </div>
             </button>

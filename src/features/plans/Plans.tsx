@@ -2,6 +2,7 @@ import { usePlans } from 'app/hooks';
 import { AddFab } from 'features/groceries/AddFab';
 import { isEmpty } from 'lodash/fp';
 import { useState } from 'react';
+
 import { Card } from '../../components/Card';
 import { PageTitle } from '../../components/PageTitle';
 import { CreatePlanDialog } from './CreatePlanDialog';

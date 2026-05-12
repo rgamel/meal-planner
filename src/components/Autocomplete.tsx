@@ -1,11 +1,11 @@
-import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import { Dispatch, SetStateAction, useCallback, useState } from 'react';
-import IconButton from '@mui/material/IconButton';
 import Icon from '@mui/material/Icon';
+import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import ListItemText from '@mui/material/ListItemText';
+import TextField from '@mui/material/TextField';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { Entity, EntityOptionType } from 'types';
 
 type ComboBoxProps = {

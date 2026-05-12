@@ -1,5 +1,5 @@
-import { Outlet } from 'react-router-dom';
 import { BottomAppBar } from 'components/BottomAppBar';
+import { Outlet } from 'react-router-dom';
 
 export default function App() {
     return (

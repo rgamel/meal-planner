@@ -2,7 +2,7 @@ import { Dialog } from '@mui/material';
 import { usePlans } from 'app/hooks';
 import { Button } from 'components/Button';
 import { DialogTitle } from 'components/DialogTitle';
-import { Dispatch, useState } from 'react';
+import { useState } from 'react';
 
 type CreatePlanDialogProps = {
     setIsPlanDialogOpen(open: boolean): void;

@@ -3,6 +3,7 @@ import { IconButton } from 'components/Button';
 import { Delete } from 'components/icons/Delete';
 import { DragHandle } from 'components/icons/DragHandle';
 import { titleCase } from 'helpers';
+
 import { GroceryLineItemProps } from './GroceryList';
 
 export function GroceryLineItem({ groceryItem, deleteGroceryItem, itemId }: GroceryLineItemProps) {

@@ -1,6 +1,7 @@
-import { titleCase } from 'helpers';
-import { getAllGroceries } from 'features/groceries/utils/getAllGroceries';
 import { useIngredients, usePlans, useRecipes } from 'app/hooks';
+import { getAllGroceries } from 'features/groceries/utils/getAllGroceries';
+import { titleCase } from 'helpers';
+
 import { QuantitySelect } from './QuantitySelect';
 
 type PlanItemProps = {

@@ -5,6 +5,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useUserStore } from 'app/useUserStore';
 import { MouseEvent, useState } from 'react';
+
 import { Button } from './Button';
 
 export function AuthButton() {

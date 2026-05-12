@@ -1,17 +1,18 @@
 import { usePlans } from 'app/hooks';
 import { Button, DeleteButton, IconButton } from 'components/Button';
-import { PageTitle } from 'components/PageTitle';
 import { ArrowBack } from 'components/icons/ArrowBack';
 import { Edit } from 'components/icons/Edit';
 import { Save } from 'components/icons/Save';
+import { PageTitle } from 'components/PageTitle';
 import { titleCase } from 'helpers';
 import { isEmpty, noop } from 'lodash/fp';
 import { useConfirm } from 'material-ui-confirm';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Plan as IPlan } from 'types';
+
 import { EmptyPlanMessage } from './EmptyPlanMessage';
 import { PlanItem } from './PlanItem';
-import { Plan as IPlan } from 'types';
 
 export default function Plan(): JSX.Element {
     const planId = useParams().id as string;
