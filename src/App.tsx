@@ -1,18 +1,18 @@
-import { BottomAppBar } from 'components/BottomAppBar';
-import { Outlet } from 'react-router-dom';
+import { BottomAppBar } from 'components/BottomAppBar'
+import { Outlet } from 'react-router-dom'
 
 export default function App() {
-    return (
-        <div className="mx-auto h-full min-h-screen w-full max-w-md bg-gray-100">
-            <div className="">
-                {/* <Header /> */}
-                <div className="pb-24 pt-6">
-                    <Outlet />
-                </div>
-                <BottomAppBar />
-            </div>
+  return (
+    <div className="mx-auto h-full min-h-screen w-full max-w-md bg-gray-100">
+      <div className="">
+        {/* <Header /> */}
+        <div className="pb-24 pt-6">
+          <Outlet />
         </div>
-    );
+        <BottomAppBar />
+      </div>
+    </div>
+  )
 }
 
 // function Header() {

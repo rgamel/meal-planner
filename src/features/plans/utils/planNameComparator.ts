@@ -1,14 +1,14 @@
-import { Plan } from 'types';
+import { Plan } from 'types'
 
 export function planNameComparator(a: Plan, b: Plan) {
-    const nameA = a.name.toUpperCase();
-    const nameB = b.name.toUpperCase();
+  const nameA = a.name.toUpperCase()
+  const nameB = b.name.toUpperCase()
 
-    if (nameA > nameB) {
-        return 1;
-    }
-    if (nameA < nameB) {
-        return -1;
-    }
-    return 0;
+  if (nameA > nameB) {
+    return 1
+  }
+  if (nameA < nameB) {
+    return -1
+  }
+  return 0
 }

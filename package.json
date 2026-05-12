@@ -1,76 +1,76 @@
 {
-    "name": "meal-planner",
-    "version": "0.1.0",
-    "private": true,
-    "homepage": "https://mealplanner-ddb4f.web.app/",
-    "type": "module",
-    "scripts": {
-        "clean": "rm -rf ./dist",
-        "start": "vite",
-        "build": "pnpm run clean && tsc && vite build",
-        "preview": "vite preview",
-        "format": "oxfmt --write",
-        "lint": "oxlint --fix"
-    },
-    "dependencies": {
-        "@emotion/react": "^11.8.2",
-        "@emotion/styled": "^11.8.1",
-        "@mui/material": "^5.5.2",
-        "@vitejs/plugin-react": "^4.2.1",
-        "clsx": "^2.1.0",
-        "firebase": "^9.6.10",
-        "firebase-admin": "^10.0.2",
-        "firebase-functions": "^3.19.0",
-        "fraction.js": "^4.2.0",
-        "lodash": "^4.17.21",
-        "material-ui-confirm": "^3.0.4",
-        "nanoid": "^3.3.1",
-        "react": "^17.0.2",
-        "react-beautiful-dnd": "^13.1.0",
-        "react-dom": "^17.0.2",
-        "react-router-dom": "^6.2.2",
-        "title-case": "^3.0.3",
-        "typescript": "^4.6.3",
-        "vite": "^5.1.5",
-        "vite-tsconfig-paths": "^4.3.1",
-        "zustand": "^4.5.2"
-    },
-    "devDependencies": {
-        "@types/lodash": "^4.14.180",
-        "@types/node": "^20.11.25",
-        "@types/react": "^17.0.43",
-        "@types/react-beautiful-dnd": "^13.1.2",
-        "@types/react-dom": "^17.0.14",
-        "@types/react-router-dom": "^5.3.3",
-        "@typescript-eslint/eslint-plugin": "^5.16.0",
-        "@typescript-eslint/parser": "^5.16.0",
-        "autoprefixer": "^10.4.18",
-        "globals": "^17.6.0",
-        "nth-check": "^2.0.1",
-        "oxfmt": "^0.48.0",
-        "oxlint": "^1.63.0",
-        "postcss": "^8.4.35",
-        "tailwindcss": "^3.4.1"
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
-    },
-    "engines": {
-        "node": "24"
-    }
+  "name": "meal-planner",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://mealplanner-ddb4f.web.app/",
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "start": "vite",
+    "build": "pnpm run clean && tsc && vite build",
+    "preview": "vite preview",
+    "format": "oxfmt --write",
+    "lint": "oxlint --fix"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.8.2",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.5.2",
+    "@vitejs/plugin-react": "^4.2.1",
+    "clsx": "^2.1.0",
+    "firebase": "^9.6.10",
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.19.0",
+    "fraction.js": "^4.2.0",
+    "lodash": "^4.17.21",
+    "material-ui-confirm": "^3.0.4",
+    "nanoid": "^3.3.1",
+    "react": "^17.0.2",
+    "react-beautiful-dnd": "^13.1.0",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.2.2",
+    "title-case": "^3.0.3",
+    "typescript": "^4.6.3",
+    "vite": "^5.1.5",
+    "vite-tsconfig-paths": "^4.3.1",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.180",
+    "@types/node": "^20.11.25",
+    "@types/react": "^17.0.43",
+    "@types/react-beautiful-dnd": "^13.1.2",
+    "@types/react-dom": "^17.0.14",
+    "@types/react-router-dom": "^5.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "autoprefixer": "^10.4.18",
+    "globals": "^17.6.0",
+    "nth-check": "^2.0.1",
+    "oxfmt": "^0.48.0",
+    "oxlint": "^1.63.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "engines": {
+    "node": "24"
+  }
 }
