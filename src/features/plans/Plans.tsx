@@ -20,7 +20,7 @@ export default function Plans() {
         <Card>
           <ul className="divide-y divide-gray-100">
             {[...pinnedPlans].sort(planNameComparator).map((plan) => (
-              <PlanListItem key={plan.id} id={plan.id} name={plan.name} togglePinned={togglePinned} />
+              <PlanListItem key={plan.id} id={plan.id} name={plan.name} togglePinned={togglePinned} isPinned />
             ))}
           </ul>
         </Card>
