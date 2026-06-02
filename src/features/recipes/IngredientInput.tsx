@@ -45,7 +45,7 @@ function IngredientInput({ commitGroceryItem }: IngredientInputProps) {
   const ingredientsMemo = useMemo(() => Object.values(ingredients), [ingredients])
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <TextField
         error={quantity.length > 0 && !validQuantity}
         value={quantity}
@@ -53,6 +53,7 @@ function IngredientInput({ commitGroceryItem }: IngredientInputProps) {
         fullWidth
         label="Quantity"
         required
+        sx={{ mb: 2 }}
       />
       <Autocomplete
         suggestions={uomsMemo}
