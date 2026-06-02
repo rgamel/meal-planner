@@ -6,8 +6,8 @@ import { Dispatch, SetStateAction, useContext } from 'react'
 import { db } from './firebase'
 import { RecipesContext } from './recipeContext'
 
-export const useFirebase = () => {
-  const formatCollectionAsList = (snapshot: QuerySnapshot<DocumentData>) => {
+export function useFirebase() {
+  function formatCollectionAsList(snapshot: QuerySnapshot<DocumentData>) {
     const result = {} as any // TODO: figure out this type
     snapshot.forEach((document) => {
       result[document.id] = { ...document.data(), id: document.id }
@@ -15,16 +15,16 @@ export const useFirebase = () => {
     return result
   }
 
-  const getCollection = async (collectionName: string) => {
+  async function getCollection(collectionName: string) {
     const c = await getDocs(collection(db, collectionName))
     return formatCollectionAsList(c)
   }
 
-  const addRecord = async <T>(listName: string, id: string, item: Record<string, T>) => {
+  async function addRecord<T>(listName: string, id: string, item: Record<string, T>) {
     await setDoc(doc(db, listName, id), item)
   }
 
-  const deleteRecord = async (listName: string, id: string) => {
+  async function deleteRecord(listName: string, id: string) {
     await deleteDoc(doc(db, listName, id))
   }
 
@@ -42,13 +42,14 @@ const listNames = {
 
 type ListName = (typeof listNames)[keyof typeof listNames]
 
-const useGenericFns = <T extends { id: string }>(
+function useGenericFns<T extends { id: string }>(
   list: Record<string, T>,
   setList: Dispatch<SetStateAction<Record<string, T>>>,
   listName: ListName,
-) => {
+) {
   const { addRecord: upsertRecord, deleteRecord } = useFirebase()
-  const addFn = (item: Omit<T, 'id'>) => {
+
+  function addFn(item: Omit<T, 'id'>) {
     const id = nanoid()
     const itemWithId = { ...item, id } as T
 
@@ -58,12 +59,12 @@ const useGenericFns = <T extends { id: string }>(
     return itemWithId
   }
 
-  const deleteFn = (id: string) => {
+  function deleteFn(id: string) {
     setList((prev) => omit(id, prev))
     void deleteRecord(listName, id)
   }
 
-  const updateFn = (item: T) => {
+  function updateFn(item: T) {
     setList(set(item.id, item, list))
     void upsertRecord(listName, item.id, omit('id', item))
   }
@@ -75,9 +76,8 @@ const useGenericFns = <T extends { id: string }>(
   }
 }
 
-export const useIngredients = () => {
+export function useIngredients() {
   const { ingredients, setIngredients } = useContext(RecipesContext)
-
   const { addFn, deleteFn } = useGenericFns(ingredients, setIngredients, listNames.ingredients)
 
   return {
@@ -87,9 +87,8 @@ export const useIngredients = () => {
   }
 }
 
-export const useUoms = () => {
+export function useUoms() {
   const { uoms, setUoms } = useContext(RecipesContext)
-
   const { addFn, deleteFn } = useGenericFns(uoms, setUoms, listNames.uoms)
 
   return {
@@ -99,9 +98,8 @@ export const useUoms = () => {
   }
 }
 
-export const useRecipes = () => {
+export function useRecipes() {
   const { recipes, setRecipes } = useContext(RecipesContext)
-
   const { addFn, deleteFn, updateFn } = useGenericFns(recipes, setRecipes, listNames.recipes)
 
   return {
@@ -112,7 +110,7 @@ export const useRecipes = () => {
   }
 }
 
-export const useCategories = () => {
+export function useCategories() {
   const { categories, setCategories } = useContext(RecipesContext)
   const { addFn, deleteFn } = useGenericFns(categories, setCategories, listNames.categories)
 
@@ -123,7 +121,7 @@ export const useCategories = () => {
   }
 }
 
-export const usePlans = () => {
+export function usePlans() {
   const { plans, setPlans, selectedPlanId, setSelectedPlanId } = useContext(RecipesContext)
   const { addFn, deleteFn, updateFn } = useGenericFns(plans, setPlans, listNames.plans)
   const [pinnedPlans, unpinnedPlans] = partition((plan) => plan.pinned, values(plans))
@@ -155,12 +153,11 @@ export const usePlans = () => {
   }
 }
 
-export const usePlannedQuantity = () => {
+export function usePlannedQuantity() {
   const { plans, updatePlan, selectedPlanId } = usePlans()
-
   const currentPlan = plans[selectedPlanId]
 
-  const updatePlannedQuantity = (id: string, quantity: string) => {
+  function updatePlannedQuantity(id: string, quantity: string) {
     const _recipes = currentPlan?.recipes ?? []
 
     const indexToUpdate = _recipes?.findIndex((r) => r.id === id)
@@ -176,23 +173,22 @@ export const usePlannedQuantity = () => {
   return updatePlannedQuantity
 }
 
-export const useShoppedItems = () => {
+export function useShoppedItems() {
   const { plans, updatePlan, selectedPlanId } = usePlans()
-
   const currentPlan = plans[selectedPlanId]
   const shoppedItems = currentPlan?.shoppedItems ?? []
 
-  const removeShopped = (id: string) => {
+  function removeShopped(id: string) {
     const shoppedWithout = shoppedItems.filter((item) => item !== id)
     updatePlan({ ...currentPlan, shoppedItems: shoppedWithout })
   }
 
-  const addShopped = (id: string) => {
+  function addShopped(id: string) {
     const shoppedWith = [...shoppedItems, id]
     updatePlan({ ...currentPlan, shoppedItems: shoppedWith })
   }
 
-  const handleToggleShopped = (id: string) => {
+  function handleToggleShopped(id: string) {
     if (shoppedItems.includes(id)) {
       removeShopped(id)
       return
@@ -201,7 +197,7 @@ export const useShoppedItems = () => {
     addShopped(id)
   }
 
-  const clearAllShopped = () => {
+  function clearAllShopped() {
     updatePlan({ ...currentPlan, shoppedItems: [] })
   }
 
@@ -212,23 +208,23 @@ export const useShoppedItems = () => {
   }
 }
 
-export const useSelectedRecipes = () => {
+export function useSelectedRecipes() {
   const { recipes } = useContext(RecipesContext)
   const { plans, updatePlan, selectedPlanId } = usePlans()
 
   const recipesForCurrentPlan = plans[selectedPlanId]?.recipes ?? []
 
-  const removeRecipe = (id: string) => {
+  function removeRecipe(id: string) {
     const selectedWithout = recipesForCurrentPlan.filter((r) => r.id !== id)
     updatePlan({ ...plans[selectedPlanId], recipes: selectedWithout })
   }
 
-  const addRecipe = (id: string) => {
+  function addRecipe(id: string) {
     const selectedWith = [...recipesForCurrentPlan, { id, quantity: '1' }]
     updatePlan({ ...plans[selectedPlanId], recipes: selectedWith })
   }
 
-  const handleSelectRecipe = (id: string) => {
+  function handleSelectRecipe(id: string) {
     if (!recipes[id]) return
 
     if (!plans[selectedPlanId]) return
@@ -241,7 +237,7 @@ export const useSelectedRecipes = () => {
     addRecipe(id)
   }
 
-  const clearAllSelected = () => {
+  function clearAllSelected() {
     updatePlan({ ...plans[selectedPlanId], recipes: [], shoppedItems: [] })
   }
 
