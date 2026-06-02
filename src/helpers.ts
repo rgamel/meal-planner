@@ -1,3 +1,5 @@
 import { titleCase as tc } from 'title-case'
 
-export const titleCase = (string: string | undefined) => (string ? tc(string) : '')
+export function titleCase(string: string | undefined) {
+  return string ? tc(string) : ''
+}
