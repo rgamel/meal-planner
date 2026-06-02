@@ -12,7 +12,7 @@ export function AuthButton() {
   const [user, signInUser, signOutUser] = useUserStore((state) => [state.user, state.signInUser, state.signOutUser])
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
 
-  const handleClick = () => {
+  function handleClick() {
     if (!user) {
       void signInUser()
       return
@@ -20,24 +20,22 @@ export function AuthButton() {
     void signOutUser()
   }
 
-  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
+  function handleOpenUserMenu(event: MouseEvent<HTMLElement>) {
     setAnchorElUser(event.currentTarget)
   }
 
-  const handleCloseUserMenu = () => {
+  function handleCloseUserMenu() {
     setAnchorElUser(null)
   }
+
+  const displayName = user?.displayName ?? ''
+  const photoUrl = user?.photoURL ?? ''
+  const label = `Sign ${!user ? 'in with Google' : 'out'}`
 
   return (
     <div>
       <IconButton onClick={handleOpenUserMenu}>
-        {!user ? (
-          <Icon>account_circle</Icon>
-        ) : (
-          <Avatar alt={user.displayName ?? ''} src={user.photoURL ?? ''}>
-            {' '}
-          </Avatar>
-        )}
+        {!user ? <Icon>account_circle</Icon> : <Avatar alt={displayName} src={photoUrl} />}
       </IconButton>
       <Menu
         id="menu-userauth"
@@ -56,7 +54,7 @@ export function AuthButton() {
         sx={{ mt: '45px' }}
       >
         <MenuItem onClick={handleCloseUserMenu}>
-          <Button onClick={handleClick}>{`Sign ${!user ? 'in with Google' : 'out'}`}</Button>
+          <Button onClick={handleClick}>{label}</Button>
         </MenuItem>
       </Menu>
     </div>
