@@ -8,9 +8,7 @@ export default defineConfig({
   singleQuote: true,
   trailingComma: 'all',
   bracketSpacing: true,
-  sortTailwindcss: {
-    config: './tailwind.config.js',
-  },
+  sortTailwindcss: true,
   sortPackageJson: true,
   sortImports: {
     groups: [
