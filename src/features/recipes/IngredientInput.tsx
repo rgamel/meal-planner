@@ -70,7 +70,7 @@ function IngredientInput({ commitGroceryItem }: IngredientInputProps) {
         setSelected={setSelectedIngredient}
         label="Ingredient"
       />
-      <div className="ml-2 mt-2">
+      <div className="mt-2 ml-2">
         <div className="flex flex-row items-center justify-between">
           <span className="mb-2">
             <label htmlFor="is-aldi">

@@ -34,7 +34,7 @@ export function CreatePlanDialog({ setIsPlanDialogOpen }: CreatePlanDialogProps)
         <div className="flex flex-col">
           <input
             id="planNameInput"
-            className="block w-full rounded-t-lg py-2 pl-6 pr-20 text-lg ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-700"
+            className="block w-full rounded-t-lg py-2 pr-20 pl-6 text-lg ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-blue-700 focus:ring-inset"
             placeholder="Plan name"
             value={planName}
             onChange={onNameChange}

@@ -6,7 +6,7 @@ export default function App() {
     <div className="mx-auto h-full min-h-screen w-full max-w-md bg-gray-100">
       <div className="">
         {/* <Header /> */}
-        <div className="pb-24 pt-6">
+        <div className="pt-6 pb-24">
           <Outlet />
         </div>
         <BottomAppBar />
