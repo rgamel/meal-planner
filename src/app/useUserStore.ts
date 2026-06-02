@@ -8,19 +8,19 @@ const provider = new GoogleAuthProvider()
 
 interface UserStoreState {
   user: User | null
-  signInUser: () => Promise<void>
-  signOutUser: () => Promise<void>
+  signInUser(): Promise<void>
+  signOutUser(): Promise<void>
 }
 
 export const useUserStore = create(
   persist<UserStoreState>(
     (set) => ({
       user: null,
-      signInUser: async () => {
+      async signInUser() {
         const result = await signInWithPopup(auth, provider)
         set({ user: result.user })
       },
-      signOutUser: async () => {
+      async signOutUser() {
         await signOut(auth)
         set({ user: null })
       },
