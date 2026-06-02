@@ -7,7 +7,7 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up pnpm 
+      - name: Set up pnpm
         uses: pnpm/action-setup@v6
         with:
           version: 10

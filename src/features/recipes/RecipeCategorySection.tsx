@@ -1,5 +1,6 @@
 import { useCategories } from 'app/hooks'
 import clsx from 'clsx'
+import { Accordion } from 'components/Accordion'
 import { titleCase } from 'helpers'
 import { useState } from 'react'
 import { Recipe } from 'types'
@@ -26,27 +27,6 @@ export function RecipeCategorySection({ recipes, editRecipe, categoryId }: Recip
           </ul>
         }
       />
-    </div>
-  )
-}
-
-type AccordionProps = {
-  heading: React.ReactNode
-  content: React.ReactNode
-}
-function Accordion({ heading, content }: AccordionProps) {
-  const [open, setOpen] = useState(true)
-  function toggleOpen() {
-    setOpen((prev) => !prev)
-  }
-  const icon = open ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
-  return (
-    <div>
-      <button className="flew-row flex w-full items-center justify-between active:bg-slate-200" onClick={toggleOpen}>
-        {heading}
-        <span className="material-symbols-outlined">{icon}</span>
-      </button>
-      <div className={clsx('overflow-hidden', open ? 'max-h-none' : 'max-h-0 ')}>{content}</div>
     </div>
   )
 }
