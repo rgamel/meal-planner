@@ -10,7 +10,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v6
         with:
-          version: 10
+          version: 11.0.9
 
       - name: Github checkout
         uses: actions/checkout@v2
