@@ -1,10 +1,11 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { useState } from 'react'
 
 type AccordionProps = {
   heading: React.ReactNode
   content: React.ReactNode
 }
+
 export function Accordion({ heading, content }: AccordionProps) {
   const [open, setOpen] = useState(true)
   function toggleOpen() {
@@ -13,7 +14,11 @@ export function Accordion({ heading, content }: AccordionProps) {
   const icon = open ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
   return (
     <div>
-      <button className="flew-row flex w-full items-center justify-between active:bg-slate-200" onClick={toggleOpen}>
+      <button
+        type="button"
+        className="flew-row flex w-full items-center justify-between active:bg-slate-200"
+        onClick={toggleOpen}
+      >
         {heading}
         <span className="material-symbols-outlined">{icon}</span>
       </button>

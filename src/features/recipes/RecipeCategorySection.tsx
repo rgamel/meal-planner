@@ -1,8 +1,6 @@
 import { useCategories } from 'app/hooks'
-import clsx from 'clsx'
 import { Accordion } from 'components/Accordion'
 import { titleCase } from 'helpers'
-import { useState } from 'react'
 import { Recipe } from 'types'
 
 import RecipeListItem from './RecipeListItem'
