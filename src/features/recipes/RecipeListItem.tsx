@@ -32,7 +32,7 @@ export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemPro
         <div className="text-md">{label}</div>
       </div>
       <IconButton className="absolute right-0 pr-0" onClick={onClickEdit}>
-        <div className="-mr-0 opacity-50">
+        <div className="mr-0 opacity-50">
           <Edit />
         </div>
       </IconButton>
