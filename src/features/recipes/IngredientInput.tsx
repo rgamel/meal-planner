@@ -57,16 +57,16 @@ function IngredientInput({ commitGroceryItem }: IngredientInputProps) {
       />
       <Autocomplete
         suggestions={uomsMemo}
-        addItem={addUom}
-        deleteItem={deleteUom}
+        // addItem={addUom}
+        // deleteItem={deleteUom}
         selected={selectedUom}
         setSelected={setSelectedUom}
         label="UOM"
       />
       <Autocomplete
         suggestions={ingredientsMemo}
-        addItem={addIngredient}
-        deleteItem={deleteIngredient}
+        // addItem={addIngredient}
+        // deleteItem={deleteIngredient}
         selected={selectedIngredient}
         setSelected={setSelectedIngredient}
         label="Ingredient"

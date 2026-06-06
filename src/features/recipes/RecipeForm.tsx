@@ -7,7 +7,7 @@ import { useConfirm } from 'material-ui-confirm'
 import { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { EntityOptionType, GroceryItem, Recipe } from 'types'
 
-import { useCategories, useRecipes } from '../../app/hooks'
+import { useRecipes, useCategories } from '../../app/hooks'
 import Autocomplete from '../../components/Autocomplete'
 import IngredientInput from './IngredientInput'
 
@@ -34,7 +34,7 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     setGroceries(recipeToEdit.groceries)
   }, [recipeToEdit, categories])
 
-  const commitGroceryItem = (quantity: Fraction, uomId: string, itemId: string, isAldi: boolean) => {
+  function commitGroceryItem(quantity: Fraction, uomId: string, itemId: string, isAldi: boolean) {
     const match = groceries.find((g) => g.itemId === itemId)
     if (match?.uomId === uomId && match.isAldi === isAldi) {
       groceries.splice(groceries.indexOf(match), 1)
@@ -44,11 +44,11 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     setGroceries([...groceries, { quantity: quantity.toFraction(true), uomId, itemId, isAldi }])
   }
 
-  const deleteGroceryItem = (item: GroceryItem) => {
+  function deleteGroceryItem(item: GroceryItem) {
     setGroceries((prev) => prev.filter((g: GroceryItem) => g !== item))
   }
 
-  const handleSetRecipeName = (e: ChangeEvent<HTMLInputElement>) => {
+  function handleSetRecipeName(e: ChangeEvent<HTMLInputElement>) {
     const input = e.target.value
     setRecipeName(input)
   }
@@ -58,12 +58,12 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     [recipeName, groceries.length],
   )
 
-  const handleClose = () => {
+  function handleClose() {
     setRecipeToEdit(null)
     setRecipeDialogOpen(false)
   }
 
-  const handleSave = () => {
+  function handleSave() {
     const recipe = {
       name: recipeName.trim().toLowerCase(),
       groceries,
@@ -77,7 +77,7 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     handleClose()
   }
 
-  const handleDelete = (id: string) => {
+  function handleDelete(id: string) {
     confirm({
       title: `Delete ${recipeName}?`,
       description: 'This cannot be undone',
@@ -108,19 +108,17 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
           selected={category}
           setSelected={setCategory}
           addItem={addCategory}
-          deleteItem={deleteCategory}
+          //  deleteItem={deleteCategory}
         />
       </div>
 
       <div className="pt-2">
-        <p className="mb-2 text-base font-normal text-black opacity-60">
-          Please add ingredients for your recipe below:
-        </p>
+        <p className="mb-2 text-gray-600">Please add ingredients for your recipe below:</p>
         <IngredientInput commitGroceryItem={commitGroceryItem} />
       </div>
 
       <div className="pt-2">
-        <p className="m-0 text-base font-normal text-black opacity-60">Ingredients:</p>
+        <p className="m-0 text-gray-600">Ingredients:</p>
         <GroceryItems items={groceries} deleteGroceryItem={deleteGroceryItem} setItems={setGroceries} />
 
         <div id="dialog-actions">

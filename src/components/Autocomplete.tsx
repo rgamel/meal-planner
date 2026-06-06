@@ -1,109 +1,118 @@
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
-import Icon from '@mui/material/Icon'
-import IconButton from '@mui/material/IconButton'
-import ListItem from '@mui/material/ListItem'
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
-import ListItemText from '@mui/material/ListItemText'
-import TextField from '@mui/material/TextField'
-import { Dispatch, SetStateAction, useCallback, useState } from 'react'
+import { Combobox, Transition } from '@headlessui/react'
+import { Dispatch, Fragment, SetStateAction, useCallback, useState } from 'react'
 import { Entity, EntityOptionType } from 'types'
 
-type ComboBoxProps = {
+import { CheckmarkIcon } from './icons/Checkmark'
+import { UpDownIcon } from './icons/UpDown'
+import { XMarkIcon } from './icons/XMark'
+
+type HeadlessComboboxProps = {
   suggestions: Entity[]
   label: string
   selected: EntityOptionType | null
   setSelected: Dispatch<SetStateAction<EntityOptionType | null>>
   addItem: (item: EntityOptionType) => Entity
-  deleteItem: (id: string) => void
 }
 
-const filter = createFilterOptions<EntityOptionType>()
+export default function ComboBox({
+  label,
+  suggestions,
+  selected,
+  setSelected,
+  addItem,
+}: Readonly<HeadlessComboboxProps>) {
+  const [query, setQuery] = useState('')
 
-export default function ComboBox({ suggestions, label, selected, setSelected, addItem, deleteItem }: ComboBoxProps) {
-  const [value, setValue] = useState('')
+  function clearQuery() {
+    setQuery('')
+  }
 
-  const handleDelete = useCallback(
-    (option: EntityOptionType) => {
-      if (!option.id) return
-      deleteItem(option.id)
-    },
-    [deleteItem],
-  )
+  function clearSelected() {
+    setSelected(null)
+  }
 
-  const getOptionLabel = useCallback((option: EntityOptionType) => {
-    if (typeof option === 'string') {
-      return option
-    }
-    if (option.inputValue) {
-      return option.inputValue
-    }
-    return option.name
-  }, [])
+  function clearInput() {
+    clearSelected()
+    clearQuery()
+  }
 
-  const onChange = useCallback(
-    (_, newValue) => {
-      if (typeof newValue === 'string') {
-        setSelected({
-          name: newValue,
-        })
-      } else if (newValue?.inputValue) {
-        setSelected(addItem({ name: newValue.inputValue.trim().toLowerCase() }))
-      } else {
-        setSelected(newValue)
-      }
-    },
-    [setSelected, addItem],
-  )
+  function getDisplayValue() {
+    return selected?.name ?? ''
+  }
 
-  const filterOptions = useCallback((options, params) => {
-    const filtered = filter(options, params)
-    const { inputValue } = params
-    const isExisting = options.some((option: EntityOptionType) => inputValue === option.name)
-    if (inputValue !== '' && !isExisting) {
-      filtered.push({
-        inputValue,
-        name: `Add "${inputValue}"`,
-      })
-    }
-    return filtered
-  }, [])
+  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setQuery(event.target.value)
+  }
 
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  const renderInput = useCallback((params) => <TextField {...params} label={label} />, [label])
-
-  const renderOption = useCallback(
-    (props, option) => (
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      <ListItem {...props} key={`${option.name}__${option.id}`}>
-        <ListItemText>{option.name}</ListItemText>
-        <ListItemSecondaryAction>
-          <IconButton onClick={() => handleDelete(option)}>
-            <Icon>highlight_off</Icon>
-          </IconButton>
-        </ListItemSecondaryAction>
-      </ListItem>
-    ),
-    [handleDelete],
-  )
+  const filteredSuggestions =
+    query === ''
+      ? suggestions
+      : suggestions.filter((suggestion) => suggestion.name.toLowerCase().includes(query.toLowerCase()))
 
   return (
-    <Autocomplete
-      isOptionEqualToValue={(a, b) => (a?.name || '') === (b?.name || '')}
-      id="combo-box-demo"
-      options={suggestions as EntityOptionType[]}
-      getOptionLabel={getOptionLabel}
-      value={selected}
-      onChange={onChange}
-      filterOptions={filterOptions}
-      inputValue={value}
-      onInputChange={(_, newValue) => {
-        setValue(newValue)
-      }}
-      selectOnFocus
-      clearOnBlur
-      handleHomeEndKeys
-      renderInput={renderInput}
-      renderOption={renderOption}
-    />
+    <div className="outline outline-2 outline-green-200">
+      <label className="italic">{label}</label>
+      <div> {query}</div>
+      <Combobox value={selected} onChange={setSelected} nullable>
+        <div className="w-full">
+          <div className="flex w-full flex-row overflow-hidden bg-white text-left">
+            <Combobox.Input
+              className="w-full py-2 pr-10 pl-3 leading-5 text-gray-900"
+              aria-label="selection"
+              displayValue={getDisplayValue}
+              onChange={handleQueryChange}
+            />
+            <button
+              type="button"
+              className="flex items-center border border-2 border-green-400 px-3 py-2"
+              onClick={clearInput}
+            >
+              <XMarkIcon />
+            </button>
+            <Combobox.Button className="flex items-center px-3 py-2">
+              <UpDownIcon />
+            </Combobox.Button>
+          </div>
+          <Transition
+            as={Fragment}
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opactiy-0"
+            afterLeave={clearQuery}
+          >
+            <Combobox.Options className="max-h-60 w-full overflow-auto bg-white py-1">
+              {filteredSuggestions.length === 0 && query.length > 0 ? (
+                <div>None found</div>
+              ) : (
+                filteredSuggestions.map((suggestion) => (
+                  <Combobox.Option
+                    key={suggestion.id}
+                    value={suggestion}
+                    className={({ active }) =>
+                      `py-2 pr-4 pl-10 select-none ${active ? 'bg-blue-700 text-white' : 'text-gray-900'}`
+                    }
+                  >
+                    {({ selected, active }) => (
+                      <div className="flex flex-row">
+                        <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                          {suggestion.name}
+                        </span>
+                        {selected ? (
+                          <span
+                            className={`inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-blue-700'}`}
+                          >
+                            <CheckmarkIcon />
+                          </span>
+                        ) : null}
+                      </div>
+                    )}
+                  </Combobox.Option>
+                ))
+              )}
+            </Combobox.Options>
+          </Transition>
+        </div>
+      </Combobox>
+    </div>
   )
 }

@@ -1,6 +1,9 @@
 import { clsx } from 'clsx'
 import { useState } from 'react'
 
+import { ChevronDownIcon } from './icons/ChevronDown'
+import { ChevronUpIcon } from './icons/ChevronUp'
+
 type AccordionProps = {
   heading: React.ReactNode
   content: React.ReactNode
@@ -11,7 +14,7 @@ export function Accordion({ heading, content }: AccordionProps) {
   function toggleOpen() {
     setOpen((prev) => !prev)
   }
-  const icon = open ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+  const icon = open ? <ChevronUpIcon /> : <ChevronDownIcon />
   return (
     <div>
       <button
