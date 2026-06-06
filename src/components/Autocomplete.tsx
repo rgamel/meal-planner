@@ -57,47 +57,37 @@ export default function ComboBox({
       {description && <Description className="hidden">{description}</Description>}
 
       <Combobox value={selected} onChange={setSelected}>
-        <div className="w-full">
-          <div className="flex w-full flex-row overflow-hidden bg-white text-left">
+        <div className="">
+          <div className="">
             <ComboboxInput
-              className="w-full border-none py-2 pr-10 pl-3 leading-5 text-gray-900 data-focus:border-b-4"
+              className=""
               aria-label="selection"
               displayValue={getDisplayValue}
               onChange={handleQueryChange}
             />
-            <button type="button" className="flex items-center border-none px-3 py-2" onClick={clearInput}>
+            <button type="button" className="" onClick={clearInput}>
               <XMarkIcon />
             </button>
-            <Combobox.Button className="flex items-center px-3 py-2">
+            <Combobox.Button className="">
               <UpDownIcon />
             </Combobox.Button>
           </div>
 
-          <div className="relative bg-purple-400">
+          <div className="">
             <ComboboxOptions
-              // anchor={{ to: 'bottom start', gap: '4px' }}
-              className="z-40 max-h-60 w-full overflow-auto border bg-white py-1 empty:invisible"
+              // anchor={{ to: '', gap: '4px' }}
+              className=""
             >
               {filteredSuggestions.length === 0 && query.length > 0 ? (
-                <div className="py-2 pl-3">None found</div>
+                <div className="">None found</div>
               ) : (
                 filteredSuggestions.map((suggestion) => (
-                  <Combobox.Option
-                    key={suggestion.id}
-                    value={suggestion}
-                    className={({ active }) =>
-                      `py-2 pr-4 pl-10 select-none ${active ? 'bg-blue-400 text-white' : 'text-gray-900'}`
-                    }
-                  >
+                  <Combobox.Option key={suggestion.id} value={suggestion} className={({ active }) => ``}>
                     {({ selected, active }) => (
-                      <div className="flex flex-row">
-                        <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
-                          {suggestion.name}
-                        </span>
+                      <div className="">
+                        <span className={``}>{suggestion.name}</span>
                         {selected ? (
-                          <span
-                            className={`inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-blue-700'}`}
-                          >
+                          <span className={``}>
                             <CheckmarkIcon />
                           </span>
                         ) : null}
