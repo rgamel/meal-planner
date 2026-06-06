@@ -2,7 +2,7 @@ import { CssBaseline } from '@mui/material'
 import { Home } from 'features/home/Home'
 import { ConfirmProvider } from 'material-ui-confirm'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import App from './App'
@@ -13,7 +13,10 @@ import Plans from './features/plans/Plans'
 import Recipes from './features/recipes/Recipes'
 import './styles.css'
 
-ReactDOM.render(
+const container = document.getElementById('root')
+const root = createRoot(container!)
+
+root.render(
   <React.StrictMode>
     <RecipesContextProvider>
       <ConfirmProvider>
@@ -32,5 +35,4 @@ ReactDOM.render(
     </RecipesContextProvider>
     <CssBaseline />
   </React.StrictMode>,
-  document.getElementById('root'),
 )

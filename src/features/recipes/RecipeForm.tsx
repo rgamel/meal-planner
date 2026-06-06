@@ -91,8 +91,8 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
   }
 
   return (
-    <div className="space-y-4">
-      <div className="pt-2">
+    <div className="space-y-12">
+      <div className="">
         <TextField
           label="Recipe name"
           variant="outlined"
@@ -100,7 +100,7 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
           value={recipeName}
           onChange={handleSetRecipeName}
           required
-          sx={{ mb: 2 }}
+          sx={{ mb: 1 }}
         />
         <Autocomplete
           suggestions={Object.values(categories)}
