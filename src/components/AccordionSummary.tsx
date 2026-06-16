@@ -17,7 +17,7 @@ export function AccordionSummary({ label, children }: Props) {
         <h3>{label}</h3>
         <div
           className={clsx({
-            '-rotate-90 opacity-50 transition-transform': true,
+            '-rotate-90 transition-transform': true,
             'rotate-90': show,
           })}
         >

@@ -1,10 +1,13 @@
+import { Fieldset } from '@headlessui/react'
 import { TextField } from '@mui/material'
 import { Button, DeleteButton } from 'components/Button'
+import { Input } from 'components/Input'
 import { GroceryItems } from 'features/groceries/GroceryItems'
 import Fraction from 'fraction.js'
 import { isNil, noop } from 'lodash'
 import { useConfirm } from 'material-ui-confirm'
 import { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { EntityOptionType, GroceryItem, Recipe } from 'types'
 
 import { useRecipes, useCategories } from '../../app/hooks'
@@ -12,19 +15,19 @@ import Autocomplete from '../../components/Autocomplete'
 import IngredientInput from './IngredientInput'
 
 type RecipeFormProps = {
-  setRecipeDialogOpen: Dispatch<SetStateAction<boolean>>
-  setRecipeToEdit: Dispatch<SetStateAction<null | Recipe>>
   recipeToEdit: Recipe | null
+  handleClose(): void
 }
 
 // TODO: use React-Final-Form for form management and validation plz k thnkx
-export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDialogOpen }: RecipeFormProps) {
+export default function RecipeForm({ recipeToEdit, handleClose }: RecipeFormProps) {
   const { addRecipe, updateRecipe, deleteRecipe } = useRecipes()
   const { categories, addCategory, deleteCategory } = useCategories()
   const [groceries, setGroceries] = useState<GroceryItem[]>([])
   const [category, setCategory] = useState<EntityOptionType | null>(null)
   const [recipeName, setRecipeName] = useState('')
   const confirm = useConfirm()
+  const nav = useNavigate()
 
   useEffect(() => {
     // TODO: get rid of this useEffect, use the props as default values for state instead
@@ -58,11 +61,6 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
     [recipeName, groceries.length],
   )
 
-  function handleClose() {
-    setRecipeToEdit(null)
-    setRecipeDialogOpen(false)
-  }
-
   function handleSave() {
     const recipe = {
       name: recipeName.trim().toLowerCase(),
@@ -91,17 +89,27 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
   }
 
   return (
-    <div className="space-y-12">
+    <Fieldset className="">
       <div className="">
-        <TextField
+        <Input
           label="Recipe name"
-          variant="outlined"
-          fullWidth
-          value={recipeName}
+          name="recipeName"
+          fullwidth
           onChange={handleSetRecipeName}
+          value={recipeName}
           required
-          sx={{ mb: 1 }}
         />
+
+        {/* <TextField */}
+        {/*   label="Recipe name" */}
+        {/*   variant="outlined" */}
+        {/*   fullWidth */}
+        {/*   value={recipeName} */}
+        {/*   onChange={handleSetRecipeName} */}
+        {/*   required */}
+        {/*   sx={{ mb: 1 }} */}
+        {/* /> */}
+
         <Autocomplete
           suggestions={Object.values(categories)}
           label="Category"
@@ -112,7 +120,7 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
         />
       </div>
 
-      <div className="pt-2">
+      <div className="bg-teal-400 pt-2">
         <p className="mb-2 text-gray-600">Please add ingredients for your recipe below:</p>
         <IngredientInput commitGroceryItem={commitGroceryItem} />
       </div>
@@ -138,6 +146,6 @@ export default function RecipeForm({ recipeToEdit, setRecipeToEdit, setRecipeDia
           )}
         </div>
       </div>
-    </div>
+    </Fieldset>
   )
 }

@@ -1,5 +1,6 @@
 import { TextField } from '@mui/material'
 import { Button } from 'components/Button'
+import { Input } from 'components/Input'
 import Fraction from 'fraction.js'
 import { ChangeEvent, useCallback, useMemo, useState } from 'react'
 import { EntityOptionType } from 'types'
@@ -46,6 +47,15 @@ function IngredientInput({ commitGroceryItem }: IngredientInputProps) {
 
   return (
     <div className="space-y-4">
+      <Input
+        invalid={quantity.length > 0 && !validQuantity}
+        value={quantity}
+        onChange={handleChangeQuantity}
+        fullwidth
+        label="Quantity"
+        name="quantity"
+        required
+      />
       <TextField
         error={quantity.length > 0 && !validQuantity}
         value={quantity}
@@ -57,7 +67,7 @@ function IngredientInput({ commitGroceryItem }: IngredientInputProps) {
       />
       <Autocomplete
         suggestions={uomsMemo}
-        // addItem={addUom}
+        addItem={addUom}
         // deleteItem={deleteUom}
         selected={selectedUom}
         setSelected={setSelectedUom}
@@ -65,7 +75,7 @@ function IngredientInput({ commitGroceryItem }: IngredientInputProps) {
       />
       <Autocomplete
         suggestions={ingredientsMemo}
-        // addItem={addIngredient}
+        addItem={addIngredient}
         // deleteItem={deleteIngredient}
         selected={selectedIngredient}
         setSelected={setSelectedIngredient}

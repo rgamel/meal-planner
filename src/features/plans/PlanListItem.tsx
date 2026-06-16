@@ -21,11 +21,11 @@ export function PlanListItem({ id, name, togglePinned, isPinned }: PlanListItemP
   const icon = isPinned ? 'keep_off' : 'keep'
 
   return (
-    <div className="flex justify-between px-6 py-4">
+    <ul className="flex justify-between px-6 py-4">
       <RouterLink to={`${id}`}>
         <li key={id}>
           <div className="w-full">
-            <h3 className="text-xl leading-6 font-semibold text-gray-900">{label}</h3>
+            <h3 className="text-lg font-semibold">{label}</h3>
             <p className="mt-1 text-sm leading-5 text-gray-500">{recipeNames}</p>
           </div>
         </li>
@@ -36,6 +36,6 @@ export function PlanListItem({ id, name, togglePinned, isPinned }: PlanListItemP
           <span className="material-symbols-outlined opacity-50">{icon}</span>
         </div>
       </button>
-    </div>
+    </ul>
   )
 }

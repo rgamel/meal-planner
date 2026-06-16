@@ -1,6 +1,6 @@
 import { noop } from 'lodash/fp'
 import { createContext, Dispatch, SetStateAction, useEffect, useState, useMemo } from 'react'
-import { PlanList, CategoryList, IngredientList, RecipeList, UomList } from 'types'
+import { PlanList, CategoryList, IngredientList, RecipeList, UomList, Recipe } from 'types'
 
 import { useFirebase } from './hooks'
 import { useUserStore } from './useUserStore'
@@ -24,6 +24,8 @@ type RecipesContextProps = {
   setSelectedRecipes: Dispatch<SetStateAction<string[]>>
   shoppedItems: string[]
   setShoppedItems: Dispatch<SetStateAction<string[]>>
+  recipeToEdit: Recipe | null
+  setRecipeToEdit: Dispatch<SetStateAction<Recipe | null>>
 }
 
 export const RecipesContext = createContext<RecipesContextProps>({
@@ -43,6 +45,8 @@ export const RecipesContext = createContext<RecipesContextProps>({
   setSelectedRecipes: noop,
   shoppedItems: [] as string[],
   setShoppedItems: noop,
+  recipeToEdit: null,
+  setRecipeToEdit: noop,
 })
 
 export type AppState = {

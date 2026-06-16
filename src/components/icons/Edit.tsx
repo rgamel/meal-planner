@@ -1,9 +1,19 @@
-export function Edit({ fill = '#000' }) {
+import { clsx } from 'clsx'
+
+export function Edit({ className = '', fill = '#000' }) {
   return (
-    <svg width="25" height="25" viewBox="0 0 0.75 0.75" fill={fill} xmlns="http://www.w3.org/2000/svg">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke={fill}
+      className={clsx('size-6 stroke-current', className)}
+    >
       <path
-        d="M.509.072a.03.03 0 0 1 .044 0l.125.125a.03.03 0 0 1 0 .044L.272.647A.03.03 0 0 1 .25.656H.125A.03.03 0 0 1 .094.625V.5A.03.03 0 0 1 .103.478L.416.165zm-.071.16L.157.513v.081h.081L.519.313zm.125.037.049-.05L.531.138l-.049.05z"
-        fill={fill}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
       />
     </svg>
   )

@@ -10,8 +10,8 @@ export function BottomAppBar() {
   ]
 
   return (
-    <div className="fixed bottom-0 left-0 z-40 flex h-12 w-full bg-blue-500">
-      <div className="flex w-4/5 items-center justify-around font-semibold text-white">
+    <div className="fixed bottom-0 left-0 z-40 flex h-12 w-full bg-blue-600 text-blue-100">
+      <div className="flex w-4/5 items-center justify-around font-semibold">
         {links.map((link) => (
           <button type="button" className="cursor-pointer py-1" key={link.value} onClick={() => nav(link.value)}>
             {link.label}

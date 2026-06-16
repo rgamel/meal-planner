@@ -1,12 +1,12 @@
 import { clsx } from 'clsx'
+import { PropsWithChildren } from 'react'
 
-type Props = React.HTMLAttributes<any>
+type Props = {
+  className?: string
+}
 
-export function Card({ className, ...rest }: Props) {
+export function Card({ className, children }: Readonly<PropsWithChildren<Props>>) {
   return (
-    <div
-      className={clsx('m-6 flex flex-col rounded-xl border-2 border-gray-200 bg-white shadow-xs', className)}
-      {...rest}
-    />
+    <div className={clsx('m-2 flex flex-col bg-white border-gray-100 border-2 border-b-4', className)}>{children}</div>
   )
 }

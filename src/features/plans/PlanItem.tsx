@@ -19,21 +19,16 @@ export function PlanItem({ recipeWithQuantity, planId }: PlanItemProps): JSX.Ele
   )
 
   return (
-    <li className="align-center flex flex-row justify-between px-6 py-2">
-      <div>
-        <p className="text-md leading-6 text-gray-900">
-          {titleCase(recipes[recipeWithQuantity.id]?.name) || recipeWithQuantity.id}
-        </p>
-        <ul className="ml-6 pb-6 text-xs leading-5 text-gray-500">
-          {readablePlanIngredients.map((i) => (
-            <li key={i}>{titleCase(i)}</li>
-          ))}
-        </ul>
+    <div className="">
+      <div className="flex flex-row justify-between">
+        <span>{titleCase(recipes[recipeWithQuantity.id]?.name) || recipeWithQuantity.id}</span>
+        <span className="flex items-baseline justify-end bg-red-300">
+          {'x'}
+          <QuantitySelect recipeWithQuantity={recipeWithQuantity} />
+        </span>
       </div>
-      <div>
-        x
-        <QuantitySelect recipeWithQuantity={recipeWithQuantity} />
-      </div>
-    </li>
+
+      <p className="ml-3 pb-4 text-sm text-gray-400">{readablePlanIngredients.map((i) => i).join(', ')}</p>
+    </div>
   )
 }

@@ -19,5 +19,8 @@
 }
 
 :root {
-  background-color: black;
+}
+
+.divided-y {
+  @apply divide-y-2 divide-gray-100
 }

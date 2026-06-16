@@ -4,7 +4,7 @@ export function AddFab({ onClick }: { onClick: () => void }) {
       <button
         type="button"
         onClick={onClick}
-        className="mouse h-16 w-16 rounded-full bg-blue-700 p-0 shadow-sm transition duration-200 ease-in hover:bg-blue-800 focus:outline-hidden active:shadow-lg"
+        className="h-16 w-16 cursor-pointer rounded-full border-2 border-blue-700 bg-blue-600 p-0 ease-in hover:bg-blue-700 focus:outline-hidden active:bg-blue-700"
       >
         <svg viewBox="0 0 20 20" enableBackground="new 0 0 20 20" className="inline-block h-6 w-6">
           <path

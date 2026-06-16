@@ -1,5 +1,6 @@
 import { CssBaseline } from '@mui/material'
 import { Home } from 'features/home/Home'
+import { UpsertRecipe } from 'features/recipes/UpsertRecipe'
 import { ConfirmProvider } from 'material-ui-confirm'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
@@ -24,6 +25,8 @@ root.render(
           <Routes>
             <Route path="/" element={<App />}>
               <Route path="" element={<Home />} />
+              <Route path="recipes/:id" element={<UpsertRecipe />} />
+              <Route path="recipes/new" element={<UpsertRecipe />} />
               <Route path="recipes" element={<Recipes />} />
               <Route path="groceries" element={<Groceries />} />
               <Route path="plans" element={<Plans />} />

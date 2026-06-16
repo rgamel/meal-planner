@@ -1,9 +1,9 @@
 import { useSelectedRecipes } from 'app/hooks'
-import { IconButton } from 'components/Button'
-import { Edit } from 'components/icons/Edit'
 import { useCallback, useMemo } from 'react'
 import { Recipe } from 'types'
 
+import { IconButton } from '../../components/Button'
+import { Edit } from '../../components/icons/Edit'
 import { titleCase } from '../../helpers'
 
 type RecipeListItemProps = {
@@ -12,28 +12,27 @@ type RecipeListItemProps = {
 }
 
 export default function RecipeListItem({ recipe, editRecipe }: RecipeListItemProps) {
-  const { selectedRecipes, handleSelectRecipe } = useSelectedRecipes()
-  const handleChange = useCallback(() => {
-    handleSelectRecipe(recipe.id)
-  }, [recipe.id, handleSelectRecipe])
-
-  const checked = useMemo(() => selectedRecipes.map((sr) => sr.id).includes(recipe.id), [selectedRecipes, recipe])
-
-  const onClickEdit = useCallback(() => {
-    editRecipe(recipe)
-  }, [editRecipe, recipe])
-
   const label = titleCase(recipe.name)
+  const { selectedRecipes, handleSelectRecipe } = useSelectedRecipes()
+  const checked = selectedRecipes.map((sr) => sr.id).includes(recipe.id)
+
+  function handleChange() {
+    handleSelectRecipe(recipe.id)
+  }
+
+  function onClickEdit() {
+    editRecipe(recipe)
+  }
 
   return (
     <li className="flex flex-row justify-between">
-      <div className="flex items-center">
-        <input type="checkbox" className="mr-3 h-5 w-5" checked={checked} onChange={handleChange} />
+      <div className="flex flex-row items-center">
+        <input type="checkbox" className="mr-2" checked={checked} onChange={handleChange} />
         <div className="text-md">{label}</div>
       </div>
-      <IconButton className="absolute right-0 pr-0" onClick={onClickEdit}>
-        <div className="mr-0 opacity-50">
-          <Edit />
+      <IconButton className="" onClick={onClickEdit}>
+        <div className="-mb-2">
+          <Edit className="stroke-gray-600" />
         </div>
       </IconButton>
     </li>
